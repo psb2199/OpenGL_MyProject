@@ -16,6 +16,7 @@ void Renderer::Initialize(int width, int height)
 	window_height = height;
 
 	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
+	CreateVertexBufferObjects();
 }
 
 GLuint Renderer::CompileShaders(std::string FileNameVS, std::string FileNameFS)
@@ -30,13 +31,13 @@ GLuint Renderer::CompileShaders(std::string FileNameVS, std::string FileNameFS)
 	std::string vs, fs;
 
 	//shader.vs °¡ vs ¾ÈÀ¸·Î ·ÎµùµÊ
-	if (!ReadFile(FileNameVS, &vs)) {
+	if (!ReadShaderFile(FileNameVS, &vs)) {
 		std::cout << "Error compiling vertex shader" << std::endl;
 		return -1;
 	};
 
 	//shader.fs °¡ fs ¾ÈÀ¸·Î ·ÎµùµÊ
-	if (!ReadFile(FileNameFS, &fs)) {
+	if (!ReadShaderFile(FileNameFS, &fs)) {
 		std::cout << "Error compiling fragment shader" << std::endl;
 		return -1;
 	};
@@ -112,9 +113,7 @@ void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum S
 	glAttachShader(ShaderProgram, ShaderObj);
 }
 
-
-
-bool Renderer::ReadFile(std::string filename, std::string* target)
+bool Renderer::ReadShaderFile(std::string filename, std::string* target)
 {
 	std::ifstream file(filename);
 	if (file.fail())
@@ -129,4 +128,75 @@ bool Renderer::ReadFile(std::string filename, std::string* target)
 		target->append("\n");
 	}
 	return true;
+}
+
+void Renderer::CreateVertexBufferObjects()
+{
+	float cubesize = 0.1;
+
+	float rect[] =
+	{
+		//¾Õ¸é
+	-cubesize,cubesize,cubesize,0.0, 0.0, 1.0,
+	cubesize,-cubesize,cubesize,0.0, 0.0, 1.0,
+	-cubesize,-cubesize,cubesize,0.0, 0.0, 1.0,
+
+	cubesize,-cubesize,cubesize,0.0, 0.0, 1.0,
+	-cubesize,cubesize,cubesize,0.0, 0.0, 1.0,
+	cubesize,cubesize,cubesize,0.0, 0.0, 1.0,
+
+	//À­¸é
+	-cubesize,cubesize,-cubesize,0.0, 1.0, 0.0,
+	cubesize,cubesize,cubesize,0.0, 1.0, 0.0,
+	-cubesize,cubesize,cubesize,0.0, 1.0, 0.0,
+
+	cubesize,cubesize,-cubesize,0.0, 1.0, 0.0,
+	cubesize,cubesize,cubesize,0.0, 1.0, 0.0,
+	-cubesize,cubesize,-cubesize,0.0, 1.0, 0.0,
+
+	//¾Æ·§¸é
+	cubesize,-cubesize,cubesize,0.0, -1.0, 0.0,
+	-cubesize,-cubesize,-cubesize,0.0, -1.0, 0.0,
+	-cubesize,-cubesize,cubesize,0.0, -1.0, 0.0,
+
+	-cubesize,-cubesize,-cubesize,0.0, -1.0, 0.0,
+	cubesize,-cubesize,cubesize,0.0, -1.0, 0.0,
+	cubesize,-cubesize,-cubesize,0.0, -1.0, 0.0,
+
+	//µÞ¸é
+	cubesize,-cubesize,-cubesize,0.0, 0.0, -1.0,
+	-cubesize,cubesize,-cubesize,0.0, 0.0, -1.0,
+	-cubesize,-cubesize,-cubesize,0.0, 0.0, -1.0,
+
+	-cubesize,cubesize,-cubesize,0.0, 0.0, -1.0,
+	cubesize,-cubesize,-cubesize,0.0, 0.0, -1.0,
+	cubesize,cubesize,-cubesize,0.0, 0.0, -1.0,
+
+	//¿À¸¥¸é
+	cubesize,cubesize,cubesize,1.0, 0.0, 0.0,
+	cubesize,-cubesize,-cubesize,1.0, 0.0, 0.0,
+	cubesize,-cubesize,cubesize,1.0, 0.0, 0.0,
+
+	cubesize,cubesize,cubesize,1.0, 0.0, 0.0,
+	cubesize,cubesize,-cubesize,1.0, 0.0, 0.0,
+	cubesize,-cubesize,-cubesize,1.0, 0.0, 0.0,
+
+	//¿Ü¸é
+	-cubesize,-cubesize,-cubesize,-1.0, 0.0, 0.0,
+	 -cubesize,cubesize,cubesize,-1.0, 0.0, 0.0,
+	-cubesize,-cubesize,cubesize,-1.0, 0.0, 0.0,
+
+	-cubesize,cubesize,-cubesize,-1.0, 0.0, 0.0,
+	-cubesize,cubesize,cubesize,-1.0, 0.0, 0.0,
+	-cubesize,-cubesize,-cubesize,-1.0, 0.0, 0.0,
+	};
+
+	glGenBuffers(1, &Basic_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, Basic_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+}
+
+void Renderer::DrawScene()
+{
+	std::cout << "sdf" << std::endl;
 }

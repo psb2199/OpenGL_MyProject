@@ -16,14 +16,19 @@ class Renderer
 	int window_height;
 
 	GLuint Basic_Shader;
+	GLuint Basic_VBO;
 
 	void Initialize(int width, int height);
-	bool ReadFile(std::string filename, std::string* target);
 
 	GLuint CompileShaders(std::string FileNameVS, std::string FileNameFS);
+	bool ReadShaderFile(std::string filename, std::string* target);
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
+	void CreateVertexBufferObjects();
+
 public:
 	Renderer(int width, int height);
 	~Renderer();
+
+	void DrawScene();
 };
 

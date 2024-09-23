@@ -6,7 +6,8 @@
 
 #include "Renderer.h"
 
-#define RenderFriquency 100 //100밀리 초 마다 한번
+#define RenderFriquency 10 //100밀리 초 마다 한번
+Renderer* G_Renderer = NULL;
 
 GLvoid RenderScene()
 {
@@ -17,6 +18,7 @@ GLvoid RenderSceneTimer(int value)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
+    G_Renderer->DrawScene();
 
     glutSwapBuffers();
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);
@@ -36,7 +38,7 @@ int main(int argc, char** argv)
     else std::cout << "INIT" << std::endl;*/
     //glEnable(GL_DEPTH_TEST);
     glewInit();
-    Renderer* G_Renderer = new Renderer(500, 500);
+    G_Renderer = new Renderer(500, 500);
 
     glutDisplayFunc(RenderScene);
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);
