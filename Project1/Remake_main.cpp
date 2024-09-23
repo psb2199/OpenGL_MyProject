@@ -35,8 +35,8 @@ int main(int argc, char** argv)
     if (glewInit() != GLEW_OK) std::cerr << "NOT INIT" << std::endl;
     else std::cout << "INIT" << std::endl;*/
     //glEnable(GL_DEPTH_TEST);
-
-    Renderer* G_Renderer = new Renderer(100, 100);
+    glewInit();
+    Renderer* G_Renderer = new Renderer(500, 500);
 
     glutDisplayFunc(RenderScene);
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);

@@ -1,5 +1,6 @@
 #include "Renderer.h"
 
+
 Renderer::Renderer(int width, int height)
 {
 	Initialize(width, height);
@@ -14,11 +15,12 @@ void Renderer::Initialize(int width, int height)
 	window_width = width;
 	window_height = height;
 
-	Basic_Shader = CompileShaders()
+	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
 }
 
-GLuint Renderer::CompileShaders(char* FileNameVS, char* FileNameFS)
+GLuint Renderer::CompileShaders(std::string FileNameVS, std::string FileNameFS)
 {
+	std::cout << "Start Compile Shaders" << std::endl;
 	GLuint ShaderProgram = glCreateProgram();
 
 	if (ShaderProgram == 0) { //쉐이더 프로그램이 만들어졌는지 확인
@@ -112,7 +114,7 @@ void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum S
 
 
 
-bool Renderer::ReadFile(char* filename, std::string* target)
+bool Renderer::ReadFile(std::string filename, std::string* target)
 {
 	std::ifstream file(filename);
 	if (file.fail())

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="BasicShader.fs" />
+    <None Include="BasicShader.vs" />
     <None Include="fragmentlight.glsl" />
     <None Include="vertexlight.glsl" />
   </ItemGroup>

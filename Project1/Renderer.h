@@ -18,9 +18,9 @@ class Renderer
 	GLuint Basic_Shader;
 
 	void Initialize(int width, int height);
-	bool ReadFile(char* filename, std::string* target);
+	bool ReadFile(std::string filename, std::string* target);
 
-	GLuint CompileShaders(char* FileNameVS, char* FileNameFS);
+	GLuint CompileShaders(std::string FileNameVS, std::string FileNameFS);
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 public:
 	Renderer(int width, int height);
