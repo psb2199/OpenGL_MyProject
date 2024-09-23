@@ -23,10 +23,16 @@
     <None Include="vertexlight.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Remake.cpp" />
-    <ClCompile Include="term.cpp">
+    <ClCompile Include="Remake_main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="term.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Renderer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
