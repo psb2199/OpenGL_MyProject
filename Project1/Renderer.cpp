@@ -137,66 +137,86 @@ void Renderer::CreateVertexBufferObjects()
 	float rect[] =
 	{
 		//¾Õ¸é
-	-cubesize,cubesize,cubesize,0.0, 0.0, 1.0,
-	cubesize,-cubesize,cubesize,0.0, 0.0, 1.0,
-	-cubesize,-cubesize,cubesize,0.0, 0.0, 1.0,
+	-cubesize,cubesize,cubesize,
+	cubesize,-cubesize,cubesize,
+	-cubesize,-cubesize,cubesize,
 
-	cubesize,-cubesize,cubesize,0.0, 0.0, 1.0,
-	-cubesize,cubesize,cubesize,0.0, 0.0, 1.0,
-	cubesize,cubesize,cubesize,0.0, 0.0, 1.0,
+	cubesize,-cubesize,cubesize,
+	-cubesize,cubesize,cubesize,
+	cubesize,cubesize,cubesize,
 
 	//À­¸é
-	-cubesize,cubesize,-cubesize,0.0, 1.0, 0.0,
-	cubesize,cubesize,cubesize,0.0, 1.0, 0.0,
-	-cubesize,cubesize,cubesize,0.0, 1.0, 0.0,
+	-cubesize,cubesize,-cubesize,
+	cubesize,cubesize,cubesize,
+	-cubesize,cubesize,cubesize,
 
-	cubesize,cubesize,-cubesize,0.0, 1.0, 0.0,
-	cubesize,cubesize,cubesize,0.0, 1.0, 0.0,
-	-cubesize,cubesize,-cubesize,0.0, 1.0, 0.0,
+	cubesize,cubesize,-cubesize,
+	cubesize,cubesize,cubesize,
+	-cubesize,cubesize,-cubesize,
 
 	//¾Æ·§¸é
-	cubesize,-cubesize,cubesize,0.0, -1.0, 0.0,
-	-cubesize,-cubesize,-cubesize,0.0, -1.0, 0.0,
-	-cubesize,-cubesize,cubesize,0.0, -1.0, 0.0,
+	cubesize,-cubesize,cubesize,
+	-cubesize,-cubesize,-cubesize,
+	-cubesize,-cubesize,cubesize,
 
-	-cubesize,-cubesize,-cubesize,0.0, -1.0, 0.0,
-	cubesize,-cubesize,cubesize,0.0, -1.0, 0.0,
-	cubesize,-cubesize,-cubesize,0.0, -1.0, 0.0,
+	-cubesize,-cubesize,-cubesize,
+	cubesize,-cubesize,cubesize,
+	cubesize,-cubesize,-cubesize,
 
 	//µÞ¸é
-	cubesize,-cubesize,-cubesize,0.0, 0.0, -1.0,
-	-cubesize,cubesize,-cubesize,0.0, 0.0, -1.0,
-	-cubesize,-cubesize,-cubesize,0.0, 0.0, -1.0,
+	cubesize,-cubesize,-cubesize,
+	-cubesize,cubesize,-cubesize,
+	-cubesize,-cubesize,-cubesize,
 
-	-cubesize,cubesize,-cubesize,0.0, 0.0, -1.0,
-	cubesize,-cubesize,-cubesize,0.0, 0.0, -1.0,
-	cubesize,cubesize,-cubesize,0.0, 0.0, -1.0,
+	-cubesize,cubesize,-cubesize,
+	cubesize,-cubesize,-cubesize,
+	cubesize,cubesize,-cubesize,
 
 	//¿À¸¥¸é
-	cubesize,cubesize,cubesize,1.0, 0.0, 0.0,
-	cubesize,-cubesize,-cubesize,1.0, 0.0, 0.0,
-	cubesize,-cubesize,cubesize,1.0, 0.0, 0.0,
+	cubesize,cubesize,cubesize,
+	cubesize,-cubesize,-cubesize,
+	cubesize,-cubesize,cubesize,
 
-	cubesize,cubesize,cubesize,1.0, 0.0, 0.0,
-	cubesize,cubesize,-cubesize,1.0, 0.0, 0.0,
-	cubesize,-cubesize,-cubesize,1.0, 0.0, 0.0,
+	cubesize,cubesize,cubesize,
+	cubesize,cubesize,-cubesize,
+	cubesize,-cubesize,-cubesize,
 
 	//¿Ü¸é
-	-cubesize,-cubesize,-cubesize,-1.0, 0.0, 0.0,
-	 -cubesize,cubesize,cubesize,-1.0, 0.0, 0.0,
-	-cubesize,-cubesize,cubesize,-1.0, 0.0, 0.0,
+	-cubesize,-cubesize,-cubesize
+	 -cubesize,cubesize,cubesize,
+	-cubesize,-cubesize,cubesize,
 
-	-cubesize,cubesize,-cubesize,-1.0, 0.0, 0.0,
-	-cubesize,cubesize,cubesize,-1.0, 0.0, 0.0,
-	-cubesize,-cubesize,-cubesize,-1.0, 0.0, 0.0,
+	-cubesize,cubesize,-cubesize,
+	-cubesize,cubesize,cubesize,-
+	-cubesize,-cubesize,-cubesize
 	};
+
 
 	glGenBuffers(1, &Basic_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, Basic_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 }
 
+GLuint Renderer::GetShader()
+{
+	return Basic_Shader;
+}
+
 void Renderer::DrawScene()
 {
-	std::cout << "sdf" << std::endl;
+
+	glGenBuffers(1, &Basic_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, Basic_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	int BalltransformLocation;
+	glm::mat4 B_Matrix = glm::mat4(1.0f);
+	int objColorLocation = glGetUniformLocation(Basic_Shader, "objectColor");
+
+	glUseProgram(Basic_Shader);
+	BalltransformLocation = glGetUniformLocation(Basic_Shader, "transform");
+	glUniformMatrix4fv(BalltransformLocation, 1, GL_FALSE, glm::value_ptr(B_Matrix));
+	objColorLocation = glGetUniformLocation(Basic_Shader, "objectColor");
+	glUniform3f(objColorLocation, 0.0f, 0.0f, 0.0f);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }

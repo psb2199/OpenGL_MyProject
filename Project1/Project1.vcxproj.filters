@@ -16,34 +16,46 @@
     <Filter Include="소스 파일\Shaders">
       <UniqueIdentifier>{3d4c8df1-05b7-4937-99f5-07264221ddf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PreVersion">
+      <UniqueIdentifier>{69bd9f83-c160-4d57-b434-1c68b5623db3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragmentlight.glsl">
-      <Filter>소스 파일</Filter>
-    </None>
-    <None Include="vertexlight.glsl">
-      <Filter>소스 파일</Filter>
-    </None>
     <None Include="BasicShader.vs">
       <Filter>소스 파일\Shaders</Filter>
     </None>
     <None Include="BasicShader.fs">
       <Filter>소스 파일\Shaders</Filter>
     </None>
+    <None Include="vertexlight.glsl">
+      <Filter>소스 파일\PreVersion</Filter>
+    </None>
+    <None Include="fragmentlight.glsl">
+      <Filter>소스 파일\PreVersion</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="term.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Remake_main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="term.cpp">
+      <Filter>소스 파일\PreVersion</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -25,6 +25,7 @@
     <None Include="vertexlight.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Remake_main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
@@ -34,6 +35,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Renderer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -3,11 +3,7 @@
 #include <string>
 #include <fstream>
 
-#include <gl/glm/glm.hpp>
-#include <gl/glm/ext.hpp>
-#include <gl/glm/gtc/matrix_transform.hpp>
-#include <gl/glew.h>
-#include <gl/freeglut.h>
+#include "OpenGL.h"
 
 
 class Renderer
@@ -29,6 +25,7 @@ public:
 	Renderer(int width, int height);
 	~Renderer();
 
+	GLuint GetShader();
 	void DrawScene();
 };
 
