@@ -217,18 +217,23 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	{
 		vector3 location = (*itr)->GetLocation();
 		vector3 rotation = (*itr)->GetRotation();
-
-		//std::cout << rotation.x << std::endl;
-	
+		
 		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
-		unsigned int ObjectTransform = glGetUniformLocation(Basic_Shader, "transform");
+
 		transfom_Matrix = glm::translate(transfom_Matrix, glm::vec3(location.x, location.y, location.z));
-		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(0.0f), glm::vec3(rotation.x, rotation.y, rotation.z));
+		
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
+		
+		transfom_Matrix = glm::scale(transfom_Matrix, glm::vec3(1.0, 1.0, 1.0));
+		
+		unsigned int ObjectTransform = glGetUniformLocation(Basic_Shader, "transform");
+		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
 
-
-		int polygon_count = 18;
+		int polygon_count = 36;
 		glDrawArrays(GL_TRIANGLES, 0, polygon_count);
 	}
-	
+
 
 }

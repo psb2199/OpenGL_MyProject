@@ -19,7 +19,7 @@ public:
 	Camera(Renderer* renderer, int x, int y, int z);
 	~Camera();
 
-	void DoWorking();
+	void DoWorking(Renderer* renderer);
 
 	void SetLookLocation(float x, float y, float z);
 	void SetLocation(float x, float y, float z);

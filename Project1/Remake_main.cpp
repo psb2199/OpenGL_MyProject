@@ -9,7 +9,7 @@
 #include "Controller.h"
 #include "ObjectManager.h"
 
-#define RenderFriquency 100 //100밀리 초 마다 한번
+#define RenderFriquency 10 //100밀리 초 마다 한번
 Renderer* G_Renderer = NULL;
 Camera* G_Camera = nullptr;
 Controller* G_Controller = nullptr;
@@ -25,6 +25,8 @@ GLvoid RenderSceneTimer(int value)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     G_Renderer->DrawScene(G_ObjMgr->GetAllObjects());
+    G_Camera->DoWorking(G_Renderer);
+
     G_Controller->TickEvent();
  
 
@@ -90,15 +92,21 @@ GLvoid KeyBoardUP(unsigned char Key, int x, int y)
 
 int main(int argc, char** argv)
 {
+    int window_width{ 700 };
+    int window_height{ 700 };
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); //depth+
     glutInitWindowPosition(0, 0);
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(window_width, window_height);
     glutCreateWindow("OpenGL_MyProject");
 
     glewInit();
-    G_Renderer = new Renderer(500, 500);
-    G_Camera = new Camera(G_Renderer, 0, 0, 1);
+    glEnable(GL_DEPTH_TEST);
+    //glDisable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
+
+    G_Renderer = new Renderer(window_width, window_height);
+    G_Camera = new Camera(G_Renderer, 2, 2, 2);
     G_Controller = new Controller;
     G_ObjMgr = new ObjectManager;
 
