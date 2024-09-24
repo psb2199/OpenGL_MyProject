@@ -14,6 +14,8 @@ public:
 	Controller();
 	~Controller();
 
+	void MappingController();
+
 	void Debug_print();
 };
 

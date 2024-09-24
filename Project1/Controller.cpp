@@ -9,6 +9,13 @@ Controller::~Controller()
 {
 }
 
+void Controller::MappingController()
+{
+	
+
+
+}
+
 void Controller::Debug_print()
 {
 	for (int i{ 0 }; i < press(KEY_COUNT); ++i)

@@ -24,7 +24,6 @@ GLvoid RenderSceneTimer(int value)
 
     G_Renderer->DrawScene();
     //G_Camera->DoWorking();
-    G_Controller->Debug_print();
 
     glutSwapBuffers();
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);

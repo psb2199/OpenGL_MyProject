@@ -2,7 +2,6 @@
 #include "OpenGL.h"
 #include "Renderer.h"
 
-struct vector3 { float x, y, z; };
 
 class Camera
 {

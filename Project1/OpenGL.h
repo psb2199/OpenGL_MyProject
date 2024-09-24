@@ -6,3 +6,4 @@
 #include <gl/freeglut.h>
 
 enum press { w, a, s, d, KEY_COUNT};
+struct vector3 { float x, y, z; };
