@@ -231,9 +231,10 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		unsigned int ObjectTransform = glGetUniformLocation(Basic_Shader, "transform");
 		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
 
-		int polygon_count = 36;
-		glDrawArrays(GL_TRIANGLES, 0, polygon_count);
+		int vertex_count = 36;
+		glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 	}
+
 
 
 }

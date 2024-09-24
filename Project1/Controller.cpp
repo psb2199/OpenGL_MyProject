@@ -16,6 +16,8 @@ void Controller::MappingController(Object* obj)
 
 void Controller::TickEvent()
 {
+	if (!mapped_obj) return;
+
 	float movespeed = 0.1;
 	if (Key[press(w)])
 	{
