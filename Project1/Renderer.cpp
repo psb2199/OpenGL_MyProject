@@ -132,7 +132,7 @@ bool Renderer::ReadShaderFile(std::string filename, std::string* target)
 
 void Renderer::CreateVertexBufferObjects()
 {
-	float cubesize = 0.1;
+	float cubesize = 0.5;
 
 	float rect[] =
 	{
@@ -191,10 +191,14 @@ void Renderer::CreateVertexBufferObjects()
 	-cubesize,-cubesize,-cubesize
 	};
 
+	float data_float_count = 3; //(x,y,z)
 
 	glGenBuffers(1, &Basic_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, Basic_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * data_float_count, (void*)0);
+	glEnableVertexAttribArray(0);
 }
 
 GLuint Renderer::GetShader()
@@ -204,19 +208,9 @@ GLuint Renderer::GetShader()
 
 void Renderer::DrawScene()
 {
-
-	glGenBuffers(1, &Basic_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, Basic_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
-
-	int BalltransformLocation;
-	glm::mat4 B_Matrix = glm::mat4(1.0f);
-	int objColorLocation = glGetUniformLocation(Basic_Shader, "objectColor");
-
 	glUseProgram(Basic_Shader);
-	BalltransformLocation = glGetUniformLocation(Basic_Shader, "transform");
-	glUniformMatrix4fv(BalltransformLocation, 1, GL_FALSE, glm::value_ptr(B_Matrix));
-	objColorLocation = glGetUniformLocation(Basic_Shader, "objectColor");
-	glUniform3f(objColorLocation, 0.0f, 0.0f, 0.0f);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	
+	int polygon_count = 18;
+	glDrawArrays(GL_TRIANGLES, 0, polygon_count);
+
 }

@@ -21,7 +21,7 @@ GLvoid RenderSceneTimer(int value)
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
     G_Renderer->DrawScene();
-    G_Camera->DoWorking();
+    //G_Camera->DoWorking();
 
     glutSwapBuffers();
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);
