@@ -7,14 +7,15 @@
 
 class ObjectManager
 {
-	std::vector<Object> WorldObjects;
+	std::vector<Object*> WorldObjects;
+	int AllOjectCount{ 0 };
 
 public:
 	ObjectManager();
 	~ObjectManager();
 
-	void AddObject(Object obj);
-	void DeleteObject(Object obj);
-	std::vector<Object> &GetAllObjects();
+	Object* AddObject(std::string type, vector3 location);
+	void DeleteObject(Object* obj);
+	std::vector<Object*> GetAllObjects();
 };
 

@@ -4,10 +4,11 @@
 #include <fstream>
 
 #include "OpenGL.h"
+#include "ObjectManager.h"
 
 
 class Renderer
-{
+{	
 	int window_width;
 	int window_height;
 
@@ -26,6 +27,6 @@ public:
 	~Renderer();
 
 	GLuint GetShader();
-	void DrawScene();
+	void DrawScene(std::vector<Object*>Objects);
 };
 

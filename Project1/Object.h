@@ -4,18 +4,30 @@
 #include "OpenGL.h"
 
 class Object
-{
+{	
+	int id;
+	std::string ojbect_type;
+
 	vector3 location;
 	vector3 rotation;
 
 public:
-	Object();
+	Object(int obj_id, std::string type, vector3 loc);
 	~Object();
 
 	void SetLocation(vector3 new_location);
 	vector3 GetLocation() const;
 	void SetRotation(vector3 new_rotation);
 	vector3 GetRotation() const;
+
+	void AddMovementInput(vector3 velocity);
+	void AddRotationInput(vector3 velocity);
 	
+
+public:
+
+	bool operator==(const Object& other) const {
+		return this->id == other.id;
+	}
 };
 

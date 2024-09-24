@@ -8,21 +8,28 @@ ObjectManager::~ObjectManager()
 {
 }
 
-void ObjectManager::AddObject(Object obj)
+Object* ObjectManager::AddObject(std::string type, vector3 location)
 {
-	WorldObjects.push_back(obj);
+    Object* newObj = new Object(AllOjectCount, type, location);
+
+	WorldObjects.push_back(newObj);
+    AllOjectCount++;
+
+    return newObj;
 }
 
-void ObjectManager::DeleteObject(Object obj)
+void ObjectManager::DeleteObject(Object* obj)
 {
     auto it = std::find(WorldObjects.begin(), WorldObjects.end(), obj);
 
     if (it != WorldObjects.end()) {
         WorldObjects.erase(it);
+        AllOjectCount--;
     }
+
 }
 
-std::vector<Object> &ObjectManager::GetAllObjects()
+std::vector<Object*> ObjectManager::GetAllObjects()
 {
 	return WorldObjects;
 }

@@ -7,11 +7,14 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Controller.h"
+#include "ObjectManager.h"
 
 #define RenderFriquency 100 //100밀리 초 마다 한번
 Renderer* G_Renderer = NULL;
 Camera* G_Camera = nullptr;
 Controller* G_Controller = nullptr;
+ObjectManager* G_ObjMgr = nullptr;
+Object* Player = nullptr;
 
 GLvoid RenderScene()
 {
@@ -20,10 +23,10 @@ GLvoid RenderScene()
 GLvoid RenderSceneTimer(int value)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
-    G_Renderer->DrawScene();
-    //G_Camera->DoWorking();
+    G_Renderer->DrawScene(G_ObjMgr->GetAllObjects());
+    G_Controller->TickEvent();
+ 
 
     glutSwapBuffers();
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);
@@ -94,11 +97,13 @@ int main(int argc, char** argv)
     glutCreateWindow("OpenGL_MyProject");
 
     glewInit();
-
-    glEnable(GL_DEPTH_TEST);
     G_Renderer = new Renderer(500, 500);
     G_Camera = new Camera(G_Renderer, 0, 0, 1);
     G_Controller = new Controller;
+    G_ObjMgr = new ObjectManager;
+
+    Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
+    G_Controller->MappingController(Player);
 
     glutDisplayFunc(RenderScene);
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);

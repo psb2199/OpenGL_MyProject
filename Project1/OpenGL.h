@@ -5,5 +5,16 @@
 #include <gl/glew.h>
 #include <gl/freeglut.h>
 
+#include <iostream>
+using namespace std;
+
 enum press { w, a, s, d, KEY_COUNT};
-struct vector3 { float x, y, z; };
+struct vector3 
+{ 
+	float x, y, z; 
+
+	void print_vec3() 
+	{
+		cout << " x:" << x << " y:" << y << " z:" << z << endl;
+	}
+};

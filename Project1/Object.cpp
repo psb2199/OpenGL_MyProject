@@ -1,10 +1,10 @@
 #include "Object.h"
 
-Object::Object()
+Object::Object(int obj_id, std::string type, vector3 loc)
 {
-	location.x = 0;
-	location.y = 0;
-	location.z = 0;
+	id = obj_id;
+	ojbect_type = type;
+	location = loc;
 
 	rotation.x = 0;
 	rotation.y = 0;
@@ -22,7 +22,7 @@ void Object::SetLocation(vector3 new_location)
 
 vector3 Object::GetLocation() const
 {
-	return vector3();
+	return location;
 }
 
 void Object::SetRotation(vector3 new_rotation)
@@ -32,5 +32,19 @@ void Object::SetRotation(vector3 new_rotation)
 
 vector3 Object::GetRotation() const
 {
-	return vector3();
+	return rotation;
+}
+
+void Object::AddMovementInput(vector3 velocity)
+{
+	location.x += velocity.x;
+	location.y += velocity.y;
+	location.z += velocity.z;
+}
+
+void Object::AddRotationInput(vector3 velocity)
+{
+	rotation.x += velocity.x;
+	rotation.y += velocity.y;
+	rotation.z += velocity.z;
 }

@@ -209,11 +209,26 @@ GLuint Renderer::GetShader()
 	return Basic_Shader;
 }
 
-void Renderer::DrawScene()
+void Renderer::DrawScene(std::vector<Object*>Objects)
 {
 	glUseProgram(Basic_Shader);
 	
-	int polygon_count = 18;
-	glDrawArrays(GL_TRIANGLES, 0, polygon_count);
+	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr) 
+	{
+		vector3 location = (*itr)->GetLocation();
+		vector3 rotation = (*itr)->GetRotation();
+
+		//std::cout << rotation.x << std::endl;
+	
+		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
+		unsigned int ObjectTransform = glGetUniformLocation(Basic_Shader, "transform");
+		transfom_Matrix = glm::translate(transfom_Matrix, glm::vec3(location.x, location.y, location.z));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(0.0f), glm::vec3(rotation.x, rotation.y, rotation.z));
+
+
+		int polygon_count = 18;
+		glDrawArrays(GL_TRIANGLES, 0, polygon_count);
+	}
+	
 
 }
