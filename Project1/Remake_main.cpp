@@ -36,11 +36,9 @@ int main(int argc, char** argv)
     glutInitWindowSize(500, 500);
     glutCreateWindow("OpenGL_MyProject");
 
-    /*glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK) std::cerr << "NOT INIT" << std::endl;
-    else std::cout << "INIT" << std::endl;*/
-    glEnable(GL_DEPTH_TEST);
     glewInit();
+
+    glEnable(GL_DEPTH_TEST);
     G_Renderer = new Renderer(500, 500);
     G_Camera = new Camera(G_Renderer, 0, 0, 1);
     G_Camera->SetLookLocation(0, 0, 0);
