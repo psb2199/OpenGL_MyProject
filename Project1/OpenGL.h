@@ -4,3 +4,5 @@
 #include <gl/glm/gtc/matrix_transform.hpp>
 #include <gl/glew.h>
 #include <gl/freeglut.h>
+
+enum press { w, a, s, d, KEY_COUNT};
