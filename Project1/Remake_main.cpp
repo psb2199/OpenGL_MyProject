@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Controller.h"
 #include "ObjectManager.h"
+#include "Importer_obj.h"
 
 #define RenderFriquency 10 //100밀리 초 마다 한번
 Renderer* G_Renderer = NULL;
@@ -15,6 +16,7 @@ Camera* G_Camera = nullptr;
 Controller* G_Controller = nullptr;
 ObjectManager* G_ObjMgr = nullptr;
 Object* Player = nullptr;
+
 
 GLvoid RenderScene()
 {
@@ -114,7 +116,7 @@ int main(int argc, char** argv)
     G_Camera = new Camera(G_Renderer, 2, 2, 2);
     G_Controller = new Controller;
     G_ObjMgr = new ObjectManager;
-
+    
     Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
     G_Controller->MappingController(Player);
 
