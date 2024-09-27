@@ -19,6 +19,24 @@
     <Filter Include="소스 파일\PreVersion">
       <UniqueIdentifier>{69bd9f83-c160-4d57-b434-1c68b5623db3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Camera">
+      <UniqueIdentifier>{a7f3a7c2-3304-483c-bcaf-14cfa5756827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Controller">
+      <UniqueIdentifier>{69fc7d33-6145-4dfb-b0e8-e53324472da7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object">
+      <UniqueIdentifier>{dfa576d1-906f-4e6d-8865-1f08d3feabae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Importer">
+      <UniqueIdentifier>{547d4e8f-c061-4ffe-8c98-8086c9853b44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ObjectManager">
+      <UniqueIdentifier>{d07d5885-46cd-4460-b168-8356369287b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer">
+      <UniqueIdentifier>{16bd4529-eb73-4331-a202-29ed34747f51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShader.vs">
@@ -38,37 +56,49 @@
     <ClCompile Include="Remake_main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="term.cpp">
       <Filter>소스 파일\PreVersion</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일\Camera</Filter>
+    </ClCompile>
     <ClCompile Include="Controller.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Controller</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Importer_obj.cpp">
+      <Filter>소스 파일\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>소스 파일\ObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>소스 파일\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Renderer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>소스 파일\Camera</Filter>
+    </ClInclude>
     <ClInclude Include="Controller.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\Controller</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer_obj.h">
+      <Filter>소스 파일\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>소스 파일\ObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>소스 파일\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
