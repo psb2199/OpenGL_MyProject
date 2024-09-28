@@ -7,13 +7,20 @@
 
 #include "OpenGL.h"
 
+
+
 class Importer_obj
 {
-	GLuint VAO, VBO, EBO;
+	//GLuint VAO, VBO, EBO;
+
+	
+	VertexBuffer VertexBuffers[ObjFile(MAX_COUNT)];
+
+	void Initialize();
 
 public:
-	void ReadObj(const string& filePath);
-	void setupMesh(const vector<glm::vec3>& vertices, const vector<unsigned int>& indices);
+	void ReadObj(const string filePath, VertexBuffer VB);
+	void setupMesh(VertexBuffer VB, const vector<glm::vec3>& vertices, const vector<unsigned int>& indices);
 
 	Importer_obj();
 	~Importer_obj();

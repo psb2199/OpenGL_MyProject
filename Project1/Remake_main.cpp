@@ -12,9 +12,11 @@
 
 #define RenderFriquency 10 //100밀리 초 마다 한번
 Renderer* G_Renderer = NULL;
-Camera* G_Camera = nullptr;
-Controller* G_Controller = nullptr;
 ObjectManager* G_ObjMgr = nullptr;
+Importer_obj* G_Importer = nullptr;
+
+Controller* G_Controller = nullptr;
+Camera* G_Camera = nullptr;
 Object* Player = nullptr;
 
 

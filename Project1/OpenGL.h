@@ -9,6 +9,8 @@
 using namespace std;
 
 enum press { w, a, s, d, KEY_COUNT};
+enum ObjFile { test, MAX_COUNT };
+
 struct vector3 
 { 
 	float x, y, z; 
@@ -17,4 +19,12 @@ struct vector3
 	{
 		cout << " x:" << x << " y:" << y << " z:" << z << endl;
 	}
+};
+
+struct VertexBuffer {
+	std::string filename;
+
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
 };

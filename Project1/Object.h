@@ -2,18 +2,24 @@
 #include <iostream>
 
 #include "OpenGL.h"
+#include "Importer_obj.h"
 
 class Object
 {	
 	int id;
 	std::string ojbect_type;
+	GLuint mesh;
 
 	vector3 location;
 	vector3 rotation;
 
+
 public:
 	Object(int obj_id, std::string type, vector3 loc);
 	~Object();
+
+	GLuint GetMesh() const;
+	void SetMesh(std::string filename);
 
 	void SetLocation(vector3 new_location);
 	vector3 GetLocation() const;

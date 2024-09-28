@@ -4,6 +4,8 @@ Object::Object(int obj_id, std::string type, vector3 loc)
 {
 	id = obj_id;
 	ojbect_type = type;
+	SetMesh("Test.obj");
+
 	location = loc;
 
 	rotation.x = 0;
@@ -13,6 +15,16 @@ Object::Object(int obj_id, std::string type, vector3 loc)
 
 Object::~Object()
 {
+}
+
+GLuint Object::GetMesh() const
+{
+	return mesh;
+}
+
+void Object::SetMesh(std::string filename)
+{
+	mesh;
 }
 
 void Object::SetLocation(vector3 new_location)
