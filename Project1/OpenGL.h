@@ -6,6 +6,7 @@
 #include <gl/freeglut.h>
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 enum press { w, a, s, d, KEY_COUNT};
@@ -21,10 +22,20 @@ struct vector3
 	}
 };
 
-struct VertexBuffer {
+struct VertexData {
 	std::string filename;
 
 	GLuint VAO;
 	GLuint VBO;
+	GLuint texCoordVBO;
+	GLuint normalVBO;
 	GLuint EBO;
+
+	vector<glm::vec3> vertexs;
+	vector<glm::vec2> texCoords;
+	vector<glm::vec3> normals;
+
+	vector<glm::vec3> faceIndices;
+	vector<glm::vec3> texCoordIndices;
+	vector<glm::vec3> normalIndices;
 };

@@ -5,7 +5,7 @@ Object::Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer
 	Importer_mesh = importer;
 	id = obj_id;
 	ojbect_type = type;
-	SetMesh("Test.obj");
+	SetMesh("GravityBox.obj");
 
 	location = loc;
 

@@ -8,6 +8,6 @@ void main()
 {
 	
 
-	//Fragcolor = vec4(OutColor, 1.0);
-	Fragcolor = vec4(1,1,1, 1.0);
+	Fragcolor = vec4(OutColor, 1.0);
+	//Fragcolor = vec4(1,1,1, 1.0);
 }

@@ -111,6 +111,7 @@ int main(int argc, char** argv)
 
     glewInit();
     glEnable(GL_DEPTH_TEST);
+    //glDepthFunc(GL_LESS); // or glDepthFunc(GL_LEQUAL);
     //glDisable(GL_CULL_FACE);
     //glEnable(GL_CULL_FACE);
 

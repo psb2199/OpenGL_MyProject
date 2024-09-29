@@ -16,14 +16,16 @@ class Importer_obj
 	
 	//VertexBuffer VertexBuffers[ObjFile(MAX_COUNT)];
 
-	std::vector<VertexBuffer*> VertexBuffers;
+	std::vector<VertexData*> VertexBuffers;
 
 	void Initialize();
+
+	void DeBugVertexData(VertexData* VD);
 
 public:
 	void ReadObj(const string filePath);
 	GLuint FindMesh(std::string filename);
-	void setupMesh(VertexBuffer* VB, const vector<glm::vec3>& vertices, const vector<unsigned int>& indices);
+	void setupMesh(VertexData* VB);
 
 	Importer_obj();
 	~Importer_obj();
