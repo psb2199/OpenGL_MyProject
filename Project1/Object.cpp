@@ -1,7 +1,8 @@
 #include "Object.h"
 
-Object::Object(int obj_id, std::string type, vector3 loc)
+Object::Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer)
 {
+	Importer_mesh = importer;
 	id = obj_id;
 	ojbect_type = type;
 	SetMesh("Test.obj");
@@ -11,6 +12,7 @@ Object::Object(int obj_id, std::string type, vector3 loc)
 	rotation.x = 0;
 	rotation.y = 0;
 	rotation.z = 0;
+
 }
 
 Object::~Object()
@@ -24,7 +26,7 @@ GLuint Object::GetMesh() const
 
 void Object::SetMesh(std::string filename)
 {
-	mesh;
+	mesh = Importer_mesh->FindMesh(filename);
 }
 
 void Object::SetLocation(vector3 new_location)

@@ -1,7 +1,8 @@
 #include "ObjectManager.h"
 
-ObjectManager::ObjectManager()
+ObjectManager::ObjectManager(Importer_obj* importer)
 {
+    m_importer = importer;
 }
 
 ObjectManager::~ObjectManager()
@@ -10,7 +11,7 @@ ObjectManager::~ObjectManager()
 
 Object* ObjectManager::AddObject(std::string type, vector3 location)
 {
-    Object* newObj = new Object(AllOjectCount, type, location);
+    Object* newObj = new Object(AllOjectCount, type, location, m_importer);
 
 	WorldObjects.push_back(newObj);
     AllOjectCount++;

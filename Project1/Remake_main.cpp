@@ -117,7 +117,8 @@ int main(int argc, char** argv)
     G_Renderer = new Renderer(window_width, window_height);
     G_Camera = new Camera(G_Renderer, 2, 2, 2);
     G_Controller = new Controller;
-    G_ObjMgr = new ObjectManager;
+    G_Importer = new Importer_obj;
+    G_ObjMgr = new ObjectManager(G_Importer);
     
     Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
     G_Controller->MappingController(Player);

@@ -235,7 +235,7 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		glDrawArrays(GL_TRIANGLES, 0, vertex_count);*/
 
 		glBindVertexArray((*itr)->GetMesh());
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // 인덱스 기반 그리기
+		glDrawElements(GL_TRIANGLES, 1000, GL_UNSIGNED_INT, 0); // 인덱스 기반 그리기
 		glBindVertexArray(0);
 	}
 

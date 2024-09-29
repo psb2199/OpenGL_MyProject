@@ -14,13 +14,16 @@ class Importer_obj
 	//GLuint VAO, VBO, EBO;
 
 	
-	VertexBuffer VertexBuffers[ObjFile(MAX_COUNT)];
+	//VertexBuffer VertexBuffers[ObjFile(MAX_COUNT)];
+
+	std::vector<VertexBuffer*> VertexBuffers;
 
 	void Initialize();
 
 public:
-	void ReadObj(const string filePath, VertexBuffer VB);
-	void setupMesh(VertexBuffer VB, const vector<glm::vec3>& vertices, const vector<unsigned int>& indices);
+	void ReadObj(const string filePath);
+	GLuint FindMesh(std::string filename);
+	void setupMesh(VertexBuffer* VB, const vector<glm::vec3>& vertices, const vector<unsigned int>& indices);
 
 	Importer_obj();
 	~Importer_obj();

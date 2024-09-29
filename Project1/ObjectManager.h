@@ -9,9 +9,10 @@ class ObjectManager
 {
 	std::vector<Object*> WorldObjects;
 	int AllOjectCount{ 0 };
+	Importer_obj* m_importer;
 
 public:
-	ObjectManager();
+	ObjectManager(Importer_obj* importer);
 	~ObjectManager();
 
 	Object* AddObject(std::string type, vector3 location);

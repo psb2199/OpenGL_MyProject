@@ -11,10 +11,10 @@ Importer_obj::~Importer_obj()
 
 void Importer_obj::Initialize()
 {
-    ReadObj("Test.obj", VertexBuffers[ObjFile(test)]);
+    ReadObj("Test.obj");
 }
 
-void Importer_obj::ReadObj(const string filePath, VertexBuffer VB) {
+void Importer_obj::ReadObj(const string filePath) {
     ifstream objFile(filePath);
 
     if (!objFile.is_open()) {
@@ -23,7 +23,8 @@ void Importer_obj::ReadObj(const string filePath, VertexBuffer VB) {
     }
     else { cout << "File Load Success:" << filePath << endl; }
 
-    VB.filename = filePath;
+    VertexBuffer* newVertexBuffer = new VertexBuffer;
+    newVertexBuffer->filename = filePath;
 
     vector<glm::vec3> vertices;
     vector<unsigned int> indices;
@@ -54,25 +55,38 @@ void Importer_obj::ReadObj(const string filePath, VertexBuffer VB) {
     }
     vertices = tempVertices;
 
-    setupMesh(VB, vertices, indices);
+    setupMesh(newVertexBuffer, vertices, indices);
+
+    VertexBuffers.push_back(newVertexBuffer);
+}
+
+GLuint Importer_obj::FindMesh(std::string filename)
+{
+    for (std::vector<VertexBuffer*>::iterator itr = VertexBuffers.begin(); itr != VertexBuffers.end(); ++itr)
+    {
+        if ((*itr)->filename == filename) return(*itr)->VAO;
+    }
+
+    std::cout << "Can not find" << filename << "Mesh Asset." << std::endl;
+    return -1;
 }
 
 
 // OpenGL을 사용하여 버텍스 및 인덱스 데이터를 VBO, EBO에 넣기
-void Importer_obj::setupMesh(VertexBuffer VB, const vector<glm::vec3>& vertices, const vector<unsigned int>& indices) {
+void Importer_obj::setupMesh(VertexBuffer* VB, const vector<glm::vec3>& vertices, const vector<unsigned int>& indices) {
     
-    glGenVertexArrays(1, &VB.VAO);
-    glGenBuffers(1, &VB.VBO);
-    glGenBuffers(1, &VB.EBO);
+    glGenVertexArrays(1, &VB->VAO);
+    glGenBuffers(1, &VB->VBO);
+    glGenBuffers(1, &VB->EBO);
 
-    glBindVertexArray(VB.VAO);
+    glBindVertexArray(VB->VAO);
 
     // VBO에 버텍스 데이터 전송
-    glBindBuffer(GL_ARRAY_BUFFER, VB.VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VB->VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
     // EBO에 인덱스 데이터 전송
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VB.EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VB->EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
     // 버텍스 속성 지정 (position)

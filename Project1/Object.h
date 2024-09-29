@@ -13,9 +13,9 @@ class Object
 	vector3 location;
 	vector3 rotation;
 
-
+	Importer_obj* Importer_mesh;
 public:
-	Object(int obj_id, std::string type, vector3 loc);
+	Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer);
 	~Object();
 
 	GLuint GetMesh() const;
