@@ -8,7 +8,6 @@
 #include "OpenGL.h"
 
 
-
 class Importer_obj
 {
 	//GLuint VAO, VBO, EBO;
@@ -24,7 +23,7 @@ class Importer_obj
 
 public:
 	void ReadObj(const string filePath);
-	GLuint FindMesh(std::string filename);
+	VertexData* FindMesh(std::string filename);
 	void setupMesh(VertexData* VB);
 
 	Importer_obj();

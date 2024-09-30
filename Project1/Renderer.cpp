@@ -232,8 +232,9 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
 
 
-		glBindVertexArray((*itr)->GetMesh());
-		glDrawElements(GL_TRIANGLES, 5432*3, GL_UNSIGNED_INT, 0); // 인덱스 기반 그리기
+		glBindVertexArray((*itr)->GetMesh()->VAO);
+		//glDrawElements(GL_TRIANGLES, 5432*3, GL_UNSIGNED_INT, 0); // 인덱스 기반 그리기
+		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
 	}
 

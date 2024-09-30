@@ -25,11 +25,12 @@ struct vector3
 struct VertexData {
 	std::string filename;
 
+	unsigned int polygon_count{ 0 };
+
 	GLuint VAO;
 	GLuint VBO;
 	GLuint texCoordVBO;
 	GLuint normalVBO;
-	GLuint EBO;
 
 	vector<glm::vec3> vertexs;
 	vector<glm::vec2> texCoords;

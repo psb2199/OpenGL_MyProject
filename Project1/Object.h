@@ -8,7 +8,7 @@ class Object
 {	
 	int id;
 	std::string ojbect_type;
-	GLuint mesh;
+	VertexData* mesh;
 
 	vector3 location;
 	vector3 rotation;
@@ -18,7 +18,7 @@ public:
 	Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer);
 	~Object();
 
-	GLuint GetMesh() const;
+	VertexData* GetMesh();
 	void SetMesh(std::string filename);
 
 	void SetLocation(vector3 new_location);

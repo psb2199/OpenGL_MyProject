@@ -5,7 +5,8 @@ Object::Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer
 	Importer_mesh = importer;
 	id = obj_id;
 	ojbect_type = type;
-	SetMesh("Test.obj");
+	SetMesh("Male.obj");
+	//SetMesh("GravityBox.obj");
 
 	location = loc;
 
@@ -19,7 +20,7 @@ Object::~Object()
 {
 }
 
-GLuint Object::GetMesh() const
+VertexData* Object::GetMesh()
 {
 	return mesh;
 }
