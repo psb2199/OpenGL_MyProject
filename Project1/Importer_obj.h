@@ -20,7 +20,7 @@ class Importer_obj
 	void Initialize();
 
 	void DeBugVertexData(VertexData* VD);
-
+	std::string removeSubstring(const std::string& str, const std::string& toRemove);
 public:
 	void ReadObj(const string filePath);
 	VertexData* FindMesh(std::string filename);

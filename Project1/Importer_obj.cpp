@@ -11,9 +11,9 @@ Importer_obj::~Importer_obj()
 
 void Importer_obj::Initialize()
 {
-	ReadObj("Test.obj");
-	ReadObj("GravityBox.obj");
-	//ReadObj("Male.obj");
+	ReadObj("objs/Test.obj");
+	ReadObj("objs/GravityBox.obj");
+	ReadObj("objs/Base.obj");
 }
 
 void Importer_obj::DeBugVertexData(VertexData* VD)
@@ -56,8 +56,10 @@ void Importer_obj::ReadObj(const string filePath) {
 		cout << "File Load Success: " << filePath << endl;
 	}
 
+	
+
 	VertexData* newVertexData = new VertexData;
-	newVertexData->filename = filePath;
+	newVertexData->filename = removeSubstring(filePath, "objs/");
 
 	string line;
 
@@ -184,7 +186,16 @@ void Importer_obj::setupMesh(VertexData* VD) {
 	glBindVertexArray(0);
 }
 
+std::string Importer_obj::removeSubstring(const std::string& str, const std::string& toRemove) {
 
+	std::size_t pos = str.find(toRemove);
+
+	if (pos != std::string::npos) {
+		return str.substr(pos + toRemove.length());
+	}
+
+	return str;
+}
 
 
 

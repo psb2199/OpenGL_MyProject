@@ -103,6 +103,10 @@ GLvoid KeyBoardUP(unsigned char Key, int x, int y)
         }
     }
 }
+void LevelDisign()
+{
+    G_ObjMgr->AddObject("Base", { 0,0,0 });
+}
 
 int main(int argc, char** argv)
 {
@@ -128,6 +132,8 @@ int main(int argc, char** argv)
     
     Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
     G_Controller->MappingController(Player);
+
+    LevelDisign();
 
     glutDisplayFunc(RenderScene);
     glutTimerFunc(RenderFriquency, RenderSceneTimer, 1);
