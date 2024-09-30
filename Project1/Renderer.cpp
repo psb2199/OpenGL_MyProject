@@ -16,7 +16,7 @@ void Renderer::Initialize(int width, int height)
 	window_height = height;
 
 	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
-	CreateVertexBufferObjects();
+
 }
 
 GLuint Renderer::CompileShaders(std::string FileNameVS, std::string FileNameFS)
@@ -130,79 +130,6 @@ bool Renderer::ReadShaderFile(std::string filename, std::string* target)
 	return true;
 }
 
-void Renderer::CreateVertexBufferObjects()
-{
-	float cubesize = 0.5;
-
-	float rect[] =
-	{
-		//¾Õ¸é
-	-cubesize,cubesize,cubesize,	1,0,0,
-	cubesize,-cubesize,cubesize,	0,1,0,
-	-cubesize,-cubesize,cubesize,	0,0,1,
-
-	cubesize,-cubesize,cubesize,1,0,0,
-	-cubesize,cubesize,cubesize,0,1,0,
-	cubesize,cubesize,cubesize,	0,0,1,
-
-	//À­¸é
-	-cubesize,cubesize,-cubesize,1,0,0,
-	cubesize,cubesize,cubesize,	 0,1,0,
-	-cubesize,cubesize,cubesize, 0,0,1,
-
-	cubesize,cubesize,-cubesize,1,0,0,
-	cubesize,cubesize,cubesize,	0,1,0,
-	-cubesize,cubesize,-cubesize, 0,0,1,
-
-	//¾Æ·§¸é
-	cubesize,-cubesize,cubesize,	1,0,0,
-	-cubesize,-cubesize,-cubesize,	0,1,0,
-	-cubesize,-cubesize,cubesize,	0,0,1,
-
-	-cubesize,-cubesize,-cubesize,	1,0,0,
-	cubesize,-cubesize,cubesize,	0,1,0,
-	cubesize,-cubesize,-cubesize,	0,0,1,
-
-	//µÞ¸é
-	cubesize,-cubesize,-cubesize,	1,0,0,
-	-cubesize,cubesize,-cubesize,	0,1,0,
-	-cubesize,-cubesize,-cubesize,	0,0,1,
-
-	-cubesize,cubesize,-cubesize,	1,0,0,
-	cubesize,-cubesize,-cubesize,	0,1,0,
-	cubesize,cubesize,-cubesize,	0,0,1,
-
-	//¿À¸¥¸é
-	cubesize,cubesize,cubesize,		1,0,0,
-	cubesize,-cubesize,-cubesize,	0,1,0,
-	cubesize,-cubesize,cubesize,	0,0,1,
-
-	cubesize,cubesize,cubesize,		1,0,0,
-	cubesize,cubesize,-cubesize,	0,1,0,
-	cubesize,-cubesize,-cubesize,	0,0,1,
-
-	//¿Ü¸é
-	-cubesize,-cubesize,-cubesize,	1,0,0,
-	 -cubesize,cubesize,cubesize,	0,1,0,
-	-cubesize,-cubesize,cubesize,	0,0,1,
-
-	-cubesize,cubesize,-cubesize,	1,0,0,
-	-cubesize,cubesize,cubesize,	0,1,0,
-	-cubesize,-cubesize,-cubesize,	0,0,1
-	};
-
-	float data_float_count = 3 + 3; //(x,y,z,   r,g,b)
-
-	glGenBuffers(1, &Basic_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, Basic_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * data_float_count, 0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * data_float_count, (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-}
 
 GLuint Renderer::GetShader()
 {

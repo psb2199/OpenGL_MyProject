@@ -63,6 +63,11 @@ GLvoid KeyBoardDown(unsigned char Key, int x, int y)
             G_Controller->Key[press(d)] = true;
 			break;
 
+        case 'u':
+        case 'U':
+
+            break;
+
         case 'P':
         case 'p':
 

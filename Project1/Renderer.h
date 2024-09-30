@@ -20,7 +20,6 @@ class Renderer
 	GLuint CompileShaders(std::string FileNameVS, std::string FileNameFS);
 	bool ReadShaderFile(std::string filename, std::string* target);
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
-	void CreateVertexBufferObjects();
 
 public:
 	Renderer(int width, int height);

@@ -13,7 +13,7 @@ void Importer_obj::Initialize()
 {
 	ReadObj("Test.obj");
 	ReadObj("GravityBox.obj");
-	ReadObj("Male.obj");
+	//ReadObj("Male.obj");
 }
 
 void Importer_obj::DeBugVertexData(VertexData* VD)
