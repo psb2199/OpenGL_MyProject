@@ -22,6 +22,7 @@ Object::~Object()
 {
 }
 
+
 VertexData* Object::GetMesh()
 {
 	return mesh;
