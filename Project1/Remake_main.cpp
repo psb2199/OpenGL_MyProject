@@ -61,6 +61,9 @@ int main(int argc, char** argv)
 	Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
 	G_Controller->MappingController(Player);
 
+	glutSetCursor(GLUT_CURSOR_NONE);
+	ShowCursor(FALSE);
+
 	LevelDisign();
 
 	glutDisplayFunc(RenderScene);
@@ -96,7 +99,7 @@ GLvoid RenderSceneTimer(int value)
 	{	
 		glm::vec2 mouse_Delta{ 0 };
 		FixMouseInSrcreen(mouse_Delta);
-		G_Camera->BindWithMouse(mouse_Delta);
+		G_Camera->BindWithMouseRotation(mouse_Delta);
 	}
 
 	glutSwapBuffers();
@@ -136,8 +139,16 @@ GLvoid KeyBoardDown(unsigned char Key, int x, int y)
 
 		case 'P':
 		case 'p':
-			if (DoFixMouse)DoFixMouse = false;
-			else DoFixMouse = true;
+			if (DoFixMouse)
+			{
+				glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+				DoFixMouse = false;
+			}
+			else 
+			{ 
+				glutSetCursor(GLUT_CURSOR_NONE);
+				DoFixMouse = true; 
+			}
 			break;
 
 		case 27:
@@ -177,10 +188,8 @@ GLvoid KeyBoardUP(unsigned char Key, int x, int y)
 
 void Mouse(int button, int state, int x, int y)
 {
-	if (state)
-	{
-		
-	}
+	if (button == 3) G_Camera->BindWithMouseWheel(-1.f);
+	else if (button == 4)G_Camera->BindWithMouseWheel(1.f);
 }
 void Motion(int x, int y)
 {
@@ -198,14 +207,13 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 	deltaPos.y = point.y - mousepos.y;
 
 	get_mouse_delta = deltaPos;
-
 	SetCursorPos(point.x, point.y);
 }
 
 
 void LevelDisign()
 {
-	G_ObjMgr->AddObject("Base", { 0,0,0 });
+	//G_ObjMgr->AddObject("Base", { 0,0,0 });
 }
 
 

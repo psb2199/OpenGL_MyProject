@@ -28,7 +28,8 @@ public:
 
 	void DoWorking(Renderer* renderer);
 
-	void BindWithMouse(glm::vec2 xy);
+	void BindWithMouseRotation(glm::vec2 xy);
+	void BindWithMouseWheel(float value);
 
 	void SetLookLocation(float x, float y, float z);
 	void SetLocation(glm::vec3 xyz);

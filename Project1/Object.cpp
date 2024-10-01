@@ -6,7 +6,7 @@ Object::Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer
 	id = obj_id;
 	ojbect_type = type;
 	//SetMesh("Male.obj");
-	if(type == "Box"){ SetMesh("GravityBox.obj"); }
+	if(type == "Player"){ SetMesh("GravityBox.obj"); }
 	else if (type == "Base") { SetMesh("Base.obj"); }
 	else { SetMesh("Test.obj"); }
 

@@ -47,6 +47,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

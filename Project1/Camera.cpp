@@ -5,7 +5,7 @@
 Camera::Camera(Renderer* renderer, glm::vec3 xyz)
 {
     m_Renderer = renderer;
-
+    rotation = glm::vec3{ 0.f };
 	SetLocation(xyz);
 }
 
@@ -47,12 +47,19 @@ void Camera::DoWorking(Renderer* renderer)
     }
 }
 
-void Camera::BindWithMouse(glm::vec2 xy)
+void Camera::BindWithMouseRotation(glm::vec2 xy)
 {
     rotation.x += rotate_camera_sensitive * xy.x;
     rotation.y -= rotate_camera_sensitive * xy.y;
-    if (RadianToDegree(rotation.y) > 90)  rotation.y = DegreeToRadian(89.f);
-    if (RadianToDegree(rotation.y) < -90)  rotation.y = DegreeToRadian(-89.f);
+    if (RadianToDegree(rotation.y) > 90) rotation.y = DegreeToRadian(89.f);
+    if (RadianToDegree(rotation.y) < -90) rotation.y = DegreeToRadian(-89.f);
+}
+
+void Camera::BindWithMouseWheel(float value)
+{
+    float value_size{ 0.1 };
+    camera_arm_length += value * value_size;
+    if (camera_arm_length < 0.1) camera_arm_length = 0.1;
 }
 
 void Camera::SetLookLocation(float x, float y, float z)

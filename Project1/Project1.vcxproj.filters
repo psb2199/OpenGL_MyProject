@@ -100,5 +100,8 @@
     <ClInclude Include="Renderer.h">
       <Filter>소스 파일\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
