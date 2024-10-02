@@ -24,7 +24,7 @@ class Importer_obj
 	void DeBugVertexData(VertexData* VD);
 	std::string removeSubstring(const std::string& str, const std::string& toRemove);
 public:
-	void LoadTexture(const char* filepath, GLuint samplingMethod);
+	void LoadTexture(const char* filepath);
 	TextureData* FindTexture(std::string filename);
 	void ReadObj(const string filePath);
 	VertexData* FindMesh(std::string filename);

@@ -11,7 +11,7 @@ uniform float lightDistance;
 
 out vec4 Fragcolor;
 
-void main()
+void RenderMaterial()
 {
 	float x = OutTexPos.x;
 	float y = -OutTexPos.y;
@@ -30,7 +30,28 @@ void main()
 	
 	
 	Fragcolor = ColorLight * BaseColor;
-	//Fragcolor = vec3(Highlight);
-	//Fragcolor = vec4(vertex_normal, 1.0);
-	//Fragcolor = vec4(vec3(Highlight), 1.0);
 }
+
+void Preview_BaseColor()
+{
+	float x = OutTexPos.x;
+	float y = -OutTexPos.y;
+	vec2 newTexPos = vec2(x, y);
+	vec4 BaseColor = texture(u_Texture, newTexPos);
+
+	Fragcolor = BaseColor;
+}
+
+void Preview_LightMask()
+{
+}
+
+void Preview_Normal()
+{
+}
+
+void main()
+{
+	Preview_BaseColor();
+}
+

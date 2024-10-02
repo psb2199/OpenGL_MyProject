@@ -16,7 +16,9 @@ void Importer_obj::Initialize()
 	ReadObj("objs/Base.obj");
 	//ReadObj("Male.obj");
 
-	LoadTexture("textures/GravityBox_BaseColor.png", GL_NEAREST);
+	LoadTexture("textures/GravityBox_BaseColor.png");
+	LoadTexture("textures/Grass_BaseColor.png");
+	LoadTexture("textures/Grass_Normal.png");
 }
 
 void Importer_obj::DeBugVertexData(VertexData* VD)
@@ -123,7 +125,7 @@ void Importer_obj::ReadObj(const string filePath) {
 	VertexBuffers.push_back(newVertexData);
 }
 
-void Importer_obj::LoadTexture(const char* filepath, GLuint samplingMethod)
+void Importer_obj::LoadTexture(const char* filepath)
 {
 	TextureData* newtexture = new TextureData;
 	newtexture->filename = removeSubstring(filepath, "textures/");
@@ -145,8 +147,8 @@ void Importer_obj::LoadTexture(const char* filepath, GLuint samplingMethod)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
 		GL_UNSIGNED_BYTE, &image[0]);
 
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, samplingMethod);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, samplingMethod);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	
 	
 

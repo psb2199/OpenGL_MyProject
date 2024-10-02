@@ -11,6 +11,7 @@ Object::Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer
 	else { SetMesh("Test.obj"); }
 
 	SetTexture("GravityBox_BaseColor.png");
+	if(type == "Base") SetTexture("Grass_Normal.png");
 
 	location = loc;
 
