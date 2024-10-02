@@ -40,3 +40,9 @@ struct VertexData {
 	vector<glm::vec3> texCoordIndices;
 	vector<glm::vec3> normalIndices;
 };
+
+struct TextureData {
+
+	std::string filename;
+	GLuint textureID;
+};

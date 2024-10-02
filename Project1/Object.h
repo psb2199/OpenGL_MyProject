@@ -9,6 +9,7 @@ class Object
 	int id;
 	std::string ojbect_type;
 	VertexData* mesh;
+	TextureData* texture;
 
 	vector3 location;
 	vector3 rotation;
@@ -20,6 +21,8 @@ public:
 
 	VertexData* GetMesh();
 	void SetMesh(std::string filename);
+	TextureData* GetTexture();
+	void SetTexture(std::string filename);
 
 	void SetLocation(vector3 new_location);
 	vector3 GetLocation() const;

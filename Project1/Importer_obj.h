@@ -17,7 +17,7 @@ class Importer_obj
 	//VertexBuffer VertexBuffers[ObjFile(MAX_COUNT)];
 
 	std::vector<VertexData*> VertexBuffers;
-	std::vector<GLuint*> Textures;
+	std::vector<TextureData*> Textures;
 
 	void Initialize();
 
@@ -25,6 +25,7 @@ class Importer_obj
 	std::string removeSubstring(const std::string& str, const std::string& toRemove);
 public:
 	void LoadTexture(const char* filepath, GLuint samplingMethod);
+	TextureData* FindTexture(std::string filename);
 	void ReadObj(const string filePath);
 	VertexData* FindMesh(std::string filename);
 	void setupMesh(VertexData* VB);

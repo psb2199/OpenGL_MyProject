@@ -125,10 +125,8 @@ void Importer_obj::ReadObj(const string filePath) {
 
 void Importer_obj::LoadTexture(const char* filepath, GLuint samplingMethod)
 {
-	
-
-	GLuint* textureID = new GLuint;
-
+	TextureData* newtexture = new TextureData;
+	newtexture->filename = removeSubstring(filepath, "textures/");
 	//Load Png
 
 	std::vector<unsigned char> image;
@@ -142,8 +140,8 @@ void Importer_obj::LoadTexture(const char* filepath, GLuint samplingMethod)
 		cout << "PNG image loading failed:" << filepath << endl;
 	}
 
-	glGenTextures(1, textureID);
-	glBindTexture(GL_TEXTURE_2D, *textureID);
+	glGenTextures(1, &newtexture->textureID);
+	glBindTexture(GL_TEXTURE_2D, newtexture->textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
 		GL_UNSIGNED_BYTE, &image[0]);
 
@@ -152,8 +150,19 @@ void Importer_obj::LoadTexture(const char* filepath, GLuint samplingMethod)
 	
 	
 
-	Textures.push_back(textureID);
+	Textures.push_back(newtexture);
 	cout << "PNG image loading Success:" << filepath << endl;
+}
+
+TextureData* Importer_obj::FindTexture(std::string filename)
+{
+	for (std::vector<TextureData*>::iterator itr = Textures.begin(); itr != Textures.end(); ++itr)
+	{
+		if ((*itr)->filename == filename) return (*itr);
+	}
+
+	std::cout << "Can not find" << filename << "texture Asset." << std::endl;
+	return nullptr;
 }
 
 
