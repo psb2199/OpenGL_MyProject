@@ -151,9 +151,13 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		unsigned int lightPosLocation = glGetUniformLocation(Basic_Shader, "lightPos");
 		glm::vec3 light_location = m_light->GetLocation();
 		glUniform3f(lightPosLocation, light_location.x, light_location.y, light_location.z);
+
 		unsigned int lightColorLocation = glGetUniformLocation(Basic_Shader, "lightColor");
 		glm::vec3 light_color = m_light->GetLightColor();
 		glUniform3f(lightColorLocation, light_color.r, light_color.g, light_color.b);
+
+		unsigned int lightDistanceLocation = glGetUniformLocation(Basic_Shader, "lightDistance");
+		glUniform1f(lightDistanceLocation, m_light->GetLightDistance());
 		//========================================================================
 
 		vector3 location = (*itr)->GetLocation();

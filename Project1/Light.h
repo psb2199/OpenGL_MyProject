@@ -15,6 +15,7 @@ class Light
 public:
 	glm::vec3 GetLocation() const;
 	glm::vec3 GetLightColor() const;
+	float GetLightDistance() const;
 
 	Light(glm::vec3 xyz);
 	~Light();
