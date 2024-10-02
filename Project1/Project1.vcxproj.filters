@@ -77,6 +77,9 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>소스 파일\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="LoadPng.cpp">
+      <Filter>소스 파일\Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
@@ -100,8 +103,8 @@
     <ClInclude Include="Renderer.h">
       <Filter>소스 파일\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="LoadPng.h">
+      <Filter>소스 파일\Importer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

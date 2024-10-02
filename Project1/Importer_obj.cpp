@@ -14,6 +14,9 @@ void Importer_obj::Initialize()
 	ReadObj("objs/Test.obj");
 	ReadObj("objs/GravityBox.obj");
 	ReadObj("objs/Base.obj");
+	//ReadObj("Male.obj");
+
+	LoadTexture("textures/GravityBox_BaseColor.png", GL_NEAREST);
 }
 
 void Importer_obj::DeBugVertexData(VertexData* VD)
@@ -118,6 +121,39 @@ void Importer_obj::ReadObj(const string filePath) {
 
 	// VertexBuffer 리스트에 추가
 	VertexBuffers.push_back(newVertexData);
+}
+
+void Importer_obj::LoadTexture(const char* filepath, GLuint samplingMethod)
+{
+	
+
+	GLuint* textureID = new GLuint;
+
+	//Load Png
+
+	std::vector<unsigned char> image;
+
+	unsigned width, height;
+
+	unsigned error = lodepng::decode(image, width, height, filepath);
+
+	if (error != 0)
+	{
+		cout << "PNG image loading failed:" << filepath << endl;
+	}
+
+	glGenTextures(1, textureID);
+	glBindTexture(GL_TEXTURE_2D, *textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+		GL_UNSIGNED_BYTE, &image[0]);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, samplingMethod);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, samplingMethod);
+	
+	
+
+	Textures.push_back(textureID);
+	cout << "PNG image loading Success:" << filepath << endl;
 }
 
 

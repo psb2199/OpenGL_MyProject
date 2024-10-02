@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "OpenGL.h"
+#include "LoadPng.h"
 
 
 class Importer_obj
@@ -16,12 +17,14 @@ class Importer_obj
 	//VertexBuffer VertexBuffers[ObjFile(MAX_COUNT)];
 
 	std::vector<VertexData*> VertexBuffers;
+	std::vector<GLuint*> Textures;
 
 	void Initialize();
 
 	void DeBugVertexData(VertexData* VD);
 	std::string removeSubstring(const std::string& str, const std::string& toRemove);
 public:
+	void LoadTexture(const char* filepath, GLuint samplingMethod);
 	void ReadObj(const string filePath);
 	VertexData* FindMesh(std::string filename);
 	void setupMesh(VertexData* VB);

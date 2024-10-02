@@ -14,8 +14,8 @@ void main()
 {
 	gl_Position = projection * view * transform * vec4(vPos, 1.0); 
 
-	//OutColor = vec3(vColor,0);
-	OutColor = vNormal;
+	OutColor = vec3(vColor,0);
+	//OutColor = vNormal;
 }
 
 
