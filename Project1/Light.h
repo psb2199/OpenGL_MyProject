@@ -9,6 +9,7 @@ class Light
 	glm::vec3 location;
 	glm::vec3 rotation;
 	glm::vec3 color;
+	float distance;
 
 
 public:

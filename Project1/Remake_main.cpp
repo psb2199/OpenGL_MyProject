@@ -17,7 +17,10 @@
 #define WINDOW_WIDTH 700
 #define WINDOW_HEIGHT 700
 
+
 Renderer* G_Renderer = NULL;
+Light* G_Light = nullptr;
+
 ObjectManager* G_ObjMgr = nullptr;
 Importer_obj* G_Importer = nullptr;
 
@@ -213,9 +216,9 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 
 void LevelDisign()
 {
-	//G_ObjMgr->AddObject("Base", { 0,0,0 });
-	Light* newLight = new Light({ 0, 0, 3 });
-	G_Renderer->SetLight(newLight);
+	G_ObjMgr->AddObject("Base", { 0,0,0 });
+	G_Light = new Light({ 0, 3, 0 });
+	G_Renderer->SetLight(G_Light);
 }
 
 
