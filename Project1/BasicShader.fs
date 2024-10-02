@@ -3,6 +3,8 @@
 in vec2 OutTexPos;
 
 uniform sampler2D u_Texture;
+uniform vec3 lightPos;
+uniform vec3 lightColor;
 
 out vec4 Fragcolor;
 

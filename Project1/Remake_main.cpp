@@ -12,8 +12,8 @@
 #include "ObjectManager.h"
 #include "Importer_obj.h"
 
-#define RenderFriquency 10
-//100밀리 초 마다 한번
+
+#define RenderFriquency 10 //100밀리 초 마다 한번
 #define WINDOW_WIDTH 700
 #define WINDOW_HEIGHT 700
 
@@ -214,6 +214,8 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 void LevelDisign()
 {
 	//G_ObjMgr->AddObject("Base", { 0,0,0 });
+	Light* newLight = new Light({ 0, 0, 3 });
+	G_Renderer->SetLight(newLight);
 }
 
 

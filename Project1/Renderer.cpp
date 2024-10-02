@@ -10,6 +10,11 @@ Renderer::~Renderer()
 {
 }
 
+void Renderer::SetLight(Light* lights)
+{
+	m_light = lights;
+}
+
 void Renderer::Initialize(int width, int height)
 {
 	window_width = width;
@@ -142,6 +147,15 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	
 	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr) 
 	{
+		// light =================================================================
+		unsigned int lightPosLocation = glGetUniformLocation(Basic_Shader, "lightPos");
+		glm::vec3 light_location = m_light->GetLocation();
+		glUniform3f(lightPosLocation, light_location.x, light_location.y, light_location.z);
+		unsigned int lightColorLocation = glGetUniformLocation(Basic_Shader, "lightColor");
+		glm::vec3 light_color = m_light->GetLightColor();
+		glUniform3f(lightColorLocation, light_color.r, light_color.g, light_color.b);
+		//========================================================================
+
 		vector3 location = (*itr)->GetLocation();
 		vector3 rotation = (*itr)->GetRotation();
 		

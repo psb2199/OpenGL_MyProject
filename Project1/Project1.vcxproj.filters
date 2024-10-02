@@ -37,6 +37,9 @@
     <Filter Include="소스 파일\Renderer">
       <UniqueIdentifier>{16bd4529-eb73-4331-a202-29ed34747f51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Light">
+      <UniqueIdentifier>{6bcc0750-34f1-4046-8232-db8d410837c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShader.vs">
@@ -80,6 +83,9 @@
     <ClCompile Include="LoadPng.cpp">
       <Filter>소스 파일\Importer</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>소스 파일\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
@@ -105,6 +111,9 @@
     </ClInclude>
     <ClInclude Include="LoadPng.h">
       <Filter>소스 파일\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>소스 파일\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

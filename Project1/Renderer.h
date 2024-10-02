@@ -6,11 +6,15 @@
 #include "OpenGL.h"
 #include "ObjectManager.h"
 
+#include "Light.h"
+
 
 class Renderer
 {	
 	int window_width;
 	int window_height;
+
+	Light* m_light;
 
 	GLuint Basic_Shader;
 	GLuint Basic_VBO;
@@ -24,6 +28,8 @@ class Renderer
 public:
 	Renderer(int width, int height);
 	~Renderer();
+
+	void SetLight(Light* lights);
 
 	GLuint GetShader();
 	void DrawScene(std::vector<Object*>Objects);
