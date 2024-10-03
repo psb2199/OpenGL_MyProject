@@ -21,21 +21,24 @@ void Importer_obj::Initialize()
 	(
 		"M_GravityBox",
 		LoadTexture("textures/GravityBox_BaseColor.png"),
-		LoadTexture("textures/GravityBox_Normal.png")
+		LoadTexture("textures/GravityBox_Normal.png"),
+		LoadTexture("textures/GravityBox_Emissive.png")
 	);
 
 	MakeMaterial
 	(
 		"M_Grass",
 		LoadTexture("textures/Grass_BaseColor.png"),
-		LoadTexture("textures/Grass_Normal.png")
+		LoadTexture("textures/Grass_Normal.png"),
+		NULL
 	);
 
 	MakeMaterial
 	(
 		"M_Male",
 		LoadTexture("textures/Male_BaseColor.png"),
-		LoadTexture("textures/Male_Normal.png")
+		LoadTexture("textures/Male_Normal.png"),
+		LoadTexture("textures/Male_Emissive.png")
 	);
 }
 
@@ -79,12 +82,13 @@ Material* Importer_obj::GetMaterial(std::string filename)
 	std::cout << "Can not find" << filename << "Material Asset." << std::endl;
 	return nullptr;
 }
-void Importer_obj::MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap)
+void Importer_obj::MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive)
 {
 	Material* newMaterial = new Material;
 	newMaterial->material_name = MaterialName;
 	newMaterial->BaseColorID = BaseColor;
 	newMaterial->NormalMapID = NormalMap;
+	newMaterial->EmissiveID = Emissive;
 
 	Materials.push_back(newMaterial);
 }

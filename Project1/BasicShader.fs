@@ -8,6 +8,7 @@ in vec3 vertex_BitTangent;
 
 uniform sampler2D u_BaseColor;
 uniform sampler2D u_NormalMap;
+uniform sampler2D u_Emissive;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
@@ -26,6 +27,12 @@ vec3 GetBaseColor_texture(vec2 texCoords)
 {
     return texture(u_BaseColor, texCoords).rgb;
 }
+
+vec3 GetEmissive_texture(vec2 texCoords)
+{
+    return texture(u_Emissive, texCoords).rgb;
+}
+
 
 float GetLightMask(vec3 worldNormal, vec3 lightDir, vec3 fragPosition, vec3 lightPos, float lightDistance)
 {
@@ -49,13 +56,14 @@ void RenderMaterial()
     vec3 worldNormal = GetWorldNormalMap_texture(newTexPos, TBN);
 
     // 광원의 방향 계산
-    vec3 lightDir = normalize(lightPos - WorldPosition);
+    //vec3 lightDir = normalize(lightPos - 0); //direction light
+    vec3 lightDir = normalize(lightPos - WorldPosition); //point light
 
     // 조명 마스크 계산
     float lightMask = GetLightMask(worldNormal, lightDir, WorldPosition, lightPos, lightDistance);
 
     // 최종 색상 계산
-    Fragcolor = vec4(lightMask * GetBaseColor_texture(newTexPos), 1.0);
+    Fragcolor = vec4(lightMask * GetBaseColor_texture(newTexPos) + GetEmissive_texture(newTexPos), 1.0);
 }
 
 void main()

@@ -195,6 +195,11 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->NormalMapID);
 
+		GLuint ul_Emissive = glGetUniformLocation(Basic_Shader, "u_Emissive");
+		glUniform1i(ul_Emissive, 2);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);
+
 		glBindVertexArray((*itr)->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);

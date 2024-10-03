@@ -53,4 +53,5 @@ struct Material {
 
 	GLuint BaseColorID;
 	GLuint NormalMapID;
+	GLuint EmissiveID;
 };
