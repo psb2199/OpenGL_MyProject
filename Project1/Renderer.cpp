@@ -178,12 +178,12 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 
 		GLuint ul_BaseColor = glGetUniformLocation(Basic_Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0 + 0);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->BaseColorID);
 
 		GLuint ul_NormalMap = glGetUniformLocation(Basic_Shader, "u_NormalMap");
 		glUniform1i(ul_NormalMap, 1);
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->NormalMapID);
 
 		glBindVertexArray((*itr)->GetMesh()->VAO);

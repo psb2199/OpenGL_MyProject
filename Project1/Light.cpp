@@ -7,7 +7,7 @@ Light::Light(glm::vec3 xyz)
 	location = xyz;
 	rotation = glm::vec3{ 0 };
 	color = glm::vec3{ 1.f, 1.f, 1.f };
-	distance = 100.f;
+	distance = 200.f;
 }
 
 Light::~Light()

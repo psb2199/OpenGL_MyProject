@@ -217,8 +217,9 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 void LevelDisign()
 {
 	G_ObjMgr->AddObject("Base", { 0,0,0 });
-	G_Light = new Light({ 0, 1, 0 });
+	G_Light = new Light({ 0, 1, 2 });
 	G_Renderer->SetLight(G_Light);
+	G_Camera->SetLookLocation(0, 1, 0);
 }
 
 

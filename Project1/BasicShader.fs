@@ -22,7 +22,7 @@ void RenderMaterial()
 
 	vec4 NormalMap = texture(u_NormalMap, newTexPos) * 2 - 1;
 
-	NormalMap = vec4(vertex_normal, 1) * vec4(NormalMap.g, NormalMap.b, NormalMap.r, 1);
+	NormalMap = vec4(vertex_normal, 1) * vec4(-NormalMap.g, NormalMap.b, NormalMap.r, 1);
 
 	vec3 lightDir = normalize(lightPos - WorldPosition); //Point Light
 	//vec3 lightDir = normalize(lightPos - 0); //Direction Light
@@ -35,8 +35,8 @@ void RenderMaterial()
 	vec4 ColorLight = vec4(lightColor * vec3(lightMask + Highlight), 1.0);
 	
 	
-	//Fragcolor = ColorLight;
-	Fragcolor = ColorLight * BaseColor;
+	Fragcolor = ColorLight;
+	//Fragcolor = ColorLight * BaseColor;
 }
 
 void Preview_BaseColor()
@@ -49,17 +49,25 @@ void Preview_BaseColor()
 	Fragcolor = BaseColor;
 }
 
-void Preview_LightMask()
-{
-}
-
 void Preview_Normal()
 {
+	float x = OutTexPos.x;
+	float y = -OutTexPos.y;
+	vec2 newTexPos = vec2(x, y);
+	vec4 BaseColor = texture(u_NormalMap, newTexPos)* 2 - 1;
+
+	mat3 TBN = mat3(normalize(vertex_tangent), 
+                    normalize(vertex_bitangent), 
+                    normalize(vertex_normal));
+
+    vec3 worldNormal = normalize(TBN * tangentNormal);
+
+	Fragcolor = BaseColor;
 }
 
 void main()
 {
-	RenderMaterial();
-
+	//RenderMaterial();
+	Preview_Normal();
 }
 

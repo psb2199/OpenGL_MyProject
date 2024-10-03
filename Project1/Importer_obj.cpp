@@ -14,7 +14,7 @@ void Importer_obj::Initialize()
 	ReadObj("objs/Test.obj");
 	ReadObj("objs/GravityBox.obj");
 	ReadObj("objs/Base.obj");
-	//ReadObj("Male.obj");
+	ReadObj("Male.obj");
 
 	MakeMaterial
 	(
@@ -28,6 +28,13 @@ void Importer_obj::Initialize()
 		"M_Grass",
 		LoadTexture("textures/Grass_BaseColor.png"),
 		LoadTexture("textures/Grass_Normal.png")
+	);
+
+	MakeMaterial
+	(
+		"M_Male",
+		LoadTexture("textures/Male_BaseColor.png"),
+		LoadTexture("textures/Male_Normal.png")
 	);
 }
 

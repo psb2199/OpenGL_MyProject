@@ -17,9 +17,9 @@ Camera::~Camera()
 void Camera::DoWorking(Renderer* renderer)
 {
     //카메라세팅 =============================================================
-    location.y = sin(rotation.y) * camera_arm_length;
-    location.x = cos(rotation.x) * camera_arm_length * cos(rotation.y);
-    location.z = sin(rotation.x) * camera_arm_length * cos(rotation.y);
+    location.y = sin(rotation.y) * camera_arm_length + look_location.y;
+    location.x = cos(rotation.x) * camera_arm_length * cos(rotation.y) + look_location.x;
+    location.z = sin(rotation.x) * camera_arm_length * cos(rotation.y) + look_location.z;
 
 
     glm::vec3 cameraPos = location; //--- 카메라 위치
