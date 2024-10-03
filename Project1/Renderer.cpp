@@ -176,10 +176,15 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		unsigned int ObjectTransform = glGetUniformLocation(Basic_Shader, "transform");
 		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
 
-		GLuint ul_Texture = glGetUniformLocation(Basic_Shader, "u_Texture");
-		glUniform1i(ul_Texture, 0);
+		GLuint ul_BaseColor = glGetUniformLocation(Basic_Shader, "u_BaseColor");
+		glUniform1i(ul_BaseColor, 0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, (*itr)->GetTexture()->textureID);
+		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->BaseColorID);
+
+		GLuint ul_NormalMap = glGetUniformLocation(Basic_Shader, "u_NormalMap");
+		glUniform1i(ul_NormalMap, 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->NormalMapID);
 
 		glBindVertexArray((*itr)->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);

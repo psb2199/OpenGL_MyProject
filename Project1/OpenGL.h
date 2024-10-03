@@ -10,7 +10,6 @@
 using namespace std;
 
 enum press { w, a, s, d, KEY_COUNT};
-enum ObjFile { test, MAX_COUNT };
 
 struct vector3 
 { 
@@ -45,4 +44,11 @@ struct TextureData {
 
 	std::string filename;
 	GLuint textureID;
+};
+
+struct Material {
+	std::string material_name;
+
+	GLuint BaseColorID;
+	GLuint NormalMapID;
 };

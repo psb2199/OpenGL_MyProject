@@ -16,38 +16,69 @@ void Importer_obj::Initialize()
 	ReadObj("objs/Base.obj");
 	//ReadObj("Male.obj");
 
-	LoadTexture("textures/GravityBox_BaseColor.png");
-	LoadTexture("textures/Grass_BaseColor.png");
-	LoadTexture("textures/Grass_Normal.png");
+	MakeMaterial
+	(
+		"M_GravityBox",
+		LoadTexture("textures/GravityBox_BaseColor.png"),
+		LoadTexture("textures/GravityBox_Normal.png")
+	);
+
+	MakeMaterial
+	(
+		"M_Grass",
+		LoadTexture("textures/Grass_BaseColor.png"),
+		LoadTexture("textures/Grass_Normal.png")
+	);
 }
 
-void Importer_obj::DeBugVertexData(VertexData* VD)
+
+
+GLuint Importer_obj::LoadTexture(const char* filepath)
 {
-	int count{ 0 };
-	for (auto& v : VD->vertexs) {
-		//std::cout << v.x << " " << v.y << " " << v.z << std::endl;
+	//Load Png
+	GLuint texture;
+
+	std::vector<unsigned char> image;
+
+	unsigned width, height;
+
+	unsigned error = lodepng::decode(image, width, height, filepath);
+
+	if (error != 0)
+	{
+		cout << "PNG image loading failed:" << filepath << endl;
+	}
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+		GL_UNSIGNED_BYTE, &image[0]);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
+	cout << "PNG image loading Success:" << filepath << endl;
+
+	return texture;
+}
+Material* Importer_obj::GetMaterial(std::string filename)
+{
+	for (auto& v : Materials) {
 		
-		
+		if (v->material_name == filename) return v;
 	}
 
-	std::cout << std::endl;
+	std::cout << "Can not find" << filename << "Material Asset." << std::endl;
+	return nullptr;
+}
+void Importer_obj::MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap)
+{
+	Material* newMaterial = new Material;
+	newMaterial->material_name = MaterialName;
+	newMaterial->BaseColorID = BaseColor;
+	newMaterial->NormalMapID = NormalMap;
 
-	for (auto& v : VD->normals) {
-		//std::cout << v.x << " " << v.y << " " << v.z << std::endl;
-		count++;
-		
-	}
-	std::cout << std::endl;
-
-	for (auto& v : VD->texCoords) {
-		//std::cout << v.x << " " << v.y << std::endl;
-	}
-
-	for (auto& v : VD->normalIndices) {
-		std::cout << v.x << " " << v.y << " " << v.z << std::endl;
-	}
-
-	std::cout << count << endl;
+	Materials.push_back(newMaterial);
 }
 
 void Importer_obj::ReadObj(const string filePath) {
@@ -124,62 +155,6 @@ void Importer_obj::ReadObj(const string filePath) {
 	// VertexBuffer 리스트에 추가
 	VertexBuffers.push_back(newVertexData);
 }
-
-void Importer_obj::LoadTexture(const char* filepath)
-{
-	TextureData* newtexture = new TextureData;
-	newtexture->filename = removeSubstring(filepath, "textures/");
-	//Load Png
-
-	std::vector<unsigned char> image;
-
-	unsigned width, height;
-
-	unsigned error = lodepng::decode(image, width, height, filepath);
-
-	if (error != 0)
-	{
-		cout << "PNG image loading failed:" << filepath << endl;
-	}
-
-	glGenTextures(1, &newtexture->textureID);
-	glBindTexture(GL_TEXTURE_2D, newtexture->textureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-		GL_UNSIGNED_BYTE, &image[0]);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	
-	
-
-	Textures.push_back(newtexture);
-	cout << "PNG image loading Success:" << filepath << endl;
-}
-
-TextureData* Importer_obj::FindTexture(std::string filename)
-{
-	for (std::vector<TextureData*>::iterator itr = Textures.begin(); itr != Textures.end(); ++itr)
-	{
-		if ((*itr)->filename == filename) return (*itr);
-	}
-
-	std::cout << "Can not find" << filename << "texture Asset." << std::endl;
-	return nullptr;
-}
-
-
-VertexData* Importer_obj::FindMesh(std::string filename)
-{
-	for (std::vector<VertexData*>::iterator itr = VertexBuffers.begin(); itr != VertexBuffers.end(); ++itr)
-	{
-		if ((*itr)->filename == filename) return (*itr);
-	}
-
-	std::cout << "Can not find" << filename << "Mesh Asset." << std::endl;
-	return nullptr;
-}
-
-
 void Importer_obj::setupMesh(VertexData* VD) {
 	// VAO, VBO, EBO 생성
 	glGenVertexArrays(1, &VD->VAO);
@@ -231,6 +206,45 @@ void Importer_obj::setupMesh(VertexData* VD) {
 	
 	// VAO 해제
 	glBindVertexArray(0);
+}
+VertexData* Importer_obj::FindMesh(std::string filename)
+{
+	for (std::vector<VertexData*>::iterator itr = VertexBuffers.begin(); itr != VertexBuffers.end(); ++itr)
+	{
+		if ((*itr)->filename == filename) return (*itr);
+	}
+
+	std::cout << "Can not find" << filename << "Mesh Asset." << std::endl;
+	return nullptr;
+}
+
+void Importer_obj::DeBugVertexData(VertexData* VD)
+{
+	int count{ 0 };
+	for (auto& v : VD->vertexs) {
+		//std::cout << v.x << " " << v.y << " " << v.z << std::endl;
+		
+		
+	}
+
+	std::cout << std::endl;
+
+	for (auto& v : VD->normals) {
+		//std::cout << v.x << " " << v.y << " " << v.z << std::endl;
+		count++;
+		
+	}
+	std::cout << std::endl;
+
+	for (auto& v : VD->texCoords) {
+		//std::cout << v.x << " " << v.y << std::endl;
+	}
+
+	for (auto& v : VD->normalIndices) {
+		std::cout << v.x << " " << v.y << " " << v.z << std::endl;
+	}
+
+	std::cout << count << endl;
 }
 
 std::string Importer_obj::removeSubstring(const std::string& str, const std::string& toRemove) {

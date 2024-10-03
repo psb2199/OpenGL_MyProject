@@ -10,8 +10,8 @@ Object::Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer
 	else if (type == "Base") { SetMesh("Base.obj"); }
 	else { SetMesh("Test.obj"); }
 
-	SetTexture("GravityBox_BaseColor.png");
-	if(type == "Base") SetTexture("Grass_Normal.png");
+	SetMaterial("M_GravityBox");
+	if(type == "Base") SetMaterial("M_Grass");
 
 	location = loc;
 
@@ -36,14 +36,14 @@ void Object::SetMesh(std::string filename)
 	mesh = Importer_mesh->FindMesh(filename);
 }
 
-TextureData* Object::GetTexture()
+Material* Object::GetMaterial()
 {
-	return texture;
+	return m_material;
 }
 
-void Object::SetTexture(std::string filename)
+void Object::SetMaterial(std::string filename)
 {
-	texture = Importer_mesh->FindTexture(filename);
+	m_material = Importer_mesh->GetMaterial(filename);
 }
 
 
