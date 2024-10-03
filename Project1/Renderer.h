@@ -13,6 +13,7 @@ class Renderer
 {	
 	int window_width;
 	int window_height;
+	float aspect;
 
 	Light* m_light;
 
@@ -31,6 +32,7 @@ public:
 
 	void SetLight(Light* lights);
 
+	float GetAspect();
 	GLuint GetShader();
 	void DrawScene(std::vector<Object*>Objects);
 };

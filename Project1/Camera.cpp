@@ -40,7 +40,7 @@ void Camera::DoWorking(Renderer* renderer)
     }
     else {
         glm::mat4 projection = glm::mat4(1.0f);
-        projection = glm::perspective(glm::radians(field_of_view), 1.0f, 0.01f, 100.0f);
+        projection = glm::perspective(glm::radians(field_of_view), renderer->GetAspect(), 0.01f, 100.0f);
         projection = glm::translate(projection, glm::vec3(0.0, 0.0, 0.0)); //--- 공간을 약간 뒤로 미뤄줌
         unsigned int projectionLocation = glGetUniformLocation(renderer->GetShader(), "projection"); //--- 투영 변환 값 설정
         glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);

@@ -16,7 +16,7 @@ class Camera
 	float camera_arm_length{ 3.f };
 
 	float rotate_camera_sensitive{ 0.001 };
-	float field_of_view{ 90 };
+	float field_of_view{ 45 };
 	bool isOrthoGraphic{ false };
 
 	float RadianToDegree(float value);

@@ -55,6 +55,7 @@ int main(int argc, char** argv)
 	//glDisable(GL_CULL_FACE);
 	glEnable(GL_CULL_FACE);
 
+
 	G_Renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 	G_Camera = new Camera(G_Renderer, glm::vec3(0.f));
 	G_Controller = new Controller;

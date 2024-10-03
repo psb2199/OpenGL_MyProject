@@ -136,6 +136,11 @@ bool Renderer::ReadShaderFile(std::string filename, std::string* target)
 }
 
 
+float Renderer::GetAspect()
+{
+	return aspect;
+}
+
 GLuint Renderer::GetShader()
 {
 	return Basic_Shader;
@@ -143,6 +148,10 @@ GLuint Renderer::GetShader()
 
 void Renderer::DrawScene(std::vector<Object*>Objects)
 {
+	window_width = glutGet(GLUT_WINDOW_WIDTH);
+	window_height = glutGet(GLUT_WINDOW_HEIGHT);
+	aspect = (float)window_width / (float)window_height;
+
 	glUseProgram(Basic_Shader);
 	
 	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr) 
