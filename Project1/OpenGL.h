@@ -30,6 +30,8 @@ struct VertexData {
 	GLuint VBO;
 	GLuint texCoordVBO;
 	GLuint normalVBO;
+	GLuint tangentVBO;
+	GLuint bitangentVBO;
 
 	vector<glm::vec3> vertexs;
 	vector<glm::vec2> texCoords;

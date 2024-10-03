@@ -3,6 +3,8 @@
 in vec2 OutTexPos;
 in vec3 WorldPosition;
 in vec3 vertex_normal;
+in vec3 vertex_Tangent;
+in vec3 vertex_BitTangent;
 
 uniform sampler2D u_BaseColor;
 uniform sampler2D u_NormalMap;
@@ -13,61 +15,50 @@ uniform float lightDistance;
 
 out vec4 Fragcolor;
 
+vec3 GetWorldNormalMap_texture(vec2 texCoords, mat3 TBN)
+{
+    vec3 tangentNormal = texture(u_NormalMap, texCoords).rgb;
+    tangentNormal = tangentNormal * 2.0 - 1.0;
+    return normalize(TBN * tangentNormal);
+}
+
+vec3 GetBaseColor_texture(vec2 texCoords)
+{
+    return texture(u_BaseColor, texCoords).rgb;
+}
+
+float GetLightMask(vec3 worldNormal, vec3 lightDir, vec3 fragPosition, vec3 lightPos, float lightDistance)
+{
+    float lightMask = max(dot(worldNormal, lightDir), 0) 
+                    * max((1 - distance(fragPosition, lightPos) / lightDistance), 0);
+
+    float Highlight = pow(lightMask, 64);
+
+    return lightMask + Highlight;
+}
+
 void RenderMaterial()
 {
-	float x = OutTexPos.x;
-	float y = -OutTexPos.y;
-	vec2 newTexPos = vec2(x, y);
-	vec4 BaseColor = texture(u_BaseColor, newTexPos);
+    vec2 newTexPos = vec2(OutTexPos.x, -OutTexPos.y); // 텍스처 좌표 변환
 
-	vec4 NormalMap = texture(u_NormalMap, newTexPos) * 2 - 1;
-
-	NormalMap = vec4(vertex_normal, 1) * vec4(-NormalMap.g, NormalMap.b, NormalMap.r, 1);
-
-	vec3 lightDir = normalize(lightPos - WorldPosition); //Point Light
-	//vec3 lightDir = normalize(lightPos - 0); //Direction Light
-
-	float lightMask = max(dot(vec3(NormalMap), lightDir), 0) 
-					* max((1 - distance(WorldPosition, lightPos) / lightDistance), 0);
-
-	float Highlight = pow(lightMask, 64);
-
-	vec4 ColorLight = vec4(lightColor * vec3(lightMask + Highlight), 1.0);
-	
-	
-	Fragcolor = ColorLight;
-	//Fragcolor = ColorLight * BaseColor;
-}
-
-void Preview_BaseColor()
-{
-	float x = OutTexPos.x;
-	float y = -OutTexPos.y;
-	vec2 newTexPos = vec2(x, y);
-	vec4 BaseColor = texture(u_BaseColor, newTexPos);
-
-	Fragcolor = BaseColor;
-}
-
-void Preview_Normal()
-{
-	float x = OutTexPos.x;
-	float y = -OutTexPos.y;
-	vec2 newTexPos = vec2(x, y);
-	vec4 BaseColor = texture(u_NormalMap, newTexPos)* 2 - 1;
-
-	mat3 TBN = mat3(normalize(vertex_tangent), 
-                    normalize(vertex_bitangent), 
+    // TBN 매트릭스 계산
+    mat3 TBN = mat3(normalize(vertex_Tangent), 
+                    normalize(vertex_BitTangent), 
                     normalize(vertex_normal));
 
-    vec3 worldNormal = normalize(TBN * tangentNormal);
+    vec3 worldNormal = GetWorldNormalMap_texture(newTexPos, TBN);
 
-	Fragcolor = BaseColor;
+    // 광원의 방향 계산
+    vec3 lightDir = normalize(lightPos - WorldPosition);
+
+    // 조명 마스크 계산
+    float lightMask = GetLightMask(worldNormal, lightDir, WorldPosition, lightPos, lightDistance);
+
+    // 최종 색상 계산
+    Fragcolor = vec4(lightMask * GetBaseColor_texture(newTexPos), 1.0);
 }
 
 void main()
 {
-	//RenderMaterial();
-	Preview_Normal();
+    RenderMaterial();
 }
-
