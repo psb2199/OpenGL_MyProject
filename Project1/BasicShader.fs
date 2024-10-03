@@ -66,6 +66,7 @@ void RenderMaterial()
     Fragcolor = vec4(lightMask * GetBaseColor_texture(newTexPos) + GetEmissive_texture(newTexPos), 1.0);
 }
 
+
 void main()
 {
     RenderMaterial();
