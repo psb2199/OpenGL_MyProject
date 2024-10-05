@@ -5,6 +5,7 @@
 
 #include "OpenGL.h"
 #include "ObjectManager.h"
+#include "Importer_obj.h"
 
 #include "Light.h"
 
@@ -18,9 +19,11 @@ class Renderer
 	Light*			m_light;
 
 	GLuint			Basic_Shader;
+	GLuint			Shadow_Shader;
 
 	GLuint			depthMapFBO;
-	unsigned int	depthMap;
+	GLuint			depthMap;
+	void			InitializeDepthMap();
 
 	void			Initialize(int width, int height);
 
@@ -28,7 +31,6 @@ class Renderer
 	bool			ReadShaderFile(std::string filename, std::string* target);
 	void			AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 
-	void			ShadowMapping();
 public:
 	Renderer(int width, int height);
 	~Renderer();

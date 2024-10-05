@@ -22,6 +22,8 @@
     <None Include="BasicShader.fs" />
     <None Include="BasicShader.vs" />
     <None Include="fragmentlight.glsl" />
+    <None Include="ShadowShader.fs" />
+    <None Include="ShadowShader.vs" />
     <None Include="vertexlight.glsl" />
   </ItemGroup>
   <ItemGroup>

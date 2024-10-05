@@ -43,7 +43,6 @@ void Importer_obj::Initialize()
 }
 
 
-
 GLuint Importer_obj::LoadTexture(const char* filepath)
 {
 	//Load Png

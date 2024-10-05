@@ -6,6 +6,9 @@ in vec3 vertex_normal;
 in vec3 vertex_Tangent;
 in vec3 vertex_BitTangent;
 
+in vec4 proj;
+in vec4 light_proj;
+
 uniform sampler2D u_BaseColor;
 uniform sampler2D u_NormalMap;
 uniform sampler2D u_Emissive;
@@ -14,7 +17,10 @@ uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform float lightDistance;
 
+uniform sampler2D shadowMap;
+
 out vec4 Fragcolor;
+
 
 vec3 GetWorldNormalMap_texture(vec2 texCoords, mat3 TBN)
 {
@@ -53,14 +59,15 @@ void RenderMaterial()
                     normalize(vertex_BitTangent), 
                     normalize(vertex_normal));
 
-    vec3 worldNormal = GetWorldNormalMap_texture(newTexPos, TBN);
+    vec3 worldNormalMap = GetWorldNormalMap_texture(newTexPos, TBN);
+    //vec3 worldNormalMap = vertex_normal;
 
     // 광원의 방향 계산
     //vec3 lightDir = normalize(lightPos - 0); //direction light
     vec3 lightDir = normalize(lightPos - WorldPosition); //point light
 
     // 조명 마스크 계산
-    float lightMask = GetLightMask(worldNormal, lightDir, WorldPosition, lightPos, lightDistance);
+    float lightMask = GetLightMask(worldNormalMap, lightDir, WorldPosition, lightPos, lightDistance);
 
     // 최종 색상 계산
     Fragcolor = vec4(lightMask * GetBaseColor_texture(newTexPos) + GetEmissive_texture(newTexPos), 1.0);
@@ -69,5 +76,8 @@ void RenderMaterial()
 
 void main()
 {
-    RenderMaterial();
+    //RenderMaterial();
+    float depth = fract(proj.z);
+
+    Fragcolor = vec4(vec3(depth),1);
 }

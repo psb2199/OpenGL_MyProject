@@ -30,8 +30,9 @@ class Importer_obj
 		glm::vec3& tangent, glm::vec3& bitangent);
 
 	void MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive);
-	GLuint LoadTexture(const char* filepath);
+
 public:
+	static GLuint LoadTexture(const char* filepath);
 	Material* GetMaterial(std::string filename);
 	void ReadObj(const string filePath);
 	VertexData* FindMesh(std::string filename);

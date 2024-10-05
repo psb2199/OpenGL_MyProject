@@ -4,6 +4,8 @@
 Renderer::Renderer(int width, int height)
 {
 	Initialize(width, height);
+
+	//InitializeDepthMap();
 }
 
 Renderer::~Renderer()
@@ -15,14 +17,33 @@ void Renderer::SetLight(Light* lights)
 	m_light = lights;
 }
 
+void Renderer::InitializeDepthMap()
+{
+	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void Renderer::Initialize(int width, int height)
 {
 	window_width = width;
 	window_height = height;
 
 	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
-
-	//ShadowMapping();
+	Shadow_Shader = CompileShaders("ShadowShader.vs", "ShadowShader.fs");
 }
 
 GLuint Renderer::CompileShaders(std::string FileNameVS, std::string FileNameFS)
@@ -83,7 +104,6 @@ GLuint Renderer::CompileShaders(std::string FileNameVS, std::string FileNameFS)
 
 	return ShaderProgram;
 }
-
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 {
 	//쉐이더 오브젝트 생성
@@ -118,32 +138,6 @@ void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum S
 	// ShaderProgram 에 attach!!
 	glAttachShader(ShaderProgram, ShaderObj);
 }
-
-void Renderer::ShadowMapping()
-{
-	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-
-	// 깊이 맵 텍스처 생성
-	glGenFramebuffers(1, &depthMapFBO);
-
-	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-
-	// 깊이만 렌더링하는 프레임버퍼에 텍스처 부착
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
 bool Renderer::ReadShaderFile(std::string filename, std::string* target)
 {
 	std::ifstream file(filename);
@@ -161,7 +155,6 @@ bool Renderer::ReadShaderFile(std::string filename, std::string* target)
 	return true;
 }
 
-
 float Renderer::GetAspect()
 {
 	return aspect;
@@ -178,23 +171,40 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	window_height = glutGet(GLUT_WINDOW_HEIGHT);
 	aspect = (float)window_width / (float)window_height;
 
-	glUseProgram(Basic_Shader);
+	GLuint Shader = Basic_Shader;
+	//GLuint Shader = Shadow_Shader;
+
+	glUseProgram(Shader);
+
+	// light =================================================================
+	unsigned int lightPosLocation = glGetUniformLocation(Shader, "lightPos");
+	glm::vec3 light_location = m_light->GetLocation();
+	glUniform3f(lightPosLocation, light_location.x, light_location.y, light_location.z);
+
+	unsigned int lightColorLocation = glGetUniformLocation(Shader, "lightColor");
+	glm::vec3 light_color = m_light->GetLightColor();
+	glUniform3f(lightColorLocation, light_color.r, light_color.g, light_color.b);
+
+	unsigned int lightDistanceLocation = glGetUniformLocation(Shader, "lightDistance");
+	glUniform1f(lightDistanceLocation, m_light->GetLightDistance());
+	//========================================================================
 	
+	/*GLuint ul_Emissive = glGetUniformLocation(Shader, "depthMap");
+	glUniform1i(ul_Emissive, 3);
+	glActiveTexture(GL_TEXTURE0 + 3);
+	glBindTexture(GL_TEXTURE_2D, depthMap);*/
+
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.f, 10.f);
+	glm::mat4 lightView = glm::lookAt(light_location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+	unsigned int ulightSpaceMatrix = glGetUniformLocation(Shader, "lightSpaceMatrix");
+	glUniformMatrix4fv(ulightSpaceMatrix, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+	
+
+
+
 	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr) 
 	{
-		// light =================================================================
-		unsigned int lightPosLocation = glGetUniformLocation(Basic_Shader, "lightPos");
-		glm::vec3 light_location = m_light->GetLocation();
-		glUniform3f(lightPosLocation, light_location.x, light_location.y, light_location.z);
-
-		unsigned int lightColorLocation = glGetUniformLocation(Basic_Shader, "lightColor");
-		glm::vec3 light_color = m_light->GetLightColor();
-		glUniform3f(lightColorLocation, light_color.r, light_color.g, light_color.b);
-
-		unsigned int lightDistanceLocation = glGetUniformLocation(Basic_Shader, "lightDistance");
-		glUniform1f(lightDistanceLocation, m_light->GetLightDistance());
-		//========================================================================
-
 		vector3 location = (*itr)->GetLocation();
 		vector3 rotation = (*itr)->GetRotation();
 		
@@ -208,20 +218,20 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		
 		transfom_Matrix = glm::scale(transfom_Matrix, glm::vec3(1.0, 1.0, 1.0));
 		
-		unsigned int ObjectTransform = glGetUniformLocation(Basic_Shader, "transform");
+		unsigned int ObjectTransform = glGetUniformLocation(Shader, "transform");
 		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
 
-		GLuint ul_BaseColor = glGetUniformLocation(Basic_Shader, "u_BaseColor");
+		GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);
 		glActiveTexture(GL_TEXTURE0 + 0);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->BaseColorID);
 
-		GLuint ul_NormalMap = glGetUniformLocation(Basic_Shader, "u_NormalMap");
+		GLuint ul_NormalMap = glGetUniformLocation(Shader, "u_NormalMap");
 		glUniform1i(ul_NormalMap, 1);
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->NormalMapID);
 
-		GLuint ul_Emissive = glGetUniformLocation(Basic_Shader, "u_Emissive");
+		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
 		glUniform1i(ul_Emissive, 2);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);
@@ -230,7 +240,5 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
 	}
-
-
-
 }
+
