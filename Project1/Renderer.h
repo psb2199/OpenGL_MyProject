@@ -21,15 +21,19 @@ class Renderer
 	GLuint			Basic_Shader;
 	GLuint			Shadow_Shader;
 
-	GLuint			depthMapFBO;
-	GLuint			depthMap;
-	void			InitializeDepthMap();
+	FrameData		Shadow;
+
+	void			InitializeShadowMap(const unsigned int width, const unsigned int height);
 
 	void			Initialize(int width, int height);
 
 	GLuint			CompileShaders(std::string FileNameVS, std::string FileNameFS);
 	bool			ReadShaderFile(std::string filename, std::string* target);
 	void			AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
+
+	void			UpdateShadowMap(GLuint Shader, std::vector<Object*>Objects);
+	void			DrawFrame(GLuint Shader, std::vector<Object*>Objects);
+
 
 public:
 	Renderer(int width, int height);

@@ -17,6 +17,8 @@ public:
 	glm::vec3 GetLightColor() const;
 	float GetLightDistance() const;
 
+	void LightWorks(GLuint Shader);
+
 	Light(glm::vec3 xyz);
 	~Light();
 };

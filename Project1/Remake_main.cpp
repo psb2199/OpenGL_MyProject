@@ -63,6 +63,7 @@ int main(int argc, char** argv)
 	G_ObjMgr = new ObjectManager(G_Importer);
 
 	Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
+	G_ObjMgr->AddObject("Test", { 2,0,1 });
 	G_Controller->MappingController(Player);
 
 	glutSetCursor(GLUT_CURSOR_NONE);
@@ -218,7 +219,7 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 void LevelDisign()
 {
 	G_ObjMgr->AddObject("Base", { 0,0,0 });
-	G_Light = new Light({ 2, 1, 2 });
+	G_Light = new Light({ 1, 2, 1 });
 	G_Renderer->SetLight(G_Light);
 	G_Camera->SetLookLocation(0, 1, 0);
 }

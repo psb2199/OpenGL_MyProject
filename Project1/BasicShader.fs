@@ -6,21 +6,49 @@ in vec3 vertex_normal;
 in vec3 vertex_Tangent;
 in vec3 vertex_BitTangent;
 
-in vec4 proj;
-in vec4 light_proj;
-
 uniform sampler2D u_BaseColor;
 uniform sampler2D u_NormalMap;
 uniform sampler2D u_Emissive;
+
+uniform sampler2D u_DepthMap;
+in vec4 LightSpacePos;
+float Shadow_minValue = 0.1;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform float lightDistance;
 
-uniform sampler2D shadowMap;
-
 out vec4 Fragcolor;
 
+
+float CalShadowFactor()
+{
+    // 그림자 좌표를 NDC로 변환 (0.0 ~ 1.0 사이로 정규화)
+    vec3 projCoords = LightSpacePos.xyz / LightSpacePos.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // 그림자 좌표가 범위 밖이면 그림자 적용 안 함
+    if (projCoords.z > 1.0)
+        return 1.0;
+
+    // PCF 샘플링 범위
+    float shadow = 0.0;
+    float bias = 0.005;
+    int samples = 1;  // 샘플 갯수
+    float texelSize = 1.0 / 2048.0;  // 그림자 맵 해상도에 따른 텍셀 크기
+
+    for (int x = -samples; x <= samples; ++x)
+    {
+        for (int y = -samples; y <= samples; ++y)
+        {
+            float pcfDepth = texture(u_DepthMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += projCoords.z - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= (2.0 * samples + 1.0) * (2.0 * samples + 1.0);
+
+    return 1.0 - (shadow);  // 그림자의 강도 반환
+}
 
 vec3 GetWorldNormalMap_texture(vec2 texCoords, mat3 TBN)
 {
@@ -63,21 +91,18 @@ void RenderMaterial()
     //vec3 worldNormalMap = vertex_normal;
 
     // 광원의 방향 계산
-    //vec3 lightDir = normalize(lightPos - 0); //direction light
-    vec3 lightDir = normalize(lightPos - WorldPosition); //point light
+    vec3 lightDir = normalize(lightPos - 0); //direction light
+    //vec3 lightDir = normalize(lightPos - WorldPosition); //point light
 
     // 조명 마스크 계산
     float lightMask = GetLightMask(worldNormalMap, lightDir, WorldPosition, lightPos, lightDistance);
 
     // 최종 색상 계산
-    Fragcolor = vec4(lightMask * GetBaseColor_texture(newTexPos) + GetEmissive_texture(newTexPos), 1.0);
+    Fragcolor = vec4( max(CalShadowFactor() * lightMask, Shadow_minValue) * GetBaseColor_texture(newTexPos) + GetEmissive_texture(newTexPos), 1.0);
 }
 
 
 void main()
 {
-    //RenderMaterial();
-    float depth = fract(proj.z);
-
-    Fragcolor = vec4(vec3(depth),1);
+    RenderMaterial();
 }

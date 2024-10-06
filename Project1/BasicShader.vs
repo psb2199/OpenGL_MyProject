@@ -10,11 +10,6 @@ uniform mat4 transform;
 uniform mat4 projection;
 uniform mat4 view;
 
-uniform mat4 lightSpaceMatrix;
-
-out vec4 proj;
-out vec4 light_proj;
-
 out vec3 vertex_normal;
 out vec2 OutTexPos;
 out vec3 WorldPosition;
@@ -22,13 +17,14 @@ out vec3 WorldPosition;
 out vec3 vertex_Tangent;
 out vec3 vertex_BitTangent;
 
+uniform mat4 lightSpaceMatrix;
+out vec4 LightSpacePos;
 
 void main() 
 {
 	
 	gl_Position = projection * view * transform * vec4(vPos, 1.0); 
-	proj = gl_Position;
-	light_proj = lightSpaceMatrix * transform * vec4(vPos, 1.0); ;
+	LightSpacePos =  lightSpaceMatrix * transform * vec4(vPos, 1.0); 
 
 	WorldPosition = vec3(transform * vec4(vPos, 1.0));
 

@@ -15,7 +15,7 @@ void Importer_obj::Initialize()
 	ReadObj("objs/Test.obj");
 	ReadObj("objs/GravityBox.obj");
 	ReadObj("objs/Base.obj");
-	ReadObj("Male.obj");
+	ReadObj("objs/Male.obj");
 
 	MakeMaterial
 	(

@@ -48,6 +48,15 @@ struct TextureData {
 	GLuint textureID;
 };
 
+struct FrameData {
+
+	GLuint FBO;
+	GLuint SceneID;
+
+	unsigned int width;
+	unsigned int height;
+};
+
 struct Material {
 	std::string material_name;
 
