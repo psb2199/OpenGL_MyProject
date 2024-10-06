@@ -12,7 +12,7 @@ uniform sampler2D u_Emissive;
 
 uniform sampler2D u_DepthMap;
 in vec4 LightSpacePos;
-float Shadow_minValue = 0.1;
+float Shadow_minValue = 0.2;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
