@@ -1,6 +1,6 @@
 #include "Object.h"
 
-Object::Object(int obj_id, std::string type, vector3 loc, Importer_obj* importer)
+Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer)
 {
 	Importer_mesh = importer;
 	id = obj_id;
@@ -48,34 +48,34 @@ void Object::SetMaterial(std::string filename)
 
 
 
-void Object::SetLocation(vector3 new_location)
+void Object::SetLocation(glm::vec3 new_location)
 {
 	location = new_location;
 }
 
-vector3 Object::GetLocation() const
+glm::vec3 Object::GetLocation() const
 {
 	return location;
 }
 
-void Object::SetRotation(vector3 new_rotation)
+void Object::SetRotation(glm::vec3 new_rotation)
 {
 	rotation = new_rotation;
 }
 
-vector3 Object::GetRotation() const
+glm::vec3 Object::GetRotation() const
 {
 	return rotation;
 }
 
-void Object::AddMovementInput(vector3 velocity)
+void Object::AddMovementInput(glm::vec3 velocity)
 {
 	location.x += velocity.x;
 	location.y += velocity.y;
 	location.z += velocity.z;
 }
 
-void Object::AddRotationInput(vector3 velocity)
+void Object::AddRotationInput(glm::vec3 velocity)
 {
 	rotation.x += velocity.x;
 	rotation.y += velocity.y;

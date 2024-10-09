@@ -15,7 +15,7 @@ public:
 	ObjectManager(Importer_obj* importer);
 	~ObjectManager();
 
-	Object* AddObject(std::string type, vector3 location);
+	Object* AddObject(std::string type, glm::vec3 location);
 	void DeleteObject(Object* obj);
 	std::vector<Object*> GetAllObjects();
 };

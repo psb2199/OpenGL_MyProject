@@ -19,20 +19,23 @@ class Renderer
 	Light*			m_light;
 
 	GLuint			Basic_Shader;
+	GLuint			Bloom_Shader;
+	FrameData		Bloom;
 	GLuint			Shadow_Shader;
-
 	FrameData		Shadow;
-
-	void			InitializeShadowMap(const unsigned int width, const unsigned int height);
-
-	void			Initialize(int width, int height);
 
 	GLuint			CompileShaders(std::string FileNameVS, std::string FileNameFS);
 	bool			ReadShaderFile(std::string filename, std::string* target);
 	void			AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 
-	void			UpdateShadowMap(GLuint Shader, std::vector<Object*>Objects);
-	void			DrawFrame(GLuint Shader, std::vector<Object*>Objects);
+	void			Initialize_ShadowMap(const unsigned int width, const unsigned int height);
+	void			Initialize_BloomMap(const unsigned int width, const unsigned int height);
+
+	void			Initialize(int width, int height);
+
+	void			Render_ShadowMap(GLuint Shader, std::vector<Object*>Objects);
+	void			Render_BloomMap(GLuint Shader, std::vector<Object*>Objects);
+	void			Render_DefaultColor(GLuint Shader, std::vector<Object*>Objects);
 
 
 public:

@@ -12,6 +12,7 @@ uniform sampler2D u_Emissive;
 
 uniform sampler2D u_DepthMap;
 in vec4 LightSpacePos;
+uniform float u_ShadowMapSize;
 float Shadow_minValue = 0.2;
 
 uniform vec3 lightPos;
@@ -34,8 +35,8 @@ float CalShadowFactor()
     // PCF 샘플링 범위
     float shadow = 0.0;
     float bias = 0.005;
-    int samples = 1;  // 샘플 갯수
-    float texelSize = 1.0 / 2048.0;  // 그림자 맵 해상도에 따른 텍셀 크기
+    int samples = 5;  // 샘플 갯수
+    float texelSize = 1.0 / u_ShadowMapSize;  // 그림자 맵 해상도에 따른 텍셀 크기
 
     for (int x = -samples; x <= samples; ++x)
     {

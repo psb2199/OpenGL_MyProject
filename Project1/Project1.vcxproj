@@ -21,6 +21,8 @@
   <ItemGroup>
     <None Include="BasicShader.fs" />
     <None Include="BasicShader.vs" />
+    <None Include="BloomShader.fs" />
+    <None Include="BloomShader.vs" />
     <None Include="fragmentlight.glsl" />
     <None Include="ShadowShader.fs" />
     <None Include="ShadowShader.vs" />

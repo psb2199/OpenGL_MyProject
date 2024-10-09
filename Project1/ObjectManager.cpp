@@ -9,7 +9,7 @@ ObjectManager::~ObjectManager()
 {
 }
 
-Object* ObjectManager::AddObject(std::string type, vector3 location)
+Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
 {
     Object* newObj = new Object(AllOjectCount, type, location, m_importer);
 

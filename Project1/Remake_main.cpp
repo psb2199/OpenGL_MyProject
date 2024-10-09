@@ -44,7 +44,7 @@ void LevelDisign();
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); //depth+
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE); //depth+
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutCreateWindow("OpenGL_MyProject");
@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 	//glDepthFunc(GL_LESS); // or glDepthFunc(GL_LEQUAL);
 	//glDisable(GL_CULL_FACE);
 	glEnable(GL_CULL_FACE);
+
 
 
 	G_Renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -202,7 +203,10 @@ void Motion(int x, int y)
 }
 void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 {
-	glm::vec2 point{ 500,500 };
+	int window_center_x = glutGet(GLUT_WINDOW_X) + glutGet(GLUT_WINDOW_WIDTH) / 2;
+	int window_center_y = glutGet(GLUT_WINDOW_Y) + glutGet(GLUT_WINDOW_HEIGHT) / 2;
+
+	glm::vec2 point{ window_center_x, window_center_y };
 
 	POINT mousepos;
 	GetCursorPos(&mousepos);

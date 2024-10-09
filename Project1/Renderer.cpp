@@ -4,8 +4,6 @@
 Renderer::Renderer(int width, int height)
 {
 	Initialize(width, height);
-
-	//InitializeDepthMap();
 }
 
 Renderer::~Renderer()
@@ -17,7 +15,7 @@ void Renderer::SetLight(Light* lights)
 	m_light = lights;
 }
 
-void Renderer::InitializeShadowMap(const unsigned int width, const unsigned int height)
+void Renderer::Initialize_ShadowMap(const unsigned int width, const unsigned int height)
 {
 	Shadow.width = width;
 	Shadow.height = height;
@@ -40,6 +38,29 @@ void Renderer::InitializeShadowMap(const unsigned int width, const unsigned int 
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+void Renderer::Initialize_BloomMap(const unsigned int width, const unsigned int height)
+{
+	Bloom.width = width;
+	Bloom.height = height;
+
+	glGenFramebuffers(1, &Bloom.FBO);
+
+	glGenTextures(1, &Bloom.SceneID);
+	glBindTexture(GL_TEXTURE_2D, Bloom.SceneID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F,
+		width, height, 0, GL_RGB, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, Bloom.FBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, Bloom.SceneID, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
 void Renderer::Initialize(int width, int height)
 {
@@ -48,8 +69,9 @@ void Renderer::Initialize(int width, int height)
 
 	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
 	Shadow_Shader = CompileShaders("ShadowShader.vs", "ShadowShader.fs");
-
-	InitializeShadowMap(2048, 2048);
+	Initialize_ShadowMap(4096, 4096);
+	Bloom_Shader = CompileShaders("BloomShader.vs", "BloomShader.fs");
+	Initialize_BloomMap(window_width, window_height);
 }
 
 GLuint Renderer::CompileShaders(std::string FileNameVS, std::string FileNameFS)
@@ -177,10 +199,12 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	window_height = glutGet(GLUT_WINDOW_HEIGHT);
 	aspect = (float)window_width / (float)window_height;
 
-	UpdateShadowMap(Shadow_Shader, Objects);
-	DrawFrame(Basic_Shader, Objects);
+	Render_ShadowMap(Shadow_Shader, Objects);
+	//Render_BloomMap(Bloom_Shader, Objects);
+	Render_DefaultColor(Basic_Shader, Objects);
 }
-void Renderer::UpdateShadowMap(GLuint Shader, std::vector<Object*> Objects)
+
+void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, Shadow.FBO);
 	glViewport(0, 0, Shadow.width, Shadow.height);
@@ -190,11 +214,12 @@ void Renderer::UpdateShadowMap(GLuint Shader, std::vector<Object*> Objects)
 
 	m_light->LightWorks(Shader);
 
+
 	// 객체별로 변환 행렬 설정 및 렌더링
 	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr)
 	{
-		vector3 location = (*itr)->GetLocation();
-		vector3 rotation = (*itr)->GetRotation();
+		glm::vec3 location = (*itr)->GetLocation();
+		glm::vec3 rotation = (*itr)->GetRotation();
 
 		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
 		transfom_Matrix = glm::translate(transfom_Matrix, glm::vec3(location.x, location.y, location.z));
@@ -215,8 +240,44 @@ void Renderer::UpdateShadowMap(GLuint Shader, std::vector<Object*> Objects)
 	glViewport(0, 0, window_width, window_height);
 }
 
-void Renderer::DrawFrame(GLuint Shader, std::vector<Object*> Objects)
+void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 {
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, Bloom.FBO);
+	glViewport(0, 0, Bloom.width, Bloom.height);
+
+	glUseProgram(Shader);
+
+	// 객체별로 변환 행렬 설정 및 렌더링
+	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr)
+	{
+		glm::vec3 location = (*itr)->GetLocation();
+		glm::vec3 rotation = (*itr)->GetRotation();
+
+		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
+		transfom_Matrix = glm::translate(transfom_Matrix, glm::vec3(location.x, location.y, location.z));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
+		transfom_Matrix = glm::scale(transfom_Matrix, glm::vec3(1.0, 1.0, 1.0));
+
+		unsigned int ObjectTransform = glGetUniformLocation(Shader, "transform");
+		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
+
+		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
+		glUniform1i(ul_Emissive, 2);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);
+
+		glBindVertexArray((*itr)->GetMesh()->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
+		glBindVertexArray(0);
+	}
+}
+
+void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
+{
+	glEnable(GL_MULTISAMPLE);  // 멀티샘플링 활성화
+
 	glUseProgram(Shader);
 
 	m_light->LightWorks(Shader);
@@ -227,14 +288,17 @@ void Renderer::DrawFrame(GLuint Shader, std::vector<Object*> Objects)
 	glActiveTexture(GL_TEXTURE0 + 3);  // 3번 텍스처 슬롯 활성화
 	glBindTexture(GL_TEXTURE_2D, Shadow.SceneID);  // 깊이 맵 텍스처 바인딩
 
+	GLuint ul_ShadowMapSize = glGetUniformLocation(Shader, "u_ShadowMapSize");
+	glUniform1f(ul_ShadowMapSize, Shadow.width);
+
 	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr)
 	{
-		vector3 location = (*itr)->GetLocation();
-		vector3 rotation = (*itr)->GetRotation();
+		glm::vec3 location = (*itr)->GetLocation();
+		glm::vec3 rotation = (*itr)->GetRotation();
 
 		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
 
-		transfom_Matrix = glm::translate(transfom_Matrix, glm::vec3(location.x, location.y, location.z));
+		transfom_Matrix = glm::translate(transfom_Matrix, location);
 
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));

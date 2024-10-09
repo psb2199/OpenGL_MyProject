@@ -60,6 +60,12 @@
     <None Include="ShadowShader.vs">
       <Filter>소스 파일\Shaders</Filter>
     </None>
+    <None Include="BloomShader.vs">
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
+    <None Include="BloomShader.fs">
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Remake_main.cpp">
