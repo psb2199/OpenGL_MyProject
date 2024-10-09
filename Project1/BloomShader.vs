@@ -1,19 +1,15 @@
 #version 330 core
 
-layout (location = 0) in vec3 vPos;
-layout (location = 1) in vec2 vTexPos;
+layout (location = 0) in vec2 vPos;
+layout (location = 1) in vec2 vCoords;
 
-uniform mat4 transform;
-uniform mat4 projection;
-uniform mat4 view;
-
-out vec2 OutTexPos;
+out vec2 texCoords;
 
 void main() 
 {
-	gl_Position = projection * view * transform * vec4(vPos, 1.0); 
+	gl_Position = vec4(vPos.x, vPos.y , 0.0, 1.0);
 
-	OutTexPos = vec2(vTexPos.x , -vTexPos.y);
+	texCoords = vCoords;
 }
 
 

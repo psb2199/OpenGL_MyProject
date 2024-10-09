@@ -94,7 +94,6 @@ GLvoid RenderScene()
 }
 GLvoid RenderSceneTimer(int value)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	G_Renderer->DrawScene(G_ObjMgr->GetAllObjects());
 	G_Camera->DoWorking(G_Renderer);

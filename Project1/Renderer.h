@@ -19,17 +19,21 @@ class Renderer
 	Light*			m_light;
 
 	GLuint			Basic_Shader;
-	GLuint			Bloom_Shader;
-	FrameData		Bloom;
 	GLuint			Shadow_Shader;
 	FrameData		Shadow;
+	GLuint			Bloom_Shader;
+	FrameData		post_process;
+
+	GLuint			frameVAO;
+	GLuint			frameVBO;
+
 
 	GLuint			CompileShaders(std::string FileNameVS, std::string FileNameFS);
 	bool			ReadShaderFile(std::string filename, std::string* target);
 	void			AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 
 	void			Initialize_ShadowMap(const unsigned int width, const unsigned int height);
-	void			Initialize_BloomMap(const unsigned int width, const unsigned int height);
+	void			Initialize_PostProcessMap(const unsigned int width, const unsigned int height);
 
 	void			Initialize(int width, int height);
 

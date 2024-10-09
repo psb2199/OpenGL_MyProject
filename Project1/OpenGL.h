@@ -45,7 +45,7 @@ struct VertexData {
 struct TextureData {
 
 	std::string filename;
-	GLuint textureID;
+	unsigned int textureID;
 };
 
 struct FrameData {
