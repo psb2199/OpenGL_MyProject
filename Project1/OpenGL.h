@@ -62,6 +62,7 @@ struct Material {
 
 	GLuint BaseColorID;
 	GLuint NormalMapID;
+	GLuint AoRoughnessMetallicID;
 	GLuint EmissiveID;
 };
 

@@ -13,6 +13,7 @@ uniform samplerCube u_enviroment;
 uniform sampler2D u_BaseColor;
 uniform sampler2D u_NormalMap;
 uniform sampler2D u_Emissive;
+uniform sampler2D u_ARM;
 
 uniform sampler2D u_DepthMap;
 in vec4 LightSpacePos;
@@ -27,7 +28,9 @@ uniform bool u_cast_shadow;
 
 out vec4 Fragcolor;
 
-
+vec3 GetAO() { return vec3(texture(u_ARM, texCoords).r); }
+vec3 GetRoughness() { return vec3(texture(u_ARM, texCoords).g); }
+vec3 GetMetalic() { return vec3(texture(u_ARM, texCoords).b); }
 
 float CalShadowFactor()
 {
@@ -94,6 +97,18 @@ float GetLightMask(vec3 worldNormal, vec3 lightDir, vec3 fragPosition, vec3 ligh
     return lightMask + Highlight;
 }
 
+vec3 CalReflectVector(vec3 normal)
+{
+    vec3 CameraDir = normalize(WorldPosition - u_CameraPos);
+
+    return CameraDir + 2 * normal * (dot(-CameraDir, normal));
+}
+
+vec3 GetReflectedColor(vec3 normal)
+{
+    return texture(u_enviroment, CalReflectVector(normal)).rgb;
+}
+
 void RenderMaterial()
 {
     vec3 worldNormalMap = GetWorldNormalMap_texture(texCoords);
@@ -106,6 +121,9 @@ void RenderMaterial()
     // 조명 마스크 계산
     float lightMask = GetLightMask(worldNormalMap, lightDir, WorldPosition, lightPos, lightDistance);
 
+    //반사된 이미지
+    vec3 refrected_image = vec3(dot(GetReflectedColor(worldNormalMap), vec3(0.5, 0.5, 0.5))) * ( 1 - GetRoughness());
+
     // 최종 색상 계산
     if(u_cast_shadow) {
         Fragcolor = vec4(GetBaseColor_texture(texCoords), 1.0);
@@ -115,16 +133,7 @@ void RenderMaterial()
     }
 }
 
-vec3 CalReflectVector(vec3 normal)
-{
-    vec3 CameraDir = normalize(WorldPosition - u_CameraPos);
-
-    return CameraDir + 2 * normal * (dot(-CameraDir, normal));
-}
-
 void main()
 {
-    //RenderMaterial();
-    //Fragcolor = vec4(CalReflectVector(), 1.0);
-    Fragcolor = texture(u_enviroment, CalReflectVector(vertex_normal));
+    RenderMaterial();
 }

@@ -362,18 +362,20 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 
 	m_light->LightWorks(Shader);
 
+	int index{ 0 };
+
 	// 깊이 맵 텍스처를 쉐이더로 전달 (깊이 맵 자체가 화면에 그려지지 않도록 관리)
 	GLuint ul_Depth = glGetUniformLocation(Shader, "u_DepthMap");
-	glUniform1i(ul_Depth, 3);  // 3번 텍스처 슬롯을 사용한다고 지정
-	glActiveTexture(GL_TEXTURE0 + 3);  // 3번 텍스처 슬롯 활성화
+	glUniform1i(ul_Depth, 4);  // 3번 텍스처 슬롯을 사용한다고 지정
+	glActiveTexture(GL_TEXTURE0 + 4);  // 3번 텍스처 슬롯 활성화
 	glBindTexture(GL_TEXTURE_2D, Shadow.SceneID);  // 깊이 맵 텍스처 바인딩
 
 	GLuint ul_ShadowMapSize = glGetUniformLocation(Shader, "u_ShadowMapSize");
 	glUniform1f(ul_ShadowMapSize, Shadow.width);
 
 	GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
-	glUniform1i(ul_enviroment, 4);
-	glActiveTexture(GL_TEXTURE0 + 4);  // 3번 텍스처 슬롯 활성화
+	glUniform1i(ul_enviroment, 5);
+	glActiveTexture(GL_TEXTURE0 + 5);  // 3번 텍스처 슬롯 활성화
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
 
 	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr)
@@ -408,6 +410,11 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glUniform1i(ul_Emissive, 2);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);
+
+		GLuint ul_ARM = glGetUniformLocation(Shader, "u_ARM");
+		glUniform1i(ul_ARM, 3);
+		glActiveTexture(GL_TEXTURE0 + 3);
+		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->AoRoughnessMetallicID);
 
 		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
 		glUniform1i(ul_cast_shadow, (*itr)->GetCastShadow() ? 0 : 1);

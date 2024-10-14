@@ -25,15 +25,15 @@ void Importer_obj::Initialize()
 		GravityBox_BaseColor,
 		GravityBox_Normal,
 		GravityBox_Emissive,
+		GravityBox_ARM,
 
 		Male_BaseColor,
 		Male_Normal,
 		Male_Emissive,
+		Male_ARM,
 
 		Grass_BaseColor,
 		Grass_Normal,
-
-		Sky,
 
 		Enviroment,
 
@@ -44,15 +44,15 @@ void Importer_obj::Initialize()
 		Textures[GravityBox_BaseColor] = LoadTexture("textures/GravityBox_BaseColor.png");
 		Textures[GravityBox_Normal] = LoadTexture("textures/GravityBox_Normal.png");
 		Textures[GravityBox_Emissive] = LoadTexture("textures/GravityBox_Emissive.png");
+		Textures[GravityBox_ARM] = LoadTexture("textures/GravityBox_ARM.png");
 
 		Textures[Male_BaseColor] = LoadTexture("textures/Male_BaseColor.png");
 		Textures[Male_Normal] = LoadTexture("textures/Male_Normal.png");
 		Textures[Male_Emissive] = LoadTexture("textures/Male_Emissive.png");
+		Textures[Male_ARM] = LoadTexture("textures/Male_ARM.png");
 
 		Textures[Grass_BaseColor] = LoadTexture("textures/Grass_BaseColor.png");
 		Textures[Grass_Normal] = LoadTexture("textures/Grass_Normal.png");
-
-		Textures[Sky] = LoadTexture("textures/Sky.png");
 
 
 		std::vector<string> cubeMap_filepathes;
@@ -65,7 +65,7 @@ void Importer_obj::Initialize()
 		Textures[Enviroment] = LoadEnviromentTextures(cubeMap_filepathes);
 	}
 
-	//Set enviroment_Material;
+	//Set enviroment_Material
 	enviroment_Material = Textures[Enviroment];
 
 	//Make Materials
@@ -75,7 +75,8 @@ void Importer_obj::Initialize()
 			"M_GravityBox",
 			Textures[GravityBox_BaseColor],
 			Textures[GravityBox_Normal],
-			Textures[GravityBox_Emissive]
+			Textures[GravityBox_Emissive],
+			Textures[GravityBox_ARM]
 		);
 
 		MakeMaterial
@@ -83,6 +84,7 @@ void Importer_obj::Initialize()
 			"M_Grass",
 			Textures[Grass_BaseColor],
 			Textures[Grass_Normal],
+			NULL,
 			NULL
 		);
 
@@ -91,20 +93,15 @@ void Importer_obj::Initialize()
 			"M_Male",
 			Textures[Male_BaseColor],
 			Textures[Male_Normal],
-			Textures[Male_Emissive]
+			Textures[Male_Emissive],
+			Textures[Male_ARM]
 		);
 
-		MakeMaterial
-		(
-			"M_Sky",
-			Textures[Sky],
-			NULL,
-			Textures[Sky]
-		);
 
 		MakeMaterial
 		(
 			"M_Test",
+			NULL,
 			NULL,
 			NULL,
 			NULL
@@ -193,13 +190,14 @@ GLuint Importer_obj::GetEnviromentMaterial()
 	return enviroment_Material;
 }
 
-void Importer_obj::MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive)
+void Importer_obj::MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM)
 {
 	Material* newMaterial = new Material;
 	newMaterial->material_name = MaterialName;
 	newMaterial->BaseColorID = BaseColor;
 	newMaterial->NormalMapID = NormalMap;
 	newMaterial->EmissiveID = Emissive;
+	newMaterial->AoRoughnessMetallicID = ARM;
 
 	Materials.push_back(newMaterial);
 }
