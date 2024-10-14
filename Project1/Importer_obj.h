@@ -18,6 +18,7 @@ class Importer_obj
 
 	std::vector<VertexData*> VertexBuffers;
 	std::vector<Material*> Materials;
+	GLuint enviroment_Material;
 
 	void Initialize();
 
@@ -32,8 +33,12 @@ class Importer_obj
 	void MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive);
 
 public:
-	static GLuint LoadTexture(const char* filepath);
+	GLuint LoadTexture(const char* filepath);
+	GLuint LoadEnviromentTextures(std::vector<string> filepathes);
+
 	Material* GetMaterial(std::string filename);
+	GLuint GetEnviromentMaterial();
+
 	void ReadObj(const string filePath);
 	VertexData* FindMesh(std::string filename);
 	void setupMesh(VertexData* VB);

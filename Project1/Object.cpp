@@ -5,13 +5,20 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	Importer_mesh = importer;
 	id = obj_id;
 	ojbect_type = type;
-	//SetMesh("Male.obj");
-	if(type == "Player"){ SetMesh("Male.obj"); }
-	else if (type == "Base") { SetMesh("Base.obj"); }
-	else { SetMesh("Test.obj"); }
+	
+	if (type == "Player") {
+		SetMesh("Male.obj");
+		SetMaterial("M_Male");
+	}
+	else if (type == "Base"){
+		SetMesh("Base.obj");
+		SetMaterial("M_Grass");
+	}
+	else if (type == "Test"){
+		SetMesh("Test.obj");
+		SetMaterial("M_Test");
+	}
 
-	SetMaterial("M_Male");
-	if(type == "Base") SetMaterial("M_Grass");
 
 	location = loc;
 
@@ -66,6 +73,11 @@ void Object::SetRotation(glm::vec3 new_rotation)
 glm::vec3 Object::GetRotation() const
 {
 	return rotation;
+}
+
+bool Object::GetCastShadow()
+{
+	return cast_shadow;
 }
 
 void Object::AddMovementInput(glm::vec3 velocity)

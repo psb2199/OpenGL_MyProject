@@ -1,9 +1,10 @@
 #include "Renderer.h"
 
 
-Renderer::Renderer(int width, int height)
+Renderer::Renderer(int width, int height, Importer_obj* importer)
 {
 	Initialize(width, height);
+	m_importer = importer;
 }
 
 Renderer::~Renderer()
@@ -131,6 +132,11 @@ void Renderer::SetLight(Light* lights)
 {
 	m_light = lights;
 }
+void Renderer::SetCamera(Camera* camera)
+{
+	m_Camera = camera;
+}
+
 
 void Renderer::Initialize(int width, int height)
 {
@@ -139,11 +145,14 @@ void Renderer::Initialize(int width, int height)
 
 	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
 
+	Enviroment_Shader = CompileShaders("EnviromentShader.vs", "EnviromentShader.fs");
+	Initialize_EviromentVAO();
+
 	Shadow_Shader = CompileShaders("ShadowShader.vs", "ShadowShader.fs");
 	Initialize_ShadowMap(4096, 4096);
 
 	Bloom_Shader = CompileShaders("BloomShader.vs", "BloomShader.fs");
-	Initialize_PostProcessMap(window_width, window_height);
+	//Initialize_PostProcessMap(window_width, window_height);
 }
 void Renderer::Initialize_ShadowMap(const unsigned int width, const unsigned int height)
 {
@@ -174,27 +183,24 @@ void Renderer::Initialize_PostProcessMap(const unsigned int width, const unsigne
 	glGenFramebuffers(1, &post_process.FBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, post_process.FBO);
 
-	// 텍스처 생성
 	glGenTextures(1, &post_process.SceneID);
 	glBindTexture(GL_TEXTURE_2D, post_process.SceneID);
-
-	// 텍스처의 크기 및 포맷 설정
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-
-	// 텍스처 필터링 설정
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// 텍스처를 프레임 버퍼의 색상 첨부로 설정
+	// attach it to currently bound framebuffer object
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, post_process.SceneID, 0);
 
-	// FBO가 완전한지 확인
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		std::cerr << "Framebuffer is not complete!" << std::endl;
-	}
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-
-	// FBO 바인딩 해제
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
@@ -224,6 +230,65 @@ void Renderer::Initialize_PostProcessMap(const unsigned int width, const unsigne
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
+void Renderer::Initialize_EviromentVAO()
+{
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
+	glGenVertexArrays(1, &EviromentVAO);
+	glGenBuffers(1, &EviromentVBO);
+
+	glBindVertexArray(EviromentVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, EviromentVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+
+	glBindVertexArray(0);
+}
 
 
 
@@ -235,10 +300,12 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 
 	Render_ShadowMap(Shadow_Shader, Objects);
 
+	Render_Enviroment(Enviroment_Shader);
+
 	Render_DefaultColor(Basic_Shader, Objects);
 
 	// 블룸 맵 렌더링
-	//Render_BloomMap(Bloom_Shader, Objects);
+	//Render_PostProcessMap(Bloom_Shader, Objects);
 }
 
 void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
@@ -285,9 +352,10 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 {
 	glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 프레임 클리어 추가
+	glClear(GL_DEPTH_BUFFER_BIT); // 프레임 클리어 추가
 
 	glUseProgram(Shader);
+	m_Camera->DoWorking(Shader, aspect);
 	m_light->LightWorks(Shader);
 
 	// 깊이 맵 텍스처를 쉐이더로 전달 (깊이 맵 자체가 화면에 그려지지 않도록 관리)
@@ -332,14 +400,39 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);
 
+		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
+		glUniform1i(ul_cast_shadow, (*itr)->GetCastShadow() ? 0 : 1);
+		
+
 		glBindVertexArray((*itr)->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
 	}
 }
 
-void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
+void Renderer::Render_Enviroment(GLuint Shader)
 {
+	glDepthMask(GL_FALSE);
+
+	glUseProgram(Shader);
+
+	m_Camera->DoWorking(Shader, aspect);
+	//GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
+	//glUniform1i(ul_enviroment, 0);
+	//glActiveTexture(GL_TEXTURE0 + 0);
+	//glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
+
+	glBindVertexArray(EviromentVAO); 
+	glDrawArrays(GL_TRIANGLES, 0, 36); 
+
+	glBindVertexArray(0);
+
+	glDepthMask(GL_TRUE);
+}
+
+void Renderer::Render_PostProcessMap(GLuint Shader, std::vector<Object*> Objects)
+{
+
 	glUseProgram(Shader);
 
 	GLuint ul_Bloom = glGetUniformLocation(Shader, "u_Bloom");

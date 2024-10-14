@@ -12,34 +12,105 @@ Importer_obj::~Importer_obj()
 
 void Importer_obj::Initialize()
 {
-	ReadObj("objs/Test.obj");
-	ReadObj("objs/GravityBox.obj");
-	ReadObj("objs/Base.obj");
-	ReadObj("objs/Male.obj");
+	// Import Obj
+	{
+		ReadObj("objs/Test.obj");
+		ReadObj("objs/GravityBox.obj");
+		ReadObj("objs/Base.obj");
+		ReadObj("objs/Male.obj");
+	}
 
-	MakeMaterial
-	(
-		"M_GravityBox",
-		LoadTexture("textures/GravityBox_BaseColor.png"),
-		LoadTexture("textures/GravityBox_Normal.png"),
-		LoadTexture("textures/GravityBox_Emissive.png")
-	);
+	// Import Textures
+	enum textureName {
+		GravityBox_BaseColor,
+		GravityBox_Normal,
+		GravityBox_Emissive,
 
-	MakeMaterial
-	(
-		"M_Grass",
-		LoadTexture("textures/Grass_BaseColor.png"),
-		LoadTexture("textures/Grass_Normal.png"),
-		NULL
-	);
+		Male_BaseColor,
+		Male_Normal,
+		Male_Emissive,
 
-	MakeMaterial
-	(
-		"M_Male",
-		LoadTexture("textures/Male_BaseColor.png"),
-		LoadTexture("textures/Male_Normal.png"),
-		LoadTexture("textures/Male_Emissive.png")
-	);
+		Grass_BaseColor,
+		Grass_Normal,
+
+		Sky,
+
+		Enviroment,
+
+		MAX
+	};
+	GLuint Textures[textureName(MAX)];
+	{
+		Textures[GravityBox_BaseColor] = LoadTexture("textures/GravityBox_BaseColor.png");
+		Textures[GravityBox_Normal] = LoadTexture("textures/GravityBox_Normal.png");
+		Textures[GravityBox_Emissive] = LoadTexture("textures/GravityBox_Emissive.png");
+
+		Textures[Male_BaseColor] = LoadTexture("textures/Male_BaseColor.png");
+		Textures[Male_Normal] = LoadTexture("textures/Male_Normal.png");
+		Textures[Male_Emissive] = LoadTexture("textures/Male_Emissive.png");
+
+		Textures[Grass_BaseColor] = LoadTexture("textures/Grass_BaseColor.png");
+		Textures[Grass_Normal] = LoadTexture("textures/Grass_Normal.png");
+
+		Textures[Sky] = LoadTexture("textures/Sky.png");
+
+
+		std::vector<string> cubeMap_filepathes;
+		cubeMap_filepathes.push_back("textures/skybox/right.png");
+		cubeMap_filepathes.push_back("textures/skybox/left.png");
+		cubeMap_filepathes.push_back("textures/skybox/top.png");
+		cubeMap_filepathes.push_back("textures/skybox/bottom.png");
+		cubeMap_filepathes.push_back("textures/skybox/front.png");
+		cubeMap_filepathes.push_back("textures/skybox/back.png");
+		Textures[Enviroment] = LoadEnviromentTextures(cubeMap_filepathes);
+	}
+
+	//Set enviroment_Material;
+	enviroment_Material = Textures[Enviroment];
+
+	//Make Materials
+	{
+		MakeMaterial
+		(
+			"M_GravityBox",
+			Textures[GravityBox_BaseColor],
+			Textures[GravityBox_Normal],
+			Textures[GravityBox_Emissive]
+		);
+
+		MakeMaterial
+		(
+			"M_Grass",
+			Textures[Grass_BaseColor],
+			Textures[Grass_Normal],
+			NULL
+		);
+
+		MakeMaterial
+		(
+			"M_Male",
+			Textures[Male_BaseColor],
+			Textures[Male_Normal],
+			Textures[Male_Emissive]
+		);
+
+		MakeMaterial
+		(
+			"M_Sky",
+			Textures[Sky],
+			NULL,
+			Textures[Sky]
+		);
+
+		MakeMaterial
+		(
+			"M_Test",
+			NULL,
+			NULL,
+			NULL
+		);
+	}
+
 }
 
 
@@ -66,21 +137,63 @@ GLuint Importer_obj::LoadTexture(const char* filepath)
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	
+
 	cout << "PNG image loading Success:" << filepath << endl;
 
 	return texture;
 }
+GLuint Importer_obj::LoadEnviromentTextures(std::vector<string> filepathes)
+{
+	//Load Png
+	GLuint texture;
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+	unsigned width, height;
+	int i = 0;
+
+	for (auto& v : filepathes) {
+
+		std::vector<unsigned char> image;
+		unsigned error = lodepng::decode(image, width, height, v.c_str());
+
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+			0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0
+		);
+
+		if (error != 0) {
+			cout << "eviroment image loading failed:" << v.c_str() << endl;
+		}
+
+		++i;
+	}
+
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return texture;
+}
+
 Material* Importer_obj::GetMaterial(std::string filename)
 {
 	for (auto& v : Materials) {
-		
+
 		if (v->material_name == filename) return v;
 	}
 
 	std::cout << "Can not find" << filename << "Material Asset." << std::endl;
 	return nullptr;
 }
+GLuint Importer_obj::GetEnviromentMaterial()
+{
+	return enviroment_Material;
+}
+
 void Importer_obj::MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive)
 {
 	Material* newMaterial = new Material;
@@ -125,7 +238,7 @@ void Importer_obj::ReadObj(const string filePath) {
 		cout << "File Load Success: " << filePath << endl;
 	}
 
-	
+
 
 	VertexData* newVertexData = new VertexData;
 	newVertexData->filename = removeSubstring(filePath, "objs/");
@@ -169,8 +282,8 @@ void Importer_obj::ReadObj(const string filePath) {
 			glm::vec3 normalIndex;
 
 			ss >> faceIndex.x >> dummy >> texCoordIndex.x >> dummy >> normalIndex.x
-			   >> faceIndex.y >> dummy >> texCoordIndex.y >> dummy >> normalIndex.y
-			   >> faceIndex.z >> dummy >> texCoordIndex.z >> dummy >> normalIndex.z;
+				>> faceIndex.y >> dummy >> texCoordIndex.y >> dummy >> normalIndex.y
+				>> faceIndex.z >> dummy >> texCoordIndex.z >> dummy >> normalIndex.z;
 
 			newVertexData->faceIndices.push_back(faceIndex);
 			newVertexData->texCoordIndices.push_back(texCoordIndex);
@@ -294,8 +407,8 @@ void Importer_obj::DeBugVertexData(VertexData* VD)
 	int count{ 0 };
 	for (auto& v : VD->vertexs) {
 		//std::cout << v.x << " " << v.y << " " << v.z << std::endl;
-		
-		
+
+
 	}
 
 	std::cout << std::endl;
@@ -303,7 +416,7 @@ void Importer_obj::DeBugVertexData(VertexData* VD)
 	for (auto& v : VD->normals) {
 		//std::cout << v.x << " " << v.y << " " << v.z << std::endl;
 		count++;
-		
+
 	}
 	std::cout << std::endl;
 

@@ -11,7 +11,7 @@ uniform mat4 projection;
 uniform mat4 view;
 
 out vec3 vertex_normal;
-out vec2 OutTexPos;
+out vec2 texCoords;
 out vec3 WorldPosition;
 
 out vec3 vertex_Tangent;
@@ -30,7 +30,7 @@ void main()
 
 	vertex_normal =  vec3(transform * vec4(vNormal, 1.0));
 
-	OutTexPos = vTexPos;
+	texCoords = vec2(vTexPos.x , -vTexPos.y);
 
 	vertex_Tangent = vTangent;
 	vertex_BitTangent = vBitTangent;

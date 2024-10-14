@@ -1,13 +1,11 @@
 #pragma once
 #include "OpenGL.h"
-#include "Renderer.h"
+
 
 #define M_PI 3.14159265358979323846
 
 class Camera
 {
-	Renderer* m_Renderer;
-
 
 	glm::vec3 look_location;
 	glm::vec3 location;
@@ -23,10 +21,10 @@ class Camera
 	float DegreeToRadian(float value);
 
 public:
-	Camera(Renderer* renderer, glm::vec3 xyz);
+	Camera(glm::vec3 xyz);
 	~Camera();
 
-	void DoWorking(Renderer* renderer);
+	void DoWorking(GLuint Shader, float aspect);
 
 	void BindWithMouseRotation(glm::vec2 xy);
 	void BindWithMouseWheel(float value);

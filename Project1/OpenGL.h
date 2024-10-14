@@ -64,3 +64,4 @@ struct Material {
 	GLuint NormalMapID;
 	GLuint EmissiveID;
 };
+

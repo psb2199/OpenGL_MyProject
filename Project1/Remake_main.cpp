@@ -57,15 +57,15 @@ int main(int argc, char** argv)
 
 
 
-	G_Renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	G_Camera = new Camera(G_Renderer, glm::vec3(0.f));
-	G_Controller = new Controller;
 	G_Importer = new Importer_obj;
+	G_Renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT, G_Importer);
+	G_Camera = new Camera(glm::vec3(0.f));
+	G_Controller = new Controller;
 	G_ObjMgr = new ObjectManager(G_Importer);
 
 	Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
-	G_ObjMgr->AddObject("Test", { 2,0,1 });
 	G_Controller->MappingController(Player);
+	G_Renderer->SetCamera(G_Camera);
 
 	glutSetCursor(GLUT_CURSOR_NONE);
 	ShowCursor(FALSE);
@@ -96,7 +96,6 @@ GLvoid RenderSceneTimer(int value)
 {
 
 	G_Renderer->DrawScene(G_ObjMgr->GetAllObjects());
-	G_Camera->DoWorking(G_Renderer);
 
 	G_Controller->TickEvent();
 	
@@ -222,6 +221,7 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 void LevelDisign()
 {
 	G_ObjMgr->AddObject("Base", { 0,0,0 });
+	G_ObjMgr->AddObject("Test", { 2, 0.1 ,1 });
 	G_Light = new Light({ 1, 2, 1 });
 	G_Renderer->SetLight(G_Light);
 	G_Camera->SetLookLocation(0, 1, 0);

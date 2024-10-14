@@ -1,6 +1,6 @@
 #version 330 core
 
-in vec2 OutTexPos;
+in vec2 texCoords;
 in vec3 WorldPosition;
 in vec3 vertex_normal;
 in vec3 vertex_Tangent;
@@ -18,6 +18,7 @@ float Shadow_minValue = 0.2;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform float lightDistance;
+uniform bool u_cast_shadow;
 
 out vec4 Fragcolor;
 
@@ -51,22 +52,25 @@ float CalShadowFactor()
     return 1.0 - (shadow);  // 그림자의 강도 반환
 }
 
-vec3 GetWorldNormalMap_texture(vec2 texCoords, mat3 TBN)
+vec3 GetWorldNormalMap_texture(vec2 Coords, mat3 TBN)
 {
-    vec3 tangentNormal = texture(u_NormalMap, texCoords).rgb;
+    vec3 tangentNormal = texture(u_NormalMap, Coords).rgb;
+   
     tangentNormal = tangentNormal * 2.0 - 1.0;
     return normalize(TBN * tangentNormal);
+    
 }
 
-vec3 GetBaseColor_texture(vec2 texCoords)
+vec3 GetBaseColor_texture(vec2 Coords)
 {
-    return texture(u_BaseColor, texCoords).rgb;
+    return texture(u_BaseColor, Coords).rgb;
 }
 
-vec3 GetEmissive_texture(vec2 texCoords)
+vec3 GetEmissive_texture(vec2 Coords)
 {
-    return texture(u_Emissive, texCoords).rgb;
+    return texture(u_Emissive, Coords).rgb;
 }
+
 
 
 float GetLightMask(vec3 worldNormal, vec3 lightDir, vec3 fragPosition, vec3 lightPos, float lightDistance)
@@ -81,14 +85,12 @@ float GetLightMask(vec3 worldNormal, vec3 lightDir, vec3 fragPosition, vec3 ligh
 
 void RenderMaterial()
 {
-    vec2 newTexPos = vec2(OutTexPos.x, -OutTexPos.y); // 텍스처 좌표 변환
-
     // TBN 매트릭스 계산
     mat3 TBN = mat3(normalize(vertex_Tangent), 
                     normalize(vertex_BitTangent), 
                     normalize(vertex_normal));
 
-    vec3 worldNormalMap = GetWorldNormalMap_texture(newTexPos, TBN);
+    vec3 worldNormalMap = GetWorldNormalMap_texture(texCoords, TBN);
     //vec3 worldNormalMap = vertex_normal;
 
     // 광원의 방향 계산
@@ -99,7 +101,12 @@ void RenderMaterial()
     float lightMask = GetLightMask(worldNormalMap, lightDir, WorldPosition, lightPos, lightDistance);
 
     // 최종 색상 계산
-    Fragcolor = vec4( max(CalShadowFactor() * lightMask, Shadow_minValue) * GetBaseColor_texture(newTexPos) + GetEmissive_texture(newTexPos), 1.0);
+    if(u_cast_shadow) {
+        Fragcolor = vec4(GetBaseColor_texture(texCoords), 1.0);
+    }
+    else {
+        Fragcolor = vec4( max(CalShadowFactor() * lightMask, Shadow_minValue) * GetBaseColor_texture(texCoords) + GetEmissive_texture(texCoords), 1.0);
+    }
 }
 
 
