@@ -144,7 +144,7 @@ GLuint Importer_obj::LoadTexture(const char* filepath)
 }
 GLuint Importer_obj::LoadEnviromentTextures(std::vector<string> filepathes)
 {
-	//Load Png
+	// Load PNG
 	GLuint texture;
 
 	glGenTextures(1, &texture);
@@ -154,21 +154,20 @@ GLuint Importer_obj::LoadEnviromentTextures(std::vector<string> filepathes)
 	int i = 0;
 
 	for (auto& v : filepathes) {
-
 		std::vector<unsigned char> image;
 		unsigned error = lodepng::decode(image, width, height, v.c_str());
 
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-			0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0
-		);
-
 		if (error != 0) {
-			cout << "eviroment image loading failed:" << v.c_str() << endl;
+			cout << "Environment image loading failed: " << v.c_str() << endl;
+			continue; 
 		}
+
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+			0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0] 
+		);
 
 		++i;
 	}
-
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

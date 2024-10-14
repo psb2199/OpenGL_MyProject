@@ -11,7 +11,5 @@ uniform samplerCube u_enviroment;
 
 void main()
 {    
-    //Fragcolor = texture(u_enviroment, TexCoords);
-    //Fragcolor = vec4(fract(TexCoords), 1);
-    Fragcolor = vec4(1.0);
+    Fragcolor = texture(u_enviroment, TexCoords);
 }

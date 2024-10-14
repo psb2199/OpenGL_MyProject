@@ -232,49 +232,50 @@ void Renderer::Initialize_PostProcessMap(const unsigned int width, const unsigne
 }
 void Renderer::Initialize_EviromentVAO()
 {
+	float skyboxSize = 100.f;
 	float skyboxVertices[] = {
 		// positions          
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		-1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f
+		-skyboxSize,  skyboxSize, -skyboxSize,
+		-skyboxSize, -skyboxSize, -skyboxSize,
+		 skyboxSize, -skyboxSize, -skyboxSize,
+		 skyboxSize, -skyboxSize, -skyboxSize,
+		 skyboxSize,  skyboxSize, -skyboxSize,
+		-skyboxSize,  skyboxSize, -skyboxSize,
+		 			     
+		-skyboxSize, -skyboxSize,  skyboxSize,
+		-skyboxSize, -skyboxSize, -skyboxSize,
+		-skyboxSize,  skyboxSize, -skyboxSize,
+		-skyboxSize,  skyboxSize, -skyboxSize,
+		-skyboxSize,  skyboxSize,  skyboxSize,
+		-skyboxSize, -skyboxSize,  skyboxSize,
+		 			     
+		 skyboxSize, -skyboxSize, -skyboxSize,
+		 skyboxSize, -skyboxSize,  skyboxSize,
+		 skyboxSize,  skyboxSize,  skyboxSize,
+		 skyboxSize,  skyboxSize,  skyboxSize,
+		 skyboxSize,  skyboxSize, -skyboxSize,
+		 skyboxSize, -skyboxSize, -skyboxSize,
+					     
+		-skyboxSize, -skyboxSize,  skyboxSize,
+		-skyboxSize,  skyboxSize,  skyboxSize,
+		 skyboxSize,  skyboxSize,  skyboxSize,
+		 skyboxSize,  skyboxSize,  skyboxSize,
+		 skyboxSize, -skyboxSize,  skyboxSize,
+		-skyboxSize, -skyboxSize,  skyboxSize,
+					     
+		-skyboxSize,  skyboxSize, -skyboxSize,
+		 skyboxSize,  skyboxSize, -skyboxSize,
+		 skyboxSize,  skyboxSize,  skyboxSize,
+		 skyboxSize,  skyboxSize,  skyboxSize,
+		-skyboxSize,  skyboxSize,  skyboxSize,
+		-skyboxSize,  skyboxSize, -skyboxSize,
+					     
+		-skyboxSize, -skyboxSize, -skyboxSize,
+		-skyboxSize, -skyboxSize,  skyboxSize,
+		 skyboxSize, -skyboxSize, -skyboxSize,
+		 skyboxSize, -skyboxSize, -skyboxSize,
+		-skyboxSize, -skyboxSize,  skyboxSize,
+		 skyboxSize, -skyboxSize,  skyboxSize
 	};
 
 	glGenVertexArrays(1, &EviromentVAO);
@@ -301,8 +302,9 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	Render_ShadowMap(Shadow_Shader, Objects);
 
 	Render_Enviroment(Enviroment_Shader);
-
 	Render_DefaultColor(Basic_Shader, Objects);
+
+
 
 	// 블룸 맵 렌더링
 	//Render_PostProcessMap(Bloom_Shader, Objects);
@@ -417,10 +419,16 @@ void Renderer::Render_Enviroment(GLuint Shader)
 	glUseProgram(Shader);
 
 	m_Camera->DoWorking(Shader, aspect);
-	//GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
-	//glUniform1i(ul_enviroment, 0);
-	//glActiveTexture(GL_TEXTURE0 + 0);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
+
+	// 텍스처 유닛 0을 활성화
+	glActiveTexture(GL_TEXTURE0);
+
+	// 큐브맵 텍스처를 텍스처 유닛 0에 바인딩
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
+
+	// 텍스처 유닛 0을 u_enviroment에 전달
+	GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
+	glUniform1i(ul_enviroment, 0); // 텍스처 유닛 0과 샘플러 연결
 
 	glBindVertexArray(EviromentVAO); 
 	glDrawArrays(GL_TRIANGLES, 0, 36); 
