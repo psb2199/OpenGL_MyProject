@@ -24,7 +24,7 @@ class Renderer
 
 	GLuint			Basic_Shader;
 	GLuint			Shadow_Shader;
-	GLuint			Bloom_Shader;
+	GLuint			PostProcess_Shader;
 	GLuint			Enviroment_Shader;
 
 	FrameData		Shadow;
@@ -40,7 +40,6 @@ class Renderer
 	GLuint			CompileShaders(std::string FileNameVS, std::string FileNameFS);
 	bool			ReadShaderFile(std::string filename, std::string* target);
 	void			AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
-
 
 	void			Initialize(int width, int height);
 	void			Initialize_ShadowMap(const unsigned int width, const unsigned int height);

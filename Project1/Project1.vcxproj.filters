@@ -60,10 +60,10 @@
     <None Include="ShadowShader.vs">
       <Filter>소스 파일\Shaders</Filter>
     </None>
-    <None Include="BloomShader.vs">
+    <None Include="PostProcessShader.vs">
       <Filter>소스 파일\Shaders</Filter>
     </None>
-    <None Include="BloomShader.fs">
+    <None Include="PostProcessShader.fs">
       <Filter>소스 파일\Shaders</Filter>
     </None>
     <None Include="EnviromentShader.vs">

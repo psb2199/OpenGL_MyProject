@@ -151,8 +151,8 @@ void Renderer::Initialize(int width, int height)
 	Shadow_Shader = CompileShaders("ShadowShader.vs", "ShadowShader.fs");
 	Initialize_ShadowMap(4096, 4096);
 
-	Bloom_Shader = CompileShaders("BloomShader.vs", "BloomShader.fs");
-	//Initialize_PostProcessMap(window_width, window_height);
+	PostProcess_Shader = CompileShaders("PostProcessShader.vs", "PostProcessShader.fs");
+	Initialize_PostProcessMap(window_width, window_height);
 }
 void Renderer::Initialize_ShadowMap(const unsigned int width, const unsigned int height)
 {
@@ -185,7 +185,7 @@ void Renderer::Initialize_PostProcessMap(const unsigned int width, const unsigne
 
 	glGenTextures(1, &post_process.SceneID);
 	glBindTexture(GL_TEXTURE_2D, post_process.SceneID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -301,13 +301,12 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 
 	Render_ShadowMap(Shadow_Shader, Objects);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, post_process.FBO);
+
 	Render_Enviroment(Enviroment_Shader);
 	Render_DefaultColor(Basic_Shader, Objects);
 
-
-
-	// 블룸 맵 렌더링
-	//Render_PostProcessMap(Bloom_Shader, Objects);
+	Render_PostProcessMap(PostProcess_Shader, Objects);
 }
 
 void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
@@ -358,6 +357,9 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 
 	glUseProgram(Shader);
 	m_Camera->DoWorking(Shader, aspect);
+	glm::vec3 camrea_pos = m_Camera->GetLocation();
+	glUniform3f(glGetUniformLocation(Shader, "u_CameraPos"), camrea_pos.x, camrea_pos.y, camrea_pos.z);
+
 	m_light->LightWorks(Shader);
 
 	// 깊이 맵 텍스처를 쉐이더로 전달 (깊이 맵 자체가 화면에 그려지지 않도록 관리)
@@ -368,6 +370,11 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 
 	GLuint ul_ShadowMapSize = glGetUniformLocation(Shader, "u_ShadowMapSize");
 	glUniform1f(ul_ShadowMapSize, Shadow.width);
+
+	GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
+	glUniform1i(ul_enviroment, 4);
+	glActiveTexture(GL_TEXTURE0 + 4);  // 3번 텍스처 슬롯 활성화
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
 
 	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr)
 	{
@@ -419,16 +426,11 @@ void Renderer::Render_Enviroment(GLuint Shader)
 	glUseProgram(Shader);
 
 	m_Camera->DoWorking(Shader, aspect);
-
-	// 텍스처 유닛 0을 활성화
 	glActiveTexture(GL_TEXTURE0);
 
-	// 큐브맵 텍스처를 텍스처 유닛 0에 바인딩
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
-
-	// 텍스처 유닛 0을 u_enviroment에 전달
 	GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
-	glUniform1i(ul_enviroment, 0); // 텍스처 유닛 0과 샘플러 연결
+	glUniform1i(ul_enviroment, 0); 
 
 	glBindVertexArray(EviromentVAO); 
 	glDrawArrays(GL_TRIANGLES, 0, 36); 
@@ -440,12 +442,13 @@ void Renderer::Render_Enviroment(GLuint Shader)
 
 void Renderer::Render_PostProcessMap(GLuint Shader, std::vector<Object*> Objects)
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glUseProgram(Shader);
 
 	GLuint ul_Bloom = glGetUniformLocation(Shader, "u_Bloom");
-	glUniform1i(ul_Bloom, 7);
-	glActiveTexture(GL_TEXTURE0 + 7);
+	glUniform1i(ul_Bloom, 0);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, post_process.SceneID); // FBO에서 생성한 텍스처 바인딩
 
 	glBindVertexArray(frameVAO); // 정점 배열 객체 바인딩

@@ -55,6 +55,13 @@ int main(int argc, char** argv)
 	//glDisable(GL_CULL_FACE);
 	glEnable(GL_CULL_FACE);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_POLYGON_SMOOTH);
+	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
+	
 
 
 	G_Importer = new Importer_obj;

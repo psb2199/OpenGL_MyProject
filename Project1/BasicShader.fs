@@ -6,6 +6,10 @@ in vec3 vertex_normal;
 in vec3 vertex_Tangent;
 in vec3 vertex_BitTangent;
 
+uniform vec3 u_CameraPos;
+
+uniform samplerCube u_enviroment;
+
 uniform sampler2D u_BaseColor;
 uniform sampler2D u_NormalMap;
 uniform sampler2D u_Emissive;
@@ -20,7 +24,9 @@ uniform vec3 lightColor;
 uniform float lightDistance;
 uniform bool u_cast_shadow;
 
+
 out vec4 Fragcolor;
+
 
 
 float CalShadowFactor()
@@ -52,8 +58,13 @@ float CalShadowFactor()
     return 1.0 - (shadow);  // 그림자의 강도 반환
 }
 
-vec3 GetWorldNormalMap_texture(vec2 Coords, mat3 TBN)
+vec3 GetWorldNormalMap_texture(vec2 Coords)
 {
+   // TBN 매트릭스 계산
+    mat3 TBN = mat3(normalize(vertex_Tangent), 
+                    normalize(vertex_BitTangent), 
+                    normalize(vertex_normal));
+
     vec3 tangentNormal = texture(u_NormalMap, Coords).rgb;
    
     tangentNormal = tangentNormal * 2.0 - 1.0;
@@ -85,12 +96,7 @@ float GetLightMask(vec3 worldNormal, vec3 lightDir, vec3 fragPosition, vec3 ligh
 
 void RenderMaterial()
 {
-    // TBN 매트릭스 계산
-    mat3 TBN = mat3(normalize(vertex_Tangent), 
-                    normalize(vertex_BitTangent), 
-                    normalize(vertex_normal));
-
-    vec3 worldNormalMap = GetWorldNormalMap_texture(texCoords, TBN);
+    vec3 worldNormalMap = GetWorldNormalMap_texture(texCoords);
     //vec3 worldNormalMap = vertex_normal;
 
     // 광원의 방향 계산
@@ -109,8 +115,16 @@ void RenderMaterial()
     }
 }
 
+vec3 CalReflectVector(vec3 normal)
+{
+    vec3 CameraDir = normalize(WorldPosition - u_CameraPos);
+
+    return CameraDir + 2 * normal * (dot(-CameraDir, normal));
+}
 
 void main()
 {
-    RenderMaterial();
+    //RenderMaterial();
+    //Fragcolor = vec4(CalReflectVector(), 1.0);
+    Fragcolor = texture(u_enviroment, CalReflectVector(vertex_normal));
 }
