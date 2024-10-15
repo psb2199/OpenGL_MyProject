@@ -7,8 +7,8 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	ojbect_type = type;
 	
 	if (type == "Player") {
-		SetMesh("Male.obj");
-		SetMaterial("M_Male");
+		SetMesh("GravityBox.obj");
+		SetMaterial("M_GravityBox");
 	}
 	else if (type == "Base"){
 		SetMesh("Base.obj");

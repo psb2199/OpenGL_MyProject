@@ -122,7 +122,7 @@ void RenderMaterial()
     float lightMask = GetLightMask(worldNormalMap, lightDir, WorldPosition, lightPos, lightDistance);
 
     //반사된 이미지
-    vec3 refrected_image = vec3(dot(GetReflectedColor(worldNormalMap), vec3(0.5, 0.5, 0.5))) * ( 1 - GetRoughness());
+    vec3 refrected_image = vec3(dot(GetReflectedColor(worldNormalMap), vec3(0.5, 0.5, 0.5)));
 
     // 최종 색상 계산
     if(u_cast_shadow) {
@@ -136,4 +136,10 @@ void RenderMaterial()
 void main()
 {
     RenderMaterial();
+
+    vec3 DiffultColor = Fragcolor.rgb;
+    vec3 MetalicMaskedColor = DiffultColor * GetReflectedColor(GetWorldNormalMap_texture(texCoords)) * GetMetalic();
+    vec3 re_MetalicMaskedColor = DiffultColor * (1-GetMetalic());
+
+    Fragcolor = vec4(re_MetalicMaskedColor + MetalicMaskedColor, 1.0);
 }
