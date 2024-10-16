@@ -28,9 +28,24 @@ uniform bool u_cast_shadow;
 
 out vec4 Fragcolor;
 
-vec3 GetAO() { return vec3(texture(u_ARM, texCoords).r); }
-vec3 GetRoughness() { return vec3(texture(u_ARM, texCoords).g); }
-vec3 GetMetalic() { return vec3(texture(u_ARM, texCoords).b); }
+float       GetAO()            { return texture(u_ARM, texCoords).r; }
+float       GetRoughness()     { return texture(u_ARM, texCoords).g; }
+float       GetMetalic()       { return texture(u_ARM, texCoords).b; }
+
+vec3        GetBaseColor()     { return texture(u_BaseColor, texCoords).rgb; }
+vec3        GetEmissive()      { return texture(u_Emissive, texCoords).rgb; }
+
+vec3 GetWorldNormalMap()
+{
+    mat3 TBN = mat3(normalize(vertex_Tangent), 
+                    normalize(vertex_BitTangent), 
+                    normalize(vertex_normal));
+
+    vec3 tangentNormal = texture(u_NormalMap, texCoords).rgb;
+   
+    tangentNormal = tangentNormal * 2.0 - 1.0;
+    return normalize(TBN * tangentNormal);
+}
 
 float CalShadowFactor()
 {
@@ -61,40 +76,16 @@ float CalShadowFactor()
     return 1.0 - (shadow);  // 그림자의 강도 반환
 }
 
-vec3 GetWorldNormalMap_texture(vec2 Coords)
+float GetLightMask(vec3 normal)
 {
-   // TBN 매트릭스 계산
-    mat3 TBN = mat3(normalize(vertex_Tangent), 
-                    normalize(vertex_BitTangent), 
-                    normalize(vertex_normal));
-
-    vec3 tangentNormal = texture(u_NormalMap, Coords).rgb;
+    // 광원의 방향 계산
+    vec3 lightDir = normalize(lightPos - 0); //direction light
+    //vec3 lightDir = normalize(lightPos - WorldPosition); //point light
    
-    tangentNormal = tangentNormal * 2.0 - 1.0;
-    return normalize(TBN * tangentNormal);
-    
-}
+    float lightMask = dot(normal, lightDir);
 
-vec3 GetBaseColor_texture(vec2 Coords)
-{
-    return texture(u_BaseColor, Coords).rgb;
-}
-
-vec3 GetEmissive_texture(vec2 Coords)
-{
-    return texture(u_Emissive, Coords).rgb;
-}
-
-
-
-float GetLightMask(vec3 worldNormal, vec3 lightDir, vec3 fragPosition, vec3 lightPos, float lightDistance)
-{
-    float lightMask = max(dot(worldNormal, lightDir), 0) 
-                    * max((1 - distance(fragPosition, lightPos) / lightDistance), 0);
-
-    float Highlight = pow(lightMask, 64);
-
-    return lightMask + Highlight;
+    if(u_cast_shadow) return 0.0;
+    else return float(max(CalShadowFactor() * lightMask, Shadow_minValue));
 }
 
 vec3 CalReflectVector(vec3 normal)
@@ -109,37 +100,31 @@ vec3 GetReflectedColor(vec3 normal)
     return texture(u_enviroment, CalReflectVector(normal)).rgb;
 }
 
-void RenderMaterial()
-{
-    vec3 worldNormalMap = GetWorldNormalMap_texture(texCoords);
-    //vec3 worldNormalMap = vertex_normal;
+void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metalic, vec3 Emissive)
+{   
+    vec3 resultColor;
 
-    // 광원의 방향 계산
-    vec3 lightDir = normalize(lightPos - 0); //direction light
-    //vec3 lightDir = normalize(lightPos - WorldPosition); //point light
 
-    // 조명 마스크 계산
-    float lightMask = GetLightMask(worldNormalMap, lightDir, WorldPosition, lightPos, lightDistance);
+    resultColor = BaseColor;
+    resultColor *= GetLightMask(NormalMap);
 
-    //반사된 이미지
-    vec3 refrected_image = vec3(dot(GetReflectedColor(worldNormalMap), vec3(0.5, 0.5, 0.5)));
-
-    // 최종 색상 계산
-    if(u_cast_shadow) {
-        Fragcolor = vec4(GetBaseColor_texture(texCoords), 1.0);
-    }
-    else {
-        Fragcolor = vec4( max(CalShadowFactor() * lightMask, Shadow_minValue) * GetBaseColor_texture(texCoords) + GetEmissive_texture(texCoords), 1.0);
-    }
+    Fragcolor = vec4(resultColor + Emissive, 1.0);
 }
 
 void main()
 {
-    RenderMaterial();
+    Render(
+    GetBaseColor(),
+    GetWorldNormalMap(),
+    GetAO(),
+    GetRoughness(),
+    GetMetalic(),
+    GetEmissive()
+    );
 
-    vec3 DiffultColor = Fragcolor.rgb;
-    vec3 MetalicMaskedColor = DiffultColor * GetReflectedColor(GetWorldNormalMap_texture(texCoords)) * GetMetalic();
-    vec3 re_MetalicMaskedColor = DiffultColor * (1-GetMetalic());
+    //vec3 DiffultColor = Fragcolor.rgb;
+    //vec3 MetalicMaskedColor = DiffultColor * GetReflectedColor(GetWorldNormalMap()) * GetMetalic();
+    //vec3 re_MetalicMaskedColor = DiffultColor * (1-GetMetalic());
 
-    Fragcolor = vec4(re_MetalicMaskedColor + MetalicMaskedColor, 1.0);
+    //Fragcolor = vec4(re_MetalicMaskedColor + MetalicMaskedColor + GetEmissive(), 1.0);
 }

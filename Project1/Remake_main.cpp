@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	G_Controller = new Controller;
 	G_ObjMgr = new ObjectManager(G_Importer);
 
-	Player = G_ObjMgr->AddObject("Player", { 0,0,0 });
+	Player = G_ObjMgr->AddObject("Player", { 0,0.5,0 });
 	G_Controller->MappingController(Player);
 	G_Renderer->SetCamera(G_Camera);
 
