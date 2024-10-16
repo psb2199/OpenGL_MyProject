@@ -30,7 +30,7 @@ out vec4 Fragcolor;
 
 float       GetAO()            { return texture(u_ARM, texCoords).r; }
 float       GetRoughness()     { return texture(u_ARM, texCoords).g; }
-float       GetMetalic()       { return texture(u_ARM, texCoords).b; }
+float       GetMetallic()       { return texture(u_ARM, texCoords).b; }
 
 vec3        GetBaseColor()     { return texture(u_BaseColor, texCoords).rgb; }
 vec3        GetEmissive()      { return texture(u_Emissive, texCoords).rgb; }
@@ -45,6 +45,13 @@ vec3 GetWorldNormalMap()
    
     tangentNormal = tangentNormal * 2.0 - 1.0;
     return normalize(TBN * tangentNormal);
+}
+
+vec3 ToGrayScale(vec3 color)
+{
+    float gray = dot(color, vec3(0.299, 0.587, 0.114));
+
+    return vec3(gray);
 }
 
 float CalShadowFactor()
@@ -95,20 +102,58 @@ vec3 CalReflectVector(vec3 normal)
     return CameraDir + 2 * normal * (dot(-CameraDir, normal));
 }
 
-vec3 GetReflectedColor(vec3 normal)
+vec3 GetReflectedColor(vec3 normal, float roughness)
 {
-    return texture(u_enviroment, CalReflectVector(normal)).rgb;
+    vec3 colorSum = vec3(0.0);
+    int range = 2; 
+    float weight = 1.0 / pow((range * 2 + 1), 3); 
+
+    float offsetScale = roughness * 0.1; 
+
+    for (int x = -range; x <= range; ++x) {
+        for (int y = -range; y <= range; ++y) {
+            for (int z = -range; z <= range; ++z) {
+
+                vec3 offset = vec3(x, y, z) * offsetScale;
+                
+                vec3 reflectVec = CalReflectVector(normal) + offset;
+                colorSum += texture(u_enviroment, reflectVec).rgb * weight;
+            }
+        }
+    }
+    vec3 result = texture(u_enviroment, CalReflectVector(normal)).rgb;
+
+    return mix(result, colorSum, roughness);
 }
 
-void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metalic, vec3 Emissive)
+void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic, vec3 Emissive)
 {   
-    vec3 resultColor;
+    vec3 resultColor = BaseColor;
+
+    resultColor = vec3(1.0);
+    Metallic = 0;
+    Roughness = 0;
+
+    //Roughness
+    vec3 reflectedColor = GetReflectedColor(NormalMap, Roughness);
+    resultColor -= vec3(ToGrayScale(reflectedColor)) * 0.5;
 
 
-    resultColor = BaseColor;
+    //Metallic
+    vec3 re_MetallicMaskedColor = resultColor * (1 - Metallic);
+    vec3 MetallicMaskedColor = resultColor * reflectedColor * Metallic;
+    resultColor = re_MetallicMaskedColor + MetallicMaskedColor;
+
+    //Light
     resultColor *= GetLightMask(NormalMap);
 
-    Fragcolor = vec4(resultColor + Emissive, 1.0);
+    //Ambient Occulusion
+    //resultColor *= AO;
+
+    //Emissive
+    //resultColor += Emissive
+
+    Fragcolor = vec4(resultColor, 1.0);
 }
 
 void main()
@@ -118,13 +163,13 @@ void main()
     GetWorldNormalMap(),
     GetAO(),
     GetRoughness(),
-    GetMetalic(),
+    GetMetallic(),
     GetEmissive()
     );
 
     //vec3 DiffultColor = Fragcolor.rgb;
-    //vec3 MetalicMaskedColor = DiffultColor * GetReflectedColor(GetWorldNormalMap()) * GetMetalic();
-    //vec3 re_MetalicMaskedColor = DiffultColor * (1-GetMetalic());
+    //vec3 MetallicMaskedColor = DiffultColor * GetReflectedColor(GetWorldNormalMap()) * GetMetallic();
+    //vec3 re_MetallicMaskedColor = DiffultColor * (1-GetMetallic());
 
-    //Fragcolor = vec4(re_MetalicMaskedColor + MetalicMaskedColor + GetEmissive(), 1.0);
+    //Fragcolor = vec4(re_MetallicMaskedColor + MetallicMaskedColor + GetEmissive(), 1.0);
 }

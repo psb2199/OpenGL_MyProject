@@ -34,6 +34,7 @@ void Importer_obj::Initialize()
 
 		Grass_BaseColor,
 		Grass_Normal,
+		Grass_ARM,
 
 		Enviroment,
 
@@ -53,6 +54,7 @@ void Importer_obj::Initialize()
 
 		Textures[Grass_BaseColor] = LoadTexture("textures/Grass_BaseColor.png");
 		Textures[Grass_Normal] = LoadTexture("textures/Grass_Normal.png");
+		Textures[Grass_ARM] = LoadTexture("textures/Grass_ARM.png");
 
 
 		std::vector<string> cubeMap_filepathes;
@@ -85,7 +87,7 @@ void Importer_obj::Initialize()
 			Textures[Grass_BaseColor],
 			Textures[Grass_Normal],
 			NULL,
-			NULL
+			Textures[Grass_ARM]
 		);
 
 		MakeMaterial
