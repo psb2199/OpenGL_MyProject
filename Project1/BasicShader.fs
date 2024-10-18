@@ -25,7 +25,7 @@ uniform vec3        lightColor;
 uniform float       lightDistance;
 uniform bool        u_cast_shadow;
 
-
+float PI = 3.141592;
 
 out vec4 Fragcolor;
 
@@ -74,7 +74,7 @@ float CalShadowFactor()
 
     // PCF 샘플링 범위
     float shadow = 0.0;
-    float bias = 0.005;
+    float bias = 0.0025;
     int samples = 5;  // 샘플 갯수
     float texelSize = 1.0 / u_ShadowMapSize;  // 그림자 맵 해상도에 따른 텍셀 크기
 
@@ -183,10 +183,92 @@ void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Met
     Fragcolor = vec4(resultColor, 1.0);
 }
 
+// PBR 관련 수학적 함수들 
+vec3 fresnelSchlick(float cosTheta, vec3 F0) {
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH * NdotH;
+    
+    float num = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+    
+    return num / denom;
+}
+
+float GeometrySchlickGGX(float NdotV, float roughness) {
+    float r = (roughness + 1.0);
+    float k = (r * r) / 8.0;
+    
+    float num = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+    
+    return num / denom;
+}
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx1 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx2 = GeometrySchlickGGX(NdotL, roughness);
+    return ggx1 * ggx2;
+}
+
+void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic, vec3 Emissive)
+{
+    vec3 N = normalize(NormalMap);
+    vec3 V = normalize(u_CameraPos - WorldPosition);
+    vec3 L = normalize(lightPos - WorldPosition);
+    vec3 H = normalize(V + L);
+    
+
+    vec3 F0 = mix(vec3(0.04), BaseColor, Metallic); 
+    vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+    
+
+    float NDF = DistributionGGX(N, H, Roughness); 
+    float G = GeometrySmith(N, V, L, Roughness); 
+    vec3 numerator = NDF * G * F;
+    float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+    vec3 specular = numerator / denominator;
+    
+
+    vec3 kS = F;
+    vec3 kD = vec3(1.0) - kS; 
+    kD *= 1.0 - Metallic; 
+
+
+    float NdotL = max(dot(N, L), 0.0);
+    vec3 Lo = (kD * BaseColor / PI + specular) * NdotL;
+
+
+    vec3 ambient = vec3(0.5) * BaseColor * AO;
+
+    vec3 reflectedColor = GetBlurReflectedColor(N, Roughness);
+    reflectedColor *= Metallic; 
+
+   
+
+    vec3 color = ambient + Lo;
+
+    vec3 re_MetallicMaskedColor = color * (1 - Metallic);
+    vec3 MetallicMaskedColor = color * reflectedColor * Metallic;
+    color = re_MetallicMaskedColor + MetallicMaskedColor;
+
+    color *= max(CalShadowFactor() * dot(LightDir, NormalMap), Shadow_minValue);
+    color += Emissive;
+
+    Fragcolor = vec4(color, 1.0);
+}
 
 void main()
 {
-    Render(
+    PBR_Render(
     GetBaseColor(),
     GetWorldNormalMap(),
     GetAO(),
