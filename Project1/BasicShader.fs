@@ -1,39 +1,47 @@
 #version 330 core
 
-in vec2 texCoords;
-in vec3 WorldPosition;
-in vec3 vertex_normal;
-in vec3 vertex_Tangent;
-in vec3 vertex_BitTangent;
+in vec2             texCoords;
+in vec3             WorldPosition;
+in vec3             vertex_normal;
+in vec3             vertex_Tangent;
+in vec3             vertex_BitTangent;
 
-uniform vec3 u_CameraPos;
+uniform             vec3 u_CameraPos;
 
 uniform samplerCube u_enviroment;
 
-uniform sampler2D u_BaseColor;
-uniform sampler2D u_NormalMap;
-uniform sampler2D u_Emissive;
-uniform sampler2D u_ARM;
+uniform sampler2D   u_BaseColor;
+uniform sampler2D   u_NormalMap;
+uniform sampler2D   u_Emissive;
+uniform sampler2D   u_ARM;
 
-uniform sampler2D u_DepthMap;
-in vec4 LightSpacePos;
-uniform float u_ShadowMapSize;
-float Shadow_minValue = 0.2;
+uniform sampler2D   u_DepthMap;
+in vec4             LightSpacePos;
+uniform float       u_ShadowMapSize;
+float               Shadow_minValue = 0.2;
 
-uniform vec3 lightPos;
-uniform vec3 lightColor;
-uniform float lightDistance;
-uniform bool u_cast_shadow;
+uniform vec3        lightPos;
+uniform vec3        lightColor;
+uniform float       lightDistance;
+uniform bool        u_cast_shadow;
+
 
 
 out vec4 Fragcolor;
 
 float       GetAO()            { return texture(u_ARM, texCoords).r; }
 float       GetRoughness()     { return texture(u_ARM, texCoords).g; }
-float       GetMetallic()       { return texture(u_ARM, texCoords).b; }
+float       GetMetallic()      { return texture(u_ARM, texCoords).b; }
 
 vec3        GetBaseColor()     { return texture(u_BaseColor, texCoords).rgb; }
 vec3        GetEmissive()      { return texture(u_Emissive, texCoords).rgb; }
+
+// 광원의 방향 계산
+vec3 LightDir = normalize(lightPos - 0); //direction light
+//vec3 LightDir = normalize(lightPos - WorldPosition); //point light
+
+vec3 CameraDir = normalize(WorldPosition - u_CameraPos);
+
 
 vec3 GetWorldNormalMap()
 {
@@ -49,7 +57,7 @@ vec3 GetWorldNormalMap()
 
 vec3 ToGrayScale(vec3 color)
 {
-    float gray = dot(color, vec3(0.299, 0.587, 0.114));
+    float gray = dot(color, vec3(0.333, 0.333, 0.333));
 
     return vec3(gray);
 }
@@ -83,78 +91,98 @@ float CalShadowFactor()
     return 1.0 - (shadow);  // 그림자의 강도 반환
 }
 
-float GetLightMask(vec3 normal)
-{
-    // 광원의 방향 계산
-    vec3 lightDir = normalize(lightPos - 0); //direction light
-    //vec3 lightDir = normalize(lightPos - WorldPosition); //point light
-   
-    float lightMask = dot(normal, lightDir);
-
-    if(u_cast_shadow) return 0.0;
-    else return float(max(CalShadowFactor() * lightMask, Shadow_minValue));
-}
 
 vec3 CalReflectVector(vec3 normal)
 {
-    vec3 CameraDir = normalize(WorldPosition - u_CameraPos);
-
     return CameraDir + 2 * normal * (dot(-CameraDir, normal));
 }
 
-vec3 GetReflectedColor(vec3 normal, float roughness)
+vec3 GetReflectedColor(vec3 normal)
 {
-    vec3 colorSum = vec3(0.0);
-    int range = 2; 
-    float weight = 1.0 / pow((range * 2 + 1), 3); 
+    return texture(u_enviroment, CalReflectVector(normal)).rgb;
+}
 
-    float offsetScale = roughness * 0.1; 
+vec3 GetBlurReflectedColor(vec3 normal, float blurAmount)
+{
+    // 반사 벡터 계산
+    vec3 reflectedDir = normalize(CalReflectVector(normal));
 
-    for (int x = -range; x <= range; ++x) {
-        for (int y = -range; y <= range; ++y) {
-            for (int z = -range; z <= range; ++z) {
+    // 흐림을 적용하기 위해 주변 방향을 샘플링
+    vec3 color = vec3(0.0);
+    int sampleCount = 8;  // 샘플링할 개수
 
-                vec3 offset = vec3(x, y, z) * offsetScale;
-                
-                vec3 reflectVec = CalReflectVector(normal) + offset;
-                colorSum += texture(u_enviroment, reflectVec).rgb * weight;
-            }
-        }
+    // 여러 방향에서 반사된 색상을 샘플링하여 평균화
+    for (int i = 0; i < sampleCount; i++) {
+        // 난수 기반 오프셋 방향을 생성 (여기서는 간단한 퍼터베이션 사용)
+        vec3 offset = normalize(vec3(
+            fract(sin(float(i)) * 43758.5453), 
+            fract(cos(float(i)) * 96123.3542), 
+            fract(sin(float(i) * 0.5) * 21391.1325)
+        ));
+
+        // 반사 벡터에 오프셋을 추가하고, blurAmount로 조절
+        vec3 blurredDir = normalize(reflectedDir + offset * blurAmount);
+
+        // 흐려진 방향으로 텍스처 샘플링
+        color += texture(u_enviroment, blurredDir).rgb;
     }
-    vec3 result = texture(u_enviroment, CalReflectVector(normal)).rgb;
 
-    return mix(result, colorSum, roughness);
+    // 샘플한 값들의 평균을 반환 (합계를 샘플 개수로 나눔)
+    color /= float(sampleCount);
+
+    return color;
+}
+
+float Fresnel(float threshold, vec3 normal)
+{
+    return pow(1.0 - dot(CameraDir, -normal), threshold);
 }
 
 void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic, vec3 Emissive)
 {   
     vec3 resultColor = BaseColor;
 
-    resultColor = vec3(1.0);
-    Metallic = 0;
-    Roughness = 0;
-
-    //Roughness
-    vec3 reflectedColor = GetReflectedColor(NormalMap, Roughness);
-    resultColor -= vec3(ToGrayScale(reflectedColor)) * 0.5;
+    //resultColor = vec3(1.0);
+    //Metallic = 1;
+    //Roughness = 0;
 
 
-    //Metallic
+    //Ambient Occulusion=====================================================
+    resultColor *= AO;
+    //=======================================================================
+
+
+
+    //Roughness==============================================================
+    vec3 reflectedColor = GetBlurReflectedColor(NormalMap, Roughness);
+    float Highlight = pow(dot(NormalMap, LightDir), 64);
+    //=======================================================================
+
+
+
+    //Metallic===============================================================
     vec3 re_MetallicMaskedColor = resultColor * (1 - Metallic);
     vec3 MetallicMaskedColor = resultColor * reflectedColor * Metallic;
     resultColor = re_MetallicMaskedColor + MetallicMaskedColor;
+    //=======================================================================
 
-    //Light
-    resultColor *= GetLightMask(NormalMap);
+    
 
-    //Ambient Occulusion
-    //resultColor *= AO;
+    //Shadow=================================================================
+    //resultColor += Highlight;
+    resultColor *= max(dot(LightDir, NormalMap) * CalShadowFactor(), Shadow_minValue);
+    //=======================================================================
+   
 
-    //Emissive
-    //resultColor += Emissive
+
+    //Emissive===============================================================
+    resultColor += Emissive;
+    //=======================================================================
+
 
     Fragcolor = vec4(resultColor, 1.0);
 }
+
 
 void main()
 {
@@ -166,10 +194,4 @@ void main()
     GetMetallic(),
     GetEmissive()
     );
-
-    //vec3 DiffultColor = Fragcolor.rgb;
-    //vec3 MetallicMaskedColor = DiffultColor * GetReflectedColor(GetWorldNormalMap()) * GetMetallic();
-    //vec3 re_MetallicMaskedColor = DiffultColor * (1-GetMetallic());
-
-    //Fragcolor = vec4(re_MetallicMaskedColor + MetallicMaskedColor + GetEmissive(), 1.0);
 }

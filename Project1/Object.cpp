@@ -9,6 +9,8 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	if (type == "Player") {
 		SetMesh("GravityBox.obj");
 		SetMaterial("M_GravityBox");
+		//SetMesh("Male.obj");
+		//SetMaterial("M_Male");
 	}
 	else if (type == "Base"){
 		SetMesh("Base.obj");
