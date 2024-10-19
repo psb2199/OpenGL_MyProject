@@ -2,8 +2,6 @@
 
 in vec3 TexCoords;
 
-
-
 out vec4 Fragcolor;
 
 

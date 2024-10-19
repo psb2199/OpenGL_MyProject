@@ -14,7 +14,7 @@
 
 
 #define RenderFriquency 10 //100밀리 초 마다 한번
-#define WINDOW_WIDTH 1000
+#define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 700
 
 

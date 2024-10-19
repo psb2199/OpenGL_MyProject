@@ -151,6 +151,9 @@ void Renderer::Initialize(int width, int height)
 	Shadow_Shader = CompileShaders("ShadowShader.vs", "ShadowShader.fs");
 	Initialize_ShadowMap(4096, 4096);
 
+	Bloom_Shader = CompileShaders("BloomShader.vs", "BloomShader.fs");
+	Initialize_BloomMap(window_width, window_height);
+
 	PostProcess_Shader = CompileShaders("PostProcessShader.vs", "PostProcessShader.fs");
 	Initialize_PostProcessMap(window_width, window_height);
 }
@@ -172,6 +175,34 @@ void Renderer::Initialize_ShadowMap(const unsigned int width, const unsigned int
 
 	glBindFramebuffer(GL_FRAMEBUFFER, Shadow.FBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, Shadow.SceneID, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+void Renderer::Initialize_BloomMap(const unsigned int width, const unsigned int height)
+{
+	Bloom.width = width;
+	Bloom.height = height;
+
+	glGenFramebuffers(1, &Bloom.FBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, Bloom.FBO);
+
+	glGenTextures(1, &Bloom.SceneID);
+	glBindTexture(GL_TEXTURE_2D, Bloom.SceneID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Bloom.SceneID, 0);
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -300,13 +331,14 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	aspect = (float)window_width / (float)window_height;
 
 	Render_ShadowMap(Shadow_Shader, Objects);
+	Render_BloomMap(Bloom_Shader, Objects);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, post_process.FBO);
-
 	Render_Enviroment(Enviroment_Shader);
 	Render_DefaultColor(Basic_Shader, Objects);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	Render_PostProcessMap(PostProcess_Shader, Objects);
+	Render_PostProcessMap(PostProcess_Shader);
 }
 
 void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
@@ -406,10 +438,10 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->NormalMapID);
 
-		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
+	/*	GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
 		glUniform1i(ul_Emissive, 2);
 		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);
+		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);*/
 
 		GLuint ul_ARM = glGetUniformLocation(Shader, "u_ARM");
 		glUniform1i(ul_ARM, 3);
@@ -424,6 +456,50 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
 	}
+}
+
+void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, Bloom.FBO);
+
+	glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT); 
+
+	glUseProgram(Shader);
+	m_Camera->DoWorking(Shader, aspect);
+
+
+
+	// 객체별로 변환 행렬 설정 및 렌더링
+	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr)
+	{
+		glm::vec3 location = (*itr)->GetLocation();
+		glm::vec3 rotation = (*itr)->GetRotation();
+
+		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
+		transfom_Matrix = glm::translate(transfom_Matrix, glm::vec3(location.x, location.y, location.z));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
+		transfom_Matrix = glm::scale(transfom_Matrix, glm::vec3(1.0, 1.0, 1.0));
+
+		unsigned int ObjectTransform = glGetUniformLocation(Shader, "transform");
+		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
+
+		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
+		glUniform1i(ul_Emissive, 0);
+		glActiveTexture(GL_TEXTURE0 + 0);
+		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);
+
+		glBindVertexArray((*itr)->GetMesh()->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
+		glBindVertexArray(0);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, window_width, window_height);
+
+	glDisable(GL_DEPTH_TEST);
 }
 
 void Renderer::Render_Enviroment(GLuint Shader)
@@ -447,16 +523,19 @@ void Renderer::Render_Enviroment(GLuint Shader)
 	glDepthMask(GL_TRUE);
 }
 
-void Renderer::Render_PostProcessMap(GLuint Shader, std::vector<Object*> Objects)
+void Renderer::Render_PostProcessMap(GLuint Shader)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 	glUseProgram(Shader);
 
 	GLuint ul_Bloom = glGetUniformLocation(Shader, "u_Bloom");
 	glUniform1i(ul_Bloom, 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, post_process.SceneID); // FBO에서 생성한 텍스처 바인딩
+	glBindTexture(GL_TEXTURE_2D, Bloom.SceneID); 
+
+	GLuint ul_PostProcess = glGetUniformLocation(Shader, "u_PostProcess");
+	glUniform1i(ul_PostProcess, 1);
+	glActiveTexture(GL_TEXTURE0 + 1);
+	glBindTexture(GL_TEXTURE_2D, post_process.SceneID); 
 
 	glBindVertexArray(frameVAO); // 정점 배열 객체 바인딩
 	glDrawArrays(GL_TRIANGLES, 0, 6); // 화면에 텍스처 그리기

@@ -12,13 +12,12 @@ uniform samplerCube u_enviroment;
 
 uniform sampler2D   u_BaseColor;
 uniform sampler2D   u_NormalMap;
-uniform sampler2D   u_Emissive;
 uniform sampler2D   u_ARM;
 
 uniform sampler2D   u_DepthMap;
 in vec4             LightSpacePos;
 uniform float       u_ShadowMapSize;
-float               Shadow_minValue = 0.2;
+float               Shadow_minValue = 0.3;
 
 uniform vec3        lightPos;
 uniform vec3        lightColor;
@@ -34,7 +33,6 @@ float       GetRoughness()     { return texture(u_ARM, texCoords).g; }
 float       GetMetallic()      { return texture(u_ARM, texCoords).b; }
 
 vec3        GetBaseColor()     { return texture(u_BaseColor, texCoords).rgb; }
-vec3        GetEmissive()      { return texture(u_Emissive, texCoords).rgb; }
 
 // 광원의 방향 계산
 vec3 LightDir = normalize(lightPos - 0); //direction light
@@ -138,7 +136,7 @@ float Fresnel(float threshold, vec3 normal)
     return pow(1.0 - dot(CameraDir, -normal), threshold);
 }
 
-void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic, vec3 Emissive)
+void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic)
 {   
     vec3 resultColor = BaseColor;
 
@@ -173,12 +171,6 @@ void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Met
     resultColor *= max(dot(LightDir, NormalMap) * CalShadowFactor(), Shadow_minValue);
     //=======================================================================
    
-
-
-    //Emissive===============================================================
-    resultColor += Emissive;
-    //=======================================================================
-
 
     Fragcolor = vec4(resultColor, 1.0);
 }
@@ -219,7 +211,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
     return ggx1 * ggx2;
 }
 
-void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic, vec3 Emissive)
+void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic)
 {
     vec3 N = normalize(NormalMap);
     vec3 V = normalize(u_CameraPos - WorldPosition);
@@ -246,8 +238,8 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
     float NdotL = max(dot(N, L), 0.0);
     vec3 Lo = (kD * BaseColor / PI + specular) * NdotL;
 
-
-    vec3 ambient = vec3(0.5) * BaseColor * AO;
+    vec3 LightValue = vec3(0.5);
+    vec3 ambient = LightValue * BaseColor * AO;
 
     vec3 reflectedColor = GetBlurReflectedColor(N, Roughness);
     reflectedColor *= Metallic; 
@@ -261,7 +253,6 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
     color = re_MetallicMaskedColor + MetallicMaskedColor;
 
     color *= max(CalShadowFactor() * dot(LightDir, NormalMap), Shadow_minValue);
-    color += Emissive;
 
     Fragcolor = vec4(color, 1.0);
 }
@@ -273,7 +264,6 @@ void main()
     GetWorldNormalMap(),
     GetAO(),
     GetRoughness(),
-    GetMetallic(),
-    GetEmissive()
+    GetMetallic()
     );
 }

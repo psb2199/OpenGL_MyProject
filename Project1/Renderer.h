@@ -24,10 +24,12 @@ class Renderer
 
 	GLuint			Basic_Shader;
 	GLuint			Shadow_Shader;
+	GLuint			Bloom_Shader;
 	GLuint			PostProcess_Shader;
 	GLuint			Enviroment_Shader;
 
 	FrameData		Shadow;
+	FrameData		Bloom;
 	FrameData		post_process;
 
 	GLuint			EviromentVAO;
@@ -43,13 +45,15 @@ class Renderer
 
 	void			Initialize(int width, int height);
 	void			Initialize_ShadowMap(const unsigned int width, const unsigned int height);
+	void			Initialize_BloomMap(const unsigned int width, const unsigned int height);
 	void			Initialize_PostProcessMap(const unsigned int width, const unsigned int height);
 	void			Initialize_EviromentVAO();
 
 	void			Render_ShadowMap(GLuint Shader, std::vector<Object*>Objects);
-	void			Render_PostProcessMap(GLuint Shader, std::vector<Object*>Objects);
+	void			Render_BloomMap(GLuint Shader, std::vector<Object*>Objects);
 	void			Render_DefaultColor(GLuint Shader, std::vector<Object*>Objects);
 	void			Render_Enviroment(GLuint Shader);
+	void			Render_PostProcessMap(GLuint Shader);
 
 
 public:

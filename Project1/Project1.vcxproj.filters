@@ -40,37 +40,58 @@
     <Filter Include="소스 파일\Light">
       <UniqueIdentifier>{6bcc0750-34f1-4046-8232-db8d410837c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Shaders\BasicShader">
+      <UniqueIdentifier>{c6c7ae69-8bc1-4c0e-aede-20987532bd67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shaders\Enviroment">
+      <UniqueIdentifier>{2d432dca-ce30-4293-9337-b9fe0dc191cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shaders\PostProcess">
+      <UniqueIdentifier>{44199303-808b-4069-b7a9-f21c655b338b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shaders\Shadow">
+      <UniqueIdentifier>{dd48ab77-7797-48f2-b861-2386bf6591e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Shaders\Bloom">
+      <UniqueIdentifier>{ad10d73a-d8cf-4c66-ba84-3ce7cca36e14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicShader.vs">
-      <Filter>소스 파일\Shaders</Filter>
-    </None>
-    <None Include="BasicShader.fs">
-      <Filter>소스 파일\Shaders</Filter>
-    </None>
     <None Include="vertexlight.glsl">
       <Filter>소스 파일\PreVersion</Filter>
     </None>
     <None Include="fragmentlight.glsl">
       <Filter>소스 파일\PreVersion</Filter>
     </None>
-    <None Include="ShadowShader.fs">
-      <Filter>소스 파일\Shaders</Filter>
+    <None Include="BasicShader.fs">
+      <Filter>소스 파일\Shaders\BasicShader</Filter>
     </None>
-    <None Include="ShadowShader.vs">
-      <Filter>소스 파일\Shaders</Filter>
-    </None>
-    <None Include="PostProcessShader.vs">
-      <Filter>소스 파일\Shaders</Filter>
-    </None>
-    <None Include="PostProcessShader.fs">
-      <Filter>소스 파일\Shaders</Filter>
-    </None>
-    <None Include="EnviromentShader.vs">
-      <Filter>소스 파일\Shaders</Filter>
+    <None Include="BasicShader.vs">
+      <Filter>소스 파일\Shaders\BasicShader</Filter>
     </None>
     <None Include="EnviromentShader.fs">
-      <Filter>소스 파일\Shaders</Filter>
+      <Filter>소스 파일\Shaders\Enviroment</Filter>
+    </None>
+    <None Include="EnviromentShader.vs">
+      <Filter>소스 파일\Shaders\Enviroment</Filter>
+    </None>
+    <None Include="PostProcessShader.fs">
+      <Filter>소스 파일\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="PostProcessShader.vs">
+      <Filter>소스 파일\Shaders\PostProcess</Filter>
+    </None>
+    <None Include="ShadowShader.fs">
+      <Filter>소스 파일\Shaders\Shadow</Filter>
+    </None>
+    <None Include="ShadowShader.vs">
+      <Filter>소스 파일\Shaders\Shadow</Filter>
+    </None>
+    <None Include="BloomShader.vs">
+      <Filter>소스 파일\Shaders\Bloom</Filter>
+    </None>
+    <None Include="BloomShader.fs">
+      <Filter>소스 파일\Shaders\Bloom</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
