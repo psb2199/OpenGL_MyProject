@@ -17,7 +17,8 @@ uniform sampler2D   u_ARM;
 uniform sampler2D   u_DepthMap;
 in vec4             LightSpacePos;
 uniform float       u_ShadowMapSize;
-float               Shadow_minValue = 0.3;
+float               Shadow_minValue = 0.2;
+vec3                ShadowColor = vec3(0, 0.025, 0.05);
 
 uniform vec3        lightPos;
 uniform vec3        lightColor;
@@ -212,9 +213,9 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 
 void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic)
 {
-    BaseColor = vec3(1.0);
-    Roughness = 0.0;
-    Metallic = 1.0;
+    //BaseColor = vec3(1.0);
+    //Roughness = 0.0;
+    //Metallic = 1.0;
 
     vec3 N = normalize(NormalMap);
     vec3 V = normalize(u_CameraPos - WorldPosition);
@@ -241,7 +242,7 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
     float NdotL = max(dot(N, L), 0.0);
     vec3 Lo = (kD * BaseColor / PI + specular) * NdotL;
 
-    vec3 LightValue = vec3(1.0);
+    vec3 LightValue = lightColor;
     vec3 ambient = LightValue * BaseColor * AO;
 
     vec3 reflectedColor = GetBlurReflectedColor(N, Roughness);
@@ -255,20 +256,21 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
     vec3 MetallicMaskedColor = color * reflectedColor * Metallic;
     color = re_MetallicMaskedColor + MetallicMaskedColor;
 
-    color *= max(CalShadowFactor() * dot(LightDir, NormalMap), Shadow_minValue);
+    float Shadow = CalShadowFactor();
+    vec3 coloredShadow = (1.0 - Shadow) * ShadowColor;
+
+    color *= max(Shadow * dot(LightDir, NormalMap), Shadow_minValue) + coloredShadow;
 
     Fragcolor = vec4(color, 1.0);
 }
 
 void main()
 {
-    //PBR_Render(
-    //GetBaseColor(),
-    //GetWorldNormalMap(),
-    //GetAO(),
-    //GetRoughness(),
-    //GetMetallic()
-    //);
-    vec3 color = vec3(GetWorldNormalMap());
-    Fragcolor = vec4(color, 1.0);
+    PBR_Render(
+    GetBaseColor(),
+    GetWorldNormalMap(),
+    GetAO(),
+    GetRoughness(),
+    GetMetallic()
+    );
 }

@@ -9,6 +9,7 @@ layout (location = 4) in vec3 vBitTangent;
 uniform mat4 transform;
 uniform mat4 projection;
 uniform mat4 view;
+uniform mat4 normal_transform;
 
 out vec3 vertex_normal;
 out vec2 texCoords;
@@ -28,7 +29,7 @@ void main()
 
 	WorldPosition = vec3(transform * vec4(vPos, 1.0));
 
-	vertex_normal = (vec3(transform * vec4(vNormal, 1.0)));
+	vertex_normal = (vec3(normal_transform * vec4(vNormal, 1.0)));
 
 	texCoords = vec2(vTexPos.x , -vTexPos.y);
 

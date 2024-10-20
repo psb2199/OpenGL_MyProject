@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	G_Controller = new Controller;
 	G_ObjMgr = new ObjectManager(G_Importer);
 
-	Player = G_ObjMgr->AddObject("Player", { 0,1.0,0 });
+	Player = G_ObjMgr->AddObject("Player", { 0,0.5,0 });
 	G_Controller->MappingController(Player);
 	G_Renderer->SetCamera(G_Camera);
 
@@ -227,8 +227,8 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 
 void LevelDisign()
 {
-	//G_ObjMgr->AddObject("Base", { 0,0,0 });
-	G_ObjMgr->AddObject("Test", { 2, 1 ,1 });
+	G_ObjMgr->AddObject("Base", { 0,0,0 });
+	G_ObjMgr->AddObject("Test", { -2, 1 ,-1 });
 	G_Light = new Light({ 5, 5, 5 });
 	G_Renderer->SetLight(G_Light);
 	G_Camera->SetLookLocation(0, 1, 0);

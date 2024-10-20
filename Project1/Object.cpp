@@ -10,9 +10,9 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 		//SetMesh("Sphere.obj");
 		//SetMaterial("M_Glass");
 		//SetMaterial("M_Gold");
-		SetMesh("Male.obj");
+		//SetMesh("Male.obj");
 		//SetMaterial("M_Male");
-		//SetMesh("GravityBox.obj");
+		SetMesh("GravityBox.obj");
 		SetMaterial("M_GravityBox");
 	}
 	else if (type == "Base"){
@@ -21,7 +21,7 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	}
 	else if (type == "Test"){
 		SetMesh("Sphere.obj");
-		SetMaterial("M_Gold");
+		SetMaterial("M_Glass");
 	}
 
 

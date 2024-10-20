@@ -416,17 +416,18 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glm::vec3 rotation = (*itr)->GetRotation();
 
 		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
-
 		transfom_Matrix = glm::translate(transfom_Matrix, location);
-
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
-
 		transfom_Matrix = glm::scale(transfom_Matrix, glm::vec3(1.0, 1.0, 1.0));
+		glUniformMatrix4fv(glGetUniformLocation(Shader, "transform"), 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
 
-		unsigned int ObjectTransform = glGetUniformLocation(Shader, "transform");
-		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
+		glm::mat4 normal_Matrix = glm::mat4(1.0f);
+		normal_Matrix = glm::rotate(normal_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+		normal_Matrix = glm::rotate(normal_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+		normal_Matrix = glm::rotate(normal_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
+		glUniformMatrix4fv(glGetUniformLocation(Shader, "normal_transform"), 1, GL_FALSE, glm::value_ptr(normal_Matrix));
 
 		GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);

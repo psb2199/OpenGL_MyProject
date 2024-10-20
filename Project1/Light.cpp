@@ -6,7 +6,7 @@ Light::Light(glm::vec3 xyz)
 	type = "none";
 	location = xyz;
 	rotation = glm::vec3{ 0 };
-	color = glm::vec3{ 1.f, 1.f, 1.f };
+	color = glm::vec3{ 1.f, 1.f, 0.9 };
 	distance = 200.f;
 }
 
@@ -42,7 +42,7 @@ void Light::LightWorks(GLuint Shader)
 	unsigned int lightDistanceLocation = glGetUniformLocation(Shader, "lightDistance");
 	glUniform1f(lightDistanceLocation, GetLightDistance());
 
-	glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 100.f);
+	glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 20.f);
 	glm::mat4 lightView = glm::lookAt(light_location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 	unsigned int ulightSpaceMatrix = glGetUniformLocation(Shader, "lightSpaceMatrix");
