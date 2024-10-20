@@ -6,41 +6,37 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	id = obj_id;
 	ojbect_type = type;
 	
-	if (type == "Player") {
-		//SetMesh("Sphere.obj");
-		//SetMaterial("M_Glass");
-		//SetMaterial("M_Gold");
-		//SetMesh("Male.obj");
-		//SetMaterial("M_Male");
-		SetMesh("GravityBox.obj");
-		SetMaterial("M_GravityBox");
-	}
-	else if (type == "Base"){
-		SetMesh("Base.obj");
-		SetMaterial("M_Grass");
-	}
-	else if (type == "Test"){
-		SetMesh("Sphere.obj");
-		SetMaterial("M_Glass");
-	}
-
-
 	location = loc;
+	rotation = glm::vec3(1.0);
+	scale = glm::vec3(1.0);
 
-	rotation.x = 0;
-	rotation.y = 0;
-	rotation.z = 0;
-
+	BeginPlayEvent();
 }
 
 Object::~Object()
 {
 }
 
+void Object::BeginPlayEvent()
+{
+}
+
+void Object::TickEvent(float delta_sceconds)
+{
+	elapesedTime += delta_sceconds;
+}
+
+
+float Object::GetElapsedTime()
+{
+	return elapesedTime;
+}
+
 
 VertexData* Object::GetMesh()
 {
-	return mesh;
+	if (mesh) return mesh;
+	else return nullptr;
 }
 
 void Object::SetMesh(std::string filename)

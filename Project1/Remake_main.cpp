@@ -17,6 +17,7 @@
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 700
 
+float WorldSeconds{ 0.0 };
 
 Renderer* G_Renderer = NULL;
 Light* G_Light = nullptr;
@@ -105,7 +106,8 @@ GLvoid RenderSceneTimer(int value)
 	G_Renderer->DrawScene(G_ObjMgr->GetAllObjects());
 
 	G_Controller->TickEvent();
-	
+	for (auto& v : G_ObjMgr->GetAllObjects()) { v->TickEvent((float)RenderFriquency / 1000.0); }
+
 	if (DoFixMouse)
 	{	
 		glm::vec2 mouse_Delta{ 0 };
@@ -227,8 +229,6 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 
 void LevelDisign()
 {
-	G_ObjMgr->AddObject("Base", { 0,0,0 });
-	G_ObjMgr->AddObject("Test", { -2, 1 ,-1 });
 	G_Light = new Light({ 5, 5, 5 });
 	G_Renderer->SetLight(G_Light);
 	G_Camera->SetLookLocation(0, 1, 0);

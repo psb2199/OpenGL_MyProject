@@ -13,14 +13,22 @@ class Object
 
 	glm::vec3			location;
 	glm::vec3			rotation;
+	glm::vec3			scale;
 
 	bool				cast_shadow{ true };
+
+	float				elapesedTime{ 0.0 };
 
 	Importer_obj* Importer_mesh;
 
 public:
+	Object() = default;
 	Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer);
 	~Object();
+
+	virtual void		BeginPlayEvent();
+	virtual void		TickEvent(float delta_sceconds);
+	float				GetElapsedTime();
 
 	VertexData*			GetMesh();
 	void				SetMesh(std::string filename);

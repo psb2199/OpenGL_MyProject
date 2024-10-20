@@ -13,8 +13,19 @@ Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
 {
     Object* newObj;
 
-    
-    newObj = new Object(AllOjectCount, type, location, m_importer);
+    if      (type == "Player")
+    {
+        newObj = dynamic_cast<Object*>(new Player(AllOjectCount, type, location, m_importer));
+    }
+    else if (type == "Block")
+    {
+        newObj = dynamic_cast<Object*>(new Block(AllOjectCount, type, location, m_importer));
+    }
+    else
+    {
+        cout << "There is no c++ class about " << type << endl;
+        return nullptr;
+    }
  
 
 	WorldObjects.push_back(newObj);

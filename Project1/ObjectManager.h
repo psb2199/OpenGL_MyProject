@@ -5,6 +5,9 @@
 
 #include "Object.h"
 
+#include "Player.h"
+#include "Block.h"
+
 
 class ObjectManager
 {
