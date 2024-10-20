@@ -17,6 +17,7 @@ void Importer_obj::Initialize()
 		ReadObj("objs/Test.obj");
 		ReadObj("objs/GravityBox.obj");
 		ReadObj("objs/Base.obj");
+		ReadObj("objs/Sphere.obj");
 		ReadObj("objs/Male.obj");
 	}
 
@@ -27,14 +28,17 @@ void Importer_obj::Initialize()
 		GravityBox_Emissive,
 		GravityBox_ARM,
 
-		Male_BaseColor,
-		Male_Normal,
-		Male_Emissive,
-		Male_ARM,
-
 		Grass_BaseColor,
 		Grass_Normal,
 		Grass_ARM,
+
+		Glass_BaseColor,
+		Glass_Normal,
+		Glass_ARM,
+
+		Gold_BaseColor,
+		Gold_Normal,
+		Gold_ARM,
 
 		Enviroment,
 
@@ -47,14 +51,17 @@ void Importer_obj::Initialize()
 		Textures[GravityBox_Emissive] = LoadTexture("textures/GravityBox_Emissive.png");
 		Textures[GravityBox_ARM] = LoadTexture("textures/GravityBox_ARM.png");
 
-		Textures[Male_BaseColor] = LoadTexture("textures/Male_BaseColor.png");
-		Textures[Male_Normal] = LoadTexture("textures/Male_Normal.png");
-		Textures[Male_Emissive] = LoadTexture("textures/Male_Emissive.png");
-		Textures[Male_ARM] = LoadTexture("textures/Male_ARM.png");
-
 		Textures[Grass_BaseColor] = LoadTexture("textures/Grass_BaseColor.png");
 		Textures[Grass_Normal] = LoadTexture("textures/Grass_Normal.png");
 		Textures[Grass_ARM] = LoadTexture("textures/Grass_ARM.png");
+
+		Textures[Glass_BaseColor] = LoadTexture("textures/Glass/BaseColor.png");
+		Textures[Glass_Normal] = LoadTexture("textures/Glass/Normal.png");
+		Textures[Glass_ARM] = LoadTexture("textures/Glass/ARM.png");
+
+		Textures[Gold_BaseColor] = LoadTexture("textures/Gold/BaseColor.png");
+		Textures[Gold_Normal] = LoadTexture("textures/Gold/Normal.png");
+		Textures[Gold_ARM] = LoadTexture("textures/Gold/ARM.png");
 
 
 		std::vector<string> cubeMap_filepathes;
@@ -92,13 +99,21 @@ void Importer_obj::Initialize()
 
 		MakeMaterial
 		(
-			"M_Male",
-			Textures[Male_BaseColor],
-			Textures[Male_Normal],
-			Textures[Male_Emissive],
-			Textures[Male_ARM]
+			"M_Glass",
+			Textures[Glass_BaseColor],
+			Textures[Glass_Normal],
+			NULL,	  
+			Textures[Glass_ARM]
 		);
 
+		MakeMaterial
+		(
+			"M_Gold",
+			Textures[Gold_BaseColor],
+			Textures[Gold_Normal],
+			NULL,
+			Textures[Gold_ARM]
+		);
 
 		MakeMaterial
 		(

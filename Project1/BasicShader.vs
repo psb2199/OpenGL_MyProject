@@ -28,7 +28,7 @@ void main()
 
 	WorldPosition = vec3(transform * vec4(vPos, 1.0));
 
-	vertex_normal =  vec3(transform * vec4(vNormal, 1.0));
+	vertex_normal = (vec3(transform * vec4(vNormal, 1.0)));
 
 	texCoords = vec2(vTexPos.x , -vTexPos.y);
 

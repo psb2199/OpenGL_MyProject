@@ -11,7 +11,11 @@ ObjectManager::~ObjectManager()
 
 Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
 {
-    Object* newObj = new Object(AllOjectCount, type, location, m_importer);
+    Object* newObj;
+
+    
+    newObj = new Object(AllOjectCount, type, location, m_importer);
+ 
 
 	WorldObjects.push_back(newObj);
     AllOjectCount++;

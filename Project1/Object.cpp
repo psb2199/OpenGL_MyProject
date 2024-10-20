@@ -7,18 +7,21 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	ojbect_type = type;
 	
 	if (type == "Player") {
-		SetMesh("GravityBox.obj");
-		SetMaterial("M_GravityBox");
-		//SetMesh("Male.obj");
+		//SetMesh("Sphere.obj");
+		//SetMaterial("M_Glass");
+		//SetMaterial("M_Gold");
+		SetMesh("Male.obj");
 		//SetMaterial("M_Male");
+		//SetMesh("GravityBox.obj");
+		SetMaterial("M_GravityBox");
 	}
 	else if (type == "Base"){
 		SetMesh("Base.obj");
 		SetMaterial("M_Grass");
 	}
 	else if (type == "Test"){
-		SetMesh("Test.obj");
-		SetMaterial("M_Test");
+		SetMesh("Sphere.obj");
+		SetMaterial("M_Gold");
 	}
 
 

@@ -72,7 +72,7 @@ float CalShadowFactor()
 
     // PCF »ùÇÃ¸µ ¹üÀ§
     float shadow = 0.0;
-    float bias = 0.0025;
+    float bias = 0.02;
     int samples = 5;  // »ùÇÃ °¹¼ö
     float texelSize = 1.0 / u_ShadowMapSize;  // ±×¸²ÀÚ ¸Ê ÇØ»óµµ¿¡ µû¸¥ ÅØ¼¿ Å©±â
 
@@ -92,7 +92,9 @@ float CalShadowFactor()
 
 vec3 CalReflectVector(vec3 normal)
 {
-    return CameraDir + 2 * normal * (dot(-CameraDir, normal));
+    //return CameraDir + 2 * normal * (dot(-CameraDir, normal));
+    vec3 modifyDir = vec3(CameraDir.x, CameraDir.y, CameraDir.z);
+    return reflect(modifyDir, normal);
 }
 
 vec3 GetReflectedColor(vec3 normal)
@@ -131,10 +133,7 @@ vec3 GetBlurReflectedColor(vec3 normal, float blurAmount)
     return color;
 }
 
-float Fresnel(float threshold, vec3 normal)
-{
-    return pow(1.0 - dot(CameraDir, -normal), threshold);
-}
+
 
 void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic)
 {   
@@ -213,6 +212,10 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 
 void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Metallic)
 {
+    BaseColor = vec3(1.0);
+    Roughness = 0.0;
+    Metallic = 1.0;
+
     vec3 N = normalize(NormalMap);
     vec3 V = normalize(u_CameraPos - WorldPosition);
     vec3 L = normalize(lightPos - WorldPosition);
@@ -238,7 +241,7 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
     float NdotL = max(dot(N, L), 0.0);
     vec3 Lo = (kD * BaseColor / PI + specular) * NdotL;
 
-    vec3 LightValue = vec3(0.5);
+    vec3 LightValue = vec3(1.0);
     vec3 ambient = LightValue * BaseColor * AO;
 
     vec3 reflectedColor = GetBlurReflectedColor(N, Roughness);
@@ -259,11 +262,13 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
 
 void main()
 {
-    PBR_Render(
-    GetBaseColor(),
-    GetWorldNormalMap(),
-    GetAO(),
-    GetRoughness(),
-    GetMetallic()
-    );
+    //PBR_Render(
+    //GetBaseColor(),
+    //GetWorldNormalMap(),
+    //GetAO(),
+    //GetRoughness(),
+    //GetMetallic()
+    //);
+    vec3 color = vec3(GetWorldNormalMap());
+    Fragcolor = vec4(color, 1.0);
 }

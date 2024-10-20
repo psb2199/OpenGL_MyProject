@@ -5,6 +5,7 @@
 
 #include "Object.h"
 
+
 class ObjectManager
 {
 	std::vector<Object*> WorldObjects;
