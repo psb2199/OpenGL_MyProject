@@ -6,7 +6,7 @@
 #include "Object.h"
 
 #include "Player.h"
-#include "Block.h"
+#include "Base.h"
 
 
 class ObjectManager

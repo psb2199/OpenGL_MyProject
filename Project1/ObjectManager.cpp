@@ -17,9 +17,9 @@ Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
     {
         newObj = dynamic_cast<Object*>(new Player(AllOjectCount, type, location, m_importer));
     }
-    else if (type == "Block")
+    else if (type == "Base")
     {
-        newObj = dynamic_cast<Object*>(new Block(AllOjectCount, type, location, m_importer));
+        newObj = dynamic_cast<Object*>(new Base(AllOjectCount, type, location, m_importer));
     }
     else
     {

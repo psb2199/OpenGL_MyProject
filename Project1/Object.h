@@ -3,6 +3,7 @@
 
 #include "OpenGL.h"
 #include "Importer_obj.h"
+#include "Camera.h"
 
 class Object
 {	
@@ -19,7 +20,8 @@ class Object
 
 	float				elapesedTime{ 0.0 };
 
-	Importer_obj* Importer_mesh;
+	Camera*				m_Camera;
+	Importer_obj*		Importer_mesh;
 
 public:
 	Object() = default;
@@ -29,6 +31,9 @@ public:
 	virtual void		BeginPlayEvent();
 	virtual void		TickEvent(float delta_sceconds);
 	float				GetElapsedTime();
+
+	void				SetCamera(Camera* camera);
+	Camera*				GetCamera();
 
 	VertexData*			GetMesh();
 	void				SetMesh(std::string filename);

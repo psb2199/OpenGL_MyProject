@@ -61,11 +61,9 @@ void Camera::BindWithMouseWheel(float value)
     if (camera_arm_length < 0.1) camera_arm_length = 0.1;
 }
 
-void Camera::SetLookLocation(float x, float y, float z)
+void Camera::SetLookLocation(glm::vec3 loc)
 {
-    look_location.x = x;
-    look_location.y = y;
-    look_location.z = z;
+    look_location = loc;
 }
 
 void Camera::SetLocation(glm::vec3 xyz)

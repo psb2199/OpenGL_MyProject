@@ -21,23 +21,23 @@ void Controller::TickEvent()
 	float movespeed = 0.1;
 	if (Key[press(w)])
 	{
-		mapped_obj->AddRotationInput({ 1, 0, 0 });
-		//mapped_obj->AddMovementInput({ 0,movespeed,0 });
+		//mapped_obj->AddRotationInput({ 1, 0, 0 });
+		mapped_obj->AddMovementInput({ 0,0,movespeed });
 	}
 	if (Key[press(s)])
 	{
-		mapped_obj->AddRotationInput({ -1, 0, 0 });
-		//mapped_obj->AddMovementInput({ 0,-movespeed,0 });
+		//mapped_obj->AddRotationInput({ -1, 0, 0 });
+		mapped_obj->AddMovementInput({ 0,0,-movespeed });
 	}
 	if (Key[press(a)])
 	{
-		mapped_obj->AddRotationInput({ 0, -1, 0 });
-		//mapped_obj->AddMovementInput({ -movespeed,0,0 });
+		//mapped_obj->AddRotationInput({ 0, -1, 0 });
+		mapped_obj->AddMovementInput({ -movespeed,0,0 });
 	}
 	if (Key[press(d)])
 	{
-		mapped_obj->AddRotationInput({ 0, 1, 0 });
-		//mapped_obj->AddMovementInput({ movespeed,0,0 });
+		//mapped_obj->AddRotationInput({ 0, 1, 0 });
+		mapped_obj->AddMovementInput({ movespeed,0,0 });
 	}
 
 }

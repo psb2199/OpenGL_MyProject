@@ -6,7 +6,6 @@
 
 class Camera
 {
-
 	glm::vec3 look_location;
 	glm::vec3 location;
 	glm::vec3 rotation;
@@ -29,7 +28,7 @@ public:
 	void BindWithMouseRotation(glm::vec2 xy);
 	void BindWithMouseWheel(float value);
 
-	void SetLookLocation(float x, float y, float z);
+	void SetLookLocation(glm::vec3 loc);
 	void SetLocation(glm::vec3 xyz);
 	glm::vec3 GetLocation() const;
 };

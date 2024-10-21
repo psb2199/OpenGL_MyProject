@@ -14,31 +14,23 @@ void Importer_obj::Initialize()
 {
 	// Import Obj
 	{
-		ReadObj("objs/Test.obj");
-		ReadObj("objs/GravityBox.obj");
+		ReadObj("objs/Ball.obj");
 		ReadObj("objs/Base.obj");
-		ReadObj("objs/Sphere.obj");
-		ReadObj("objs/Male.obj");
 	}
 
 	// Import Textures
 	enum textureName {
-		GravityBox_BaseColor,
-		GravityBox_Normal,
-		GravityBox_Emissive,
-		GravityBox_ARM,
-
 		Grass_BaseColor,
 		Grass_Normal,
 		Grass_ARM,
 
-		Glass_BaseColor,
-		Glass_Normal,
-		Glass_ARM,
+		Ball_BaseColor,
+		Ball_Normal,
+		Ball_ARM,
 
-		Gold_BaseColor,
-		Gold_Normal,
-		Gold_ARM,
+		Base_BaseColor,
+		Base_Normal,
+		Base_ARM,
 
 		Enviroment,
 
@@ -46,7 +38,7 @@ void Importer_obj::Initialize()
 	};
 	GLuint Textures[textureName(MAX)];
 	{
-		Textures[GravityBox_BaseColor] = LoadTexture("textures/GravityBox_BaseColor.png");
+		/*Textures[GravityBox_BaseColor] = LoadTexture("textures/GravityBox_BaseColor.png");
 		Textures[GravityBox_Normal] = LoadTexture("textures/GravityBox_Normal.png");
 		Textures[GravityBox_Emissive] = LoadTexture("textures/GravityBox_Emissive.png");
 		Textures[GravityBox_ARM] = LoadTexture("textures/GravityBox_ARM.png");
@@ -61,7 +53,14 @@ void Importer_obj::Initialize()
 
 		Textures[Gold_BaseColor] = LoadTexture("textures/Gold/BaseColor.png");
 		Textures[Gold_Normal] = LoadTexture("textures/Gold/Normal.png");
-		Textures[Gold_ARM] = LoadTexture("textures/Gold/ARM.png");
+		Textures[Gold_ARM] = LoadTexture("textures/Gold/ARM.png");*/
+		Textures[Ball_BaseColor] =	LoadTexture("textures/Ball/BaseColor.png");
+		Textures[Ball_Normal] =		LoadTexture("textures/Ball/Normal.png");
+		Textures[Ball_ARM] =		LoadTexture("textures/Ball/ARM.png");
+
+		Textures[Base_BaseColor] =	LoadTexture("textures/Base/BaseColor.png");
+		Textures[Base_Normal] =		LoadTexture("textures/Base/Normal.png");
+		Textures[Base_ARM] =		LoadTexture("textures/Base/ARM.png");
 
 
 		std::vector<string> cubeMap_filepathes;
@@ -79,49 +78,20 @@ void Importer_obj::Initialize()
 
 	//Make Materials
 	{
-		MakeMaterial
-		(
-			"M_GravityBox",
-			Textures[GravityBox_BaseColor],
-			Textures[GravityBox_Normal],
-			Textures[GravityBox_Emissive],
-			Textures[GravityBox_ARM]
+		MakeMaterial(
+			"Ball",
+			Textures[Ball_BaseColor],
+			Textures[Ball_Normal],
+			NULL, 
+			Textures[Ball_ARM]
 		);
 
-		MakeMaterial
-		(
-			"M_Grass",
-			Textures[Grass_BaseColor],
-			Textures[Grass_Normal],
-			NULL,
-			Textures[Grass_ARM]
-		);
-
-		MakeMaterial
-		(
-			"M_Glass",
-			Textures[Glass_BaseColor],
-			Textures[Glass_Normal],
-			NULL,	  
-			Textures[Glass_ARM]
-		);
-
-		MakeMaterial
-		(
-			"M_Gold",
-			Textures[Gold_BaseColor],
-			Textures[Gold_Normal],
-			NULL,
-			Textures[Gold_ARM]
-		);
-
-		MakeMaterial
-		(
-			"M_Test",
-			NULL,
-			NULL,
-			NULL,
-			NULL
+		MakeMaterial(
+			"Base",
+			Textures[Base_BaseColor],
+			Textures[Base_Normal],
+			NULL,	 
+			Textures[Base_ARM]
 		);
 	}
 

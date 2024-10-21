@@ -55,6 +55,12 @@
     <Filter Include="소스 파일\Shaders\Bloom">
       <UniqueIdentifier>{ad10d73a-d8cf-4c66-ba84-3ce7cca36e14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Object\Player">
+      <UniqueIdentifier>{dd443be5-20c9-4f92-909d-62caaf73a7eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Base">
+      <UniqueIdentifier>{6dc61a4b-a1e0-4152-89a8-e91c98998d4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertexlight.glsl">
@@ -125,6 +131,12 @@
     <ClCompile Include="Light.cpp">
       <Filter>소스 파일\Light</Filter>
     </ClCompile>
+    <ClCompile Include="Base.cpp">
+      <Filter>소스 파일\Object\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\Object\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
@@ -153,6 +165,12 @@
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>소스 파일\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Base.h">
+      <Filter>소스 파일\Object\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\Object\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

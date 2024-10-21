@@ -32,6 +32,21 @@ float Object::GetElapsedTime()
 	return elapesedTime;
 }
 
+void Object::SetCamera(Camera* camera)
+{	
+	if (camera) m_Camera = camera;
+	else cout << "There is no Camera" << endl;
+}
+
+Camera* Object::GetCamera()
+{
+	if (m_Camera) return m_Camera;
+	else {
+		cout << "Camera has not attached" << endl;
+		return nullptr;
+	}
+}
+
 
 VertexData* Object::GetMesh()
 {
