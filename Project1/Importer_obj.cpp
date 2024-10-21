@@ -243,6 +243,14 @@ void Importer_obj::ReadObj(const string filePath) {
 			ss >> vertex.x >> vertex.y >> vertex.z;
 			newVertexData->vertexs.push_back(vertex);
 
+			newVertexData->min_location.x = min(newVertexData->min_location.x, vertex.x);
+			newVertexData->max_location.x = max(newVertexData->max_location.x, vertex.x);
+
+			newVertexData->min_location.y = min(newVertexData->min_location.y, vertex.y);
+			newVertexData->max_location.y = max(newVertexData->max_location.y, vertex.y);
+
+			newVertexData->min_location.z = min(newVertexData->min_location.z, vertex.z);
+			newVertexData->max_location.z = max(newVertexData->max_location.z, vertex.z);
 		}
 		else if (type == "vt") {
 			// 텍스처 좌표 읽기

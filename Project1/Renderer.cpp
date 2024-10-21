@@ -389,8 +389,6 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 
 	glUseProgram(Shader);
 	m_Camera->DoWorking(Shader, aspect);
-	glm::vec3 camrea_pos = m_Camera->GetLocation();
-	glUniform3f(glGetUniformLocation(Shader, "u_CameraPos"), camrea_pos.x, camrea_pos.y, camrea_pos.z);
 
 	m_light->LightWorks(Shader);
 
@@ -450,7 +448,7 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->AoRoughnessMetallicID);
 
 		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
-		glUniform1i(ul_cast_shadow, (*itr)->GetCastShadow() ? 0 : 1);
+		glUniform1i(ul_cast_shadow, (*itr)->setting.cast_shadow ? 0 : 1);
 		
 
 		glBindVertexArray((*itr)->GetMesh()->VAO);

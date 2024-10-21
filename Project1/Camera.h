@@ -10,7 +10,7 @@ class Camera
 	glm::vec3 location;
 	glm::vec3 rotation;
 
-	float camera_arm_length{ 3.f };
+	float camera_arm_length{ 5.f };
 
 	float rotate_camera_sensitive{ 0.001 };
 	float field_of_view{ 45 };

@@ -22,12 +22,12 @@ void Controller::TickEvent()
 	if (Key[press(w)])
 	{
 		//mapped_obj->AddRotationInput({ 1, 0, 0 });
-		mapped_obj->AddMovementInput({ 0,0,movespeed });
+		mapped_obj->AddMovementInput({ 0,movespeed, 0, });
 	}
 	if (Key[press(s)])
 	{
 		//mapped_obj->AddRotationInput({ -1, 0, 0 });
-		mapped_obj->AddMovementInput({ 0,0,-movespeed });
+		mapped_obj->AddMovementInput({ 0,-movespeed,0 });
 	}
 	if (Key[press(a)])
 	{

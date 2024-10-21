@@ -29,6 +29,7 @@ void Camera::DoWorking(GLuint Shader, float aspect)
     unsigned int viewLocation = glGetUniformLocation(Shader, "view"); //--- 뷰잉 변환 설정
     glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
+    glUniform3f(glGetUniformLocation(Shader, "u_CameraPos"), location.x, location.y, location.z);
 
     //원근법 유무(Perspective = 원근투영)
     if (isOrthoGraphic) {
@@ -39,7 +40,7 @@ void Camera::DoWorking(GLuint Shader, float aspect)
     }
     else {
         glm::mat4 projection = glm::mat4(1.0f);
-        projection = glm::perspective(glm::radians(field_of_view), aspect, 0.01f, 100.0f);
+        projection = glm::perspective(glm::radians(field_of_view), aspect, 0.01f, 200.0f);
         projection = glm::translate(projection, glm::vec3(0.0, 0.0, 0.0)); //--- 공간을 약간 뒤로 미뤄줌
         unsigned int projectionLocation = glGetUniformLocation(Shader, "projection"); //--- 투영 변환 값 설정
         glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);

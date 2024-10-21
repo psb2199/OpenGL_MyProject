@@ -219,7 +219,7 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
 
     vec3 N = normalize(NormalMap);
     vec3 V = normalize(u_CameraPos - WorldPosition);
-    vec3 L = normalize(lightPos - WorldPosition);
+    vec3 L = LightDir;
     vec3 H = normalize(V + L);
     
 

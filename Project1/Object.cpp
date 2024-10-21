@@ -1,15 +1,18 @@
 #include "Object.h"
 
-Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer)
+
+Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, std::vector<Object*>* _AllObjects)
 {
 	Importer_mesh = importer;
+	AllObjects = _AllObjects;
 	id = obj_id;
 	ojbect_type = type;
 	
-	location = loc;
+	location = glm::vec3(0.0);
 	rotation = glm::vec3(1.0);
 	scale = glm::vec3(1.0);
 
+	AddMovementInput(loc);
 	BeginPlayEvent();
 }
 
@@ -24,6 +27,22 @@ void Object::BeginPlayEvent()
 void Object::TickEvent(float delta_sceconds)
 {
 	elapesedTime += delta_sceconds;
+
+	if (!setting.isStatic)
+	{
+		if (setting.EnalbeGravity) { velocity.y -= delta_sceconds * GRAVITY; }
+		AddMovementInput(velocity);
+	}
+
+	if (setting.EnalbeCollision)
+	{
+		CheckAllCollisions(*AllObjects);
+	}
+}
+
+void Object::OverlapedCollisionEvent(Object* collision_obj)
+{
+
 }
 
 
@@ -47,16 +66,32 @@ Camera* Object::GetCamera()
 	}
 }
 
+int Object::GetID()
+{
+	return id;
+}
+
 
 VertexData* Object::GetMesh()
 {
-	if (mesh) return mesh;
+	if (mesh)
+	{
+		return mesh;
+	}
 	else return nullptr;
 }
 
 void Object::SetMesh(std::string filename)
 {
 	mesh = Importer_mesh->FindMesh(filename);
+	SetCollisionRange();
+}
+
+void Object::SetCollisionRange()
+{
+	collision_range.min = glm::vec3(GetMesh()->min_location) + location;
+	collision_range.max = glm::vec3(GetMesh()->max_location) + location;
+	setting.EnalbeCollision = true;
 }
 
 Material* Object::GetMaterial()
@@ -91,21 +126,50 @@ glm::vec3 Object::GetRotation() const
 	return rotation;
 }
 
-bool Object::GetCastShadow()
-{
-	return cast_shadow;
-}
 
 void Object::AddMovementInput(glm::vec3 velocity)
 {
-	location.x += velocity.x;
-	location.y += velocity.y;
-	location.z += velocity.z;
+	location += velocity;
+	collision_range.min += velocity;
+	collision_range.max += velocity;
 }
 
 void Object::AddRotationInput(glm::vec3 velocity)
 {
-	rotation.x += velocity.x;
-	rotation.y += velocity.y;
-	rotation.z += velocity.z;
+	rotation += velocity;
+
 }
+
+glm::vec3 Object::GetVelocity() const
+{
+	return velocity;
+}
+
+bool Object::CheckCollision(const CollisionBox& box1, const CollisionBox& box2)
+{
+	bool xCollision = (box1.max.x >= box2.min.x) && (box1.min.x <= box2.max.x);
+	bool yCollision = (box1.max.y >= box2.min.y) && (box1.min.y <= box2.max.y);
+	bool zCollision = (box1.max.z >= box2.min.z) && (box1.min.z <= box2.max.z);
+
+	return xCollision && yCollision && zCollision;
+}
+
+void Object::CheckAllCollisions(std::vector<Object*>& WorldObjects)
+{
+	for (auto& v : WorldObjects)
+	{
+		if (v != this)
+		{
+			if (CheckCollision(this->GetCollisionRange(), v->GetCollisionRange()))
+			{
+				OverlapedCollisionEvent(v);
+			}
+		}
+	}
+}
+
+CollisionBox Object::GetCollisionRange() const
+{
+	return collision_range;
+}
+

@@ -40,6 +40,9 @@ struct VertexData {
 	vector<glm::vec3> faceIndices;
 	vector<glm::vec3> texCoordIndices;
 	vector<glm::vec3> normalIndices;
+
+	glm::vec3 min_location = glm::vec3(0.0);
+	glm::vec3 max_location = glm::vec3(0.0);
 };
 
 struct TextureData {
