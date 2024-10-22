@@ -69,8 +69,7 @@ public:
 	glm::vec3			GetLocation() const;
 	void				SetRotation(glm::vec3 new_rotation);
 	glm::vec3			GetRotation() const;
-	void				SetScale(glm::vec3 new_rotation);
-	glm::vec3			GetRotation() const;
+
 
 	void				AddMovementInput(glm::vec3 velocity);
 	void				AddRotationInput(glm::vec3 velocity);
