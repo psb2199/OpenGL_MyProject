@@ -19,6 +19,7 @@ void Base::BeginPlayEvent()
 
 	setting.isStatic = true;
 	setting.EnalbeCollision = true;
+	setting.EnableRendering = true;
 }
 
 void Base::TickEvent(float delta_sceconds)

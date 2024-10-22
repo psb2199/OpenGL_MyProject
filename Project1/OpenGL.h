@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
 using namespace std;
 
 enum press { w, a, s, d, KEY_COUNT};
@@ -69,3 +70,8 @@ struct Material {
 	GLuint EmissiveID;
 };
 
+struct CollisionBox {
+	glm::vec3 min;
+	glm::vec3 max;
+
+};

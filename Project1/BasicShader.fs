@@ -6,6 +6,8 @@ in vec3             vertex_normal;
 in vec3             vertex_Tangent;
 in vec3             vertex_BitTangent;
 
+uniform             vec3 actor_location;
+
 uniform             vec3 u_CameraPos;
 
 uniform samplerCube u_enviroment;
@@ -29,17 +31,31 @@ float PI = 3.141592;
 
 out vec4 Fragcolor;
 
-float       GetAO()            { return texture(u_ARM, texCoords).r; }
-float       GetRoughness()     { return texture(u_ARM, texCoords).g; }
-float       GetMetallic()      { return texture(u_ARM, texCoords).b; }
-
-vec3        GetBaseColor()     { return texture(u_BaseColor, texCoords).rgb; }
-
 // 광원의 방향 계산
 vec3 LightDir = normalize(lightPos - 0); //direction light
 //vec3 LightDir = normalize(lightPos - WorldPosition); //point light
 
 vec3 CameraDir = normalize(WorldPosition - u_CameraPos);
+float Camera_Actor_Dis = distance(WorldPosition, actor_location);
+
+float GetAO() 
+{
+    return texture(u_ARM, texCoords).r; 
+}
+float GetRoughness() 
+{ 
+    return texture(u_ARM, texCoords).g; 
+}
+float GetMetallic() 
+{ 
+    return texture(u_ARM, texCoords).b; 
+}
+
+vec3 GetBaseColor() 
+{   
+    return texture(u_BaseColor, texCoords).rgb;
+}
+
 
 
 vec3 GetWorldNormalMap()

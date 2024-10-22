@@ -149,7 +149,7 @@ void Renderer::Initialize(int width, int height)
 	Initialize_EviromentVAO();
 
 	Shadow_Shader = CompileShaders("ShadowShader.vs", "ShadowShader.fs");
-	Initialize_ShadowMap(4096, 4096);
+	Initialize_ShadowMap(2048, 2048);
 
 	Bloom_Shader = CompileShaders("BloomShader.vs", "BloomShader.fs");
 	Initialize_BloomMap(window_width, window_height);
@@ -170,8 +170,8 @@ void Renderer::Initialize_ShadowMap(const unsigned int width, const unsigned int
 		width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, Shadow.FBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, Shadow.SceneID, 0);
@@ -388,7 +388,7 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 	glClear(GL_DEPTH_BUFFER_BIT); // 프레임 클리어 추가
 
 	glUseProgram(Shader);
-	m_Camera->DoWorking(Shader, aspect);
+	CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
 
 	m_light->LightWorks(Shader);
 
@@ -408,18 +408,27 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 	glActiveTexture(GL_TEXTURE0 + 5);  // 3번 텍스처 슬롯 활성화
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
 
-	for (std::vector<Object*>::iterator itr = Objects.begin(); itr != Objects.end(); ++itr)
+	for (Object* object : Objects)
 	{
-		glm::vec3 location = (*itr)->GetLocation();
-		glm::vec3 rotation = (*itr)->GetRotation();
+		if (!object->setting.EnableRendering) continue;
 
-		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
-		transfom_Matrix = glm::translate(transfom_Matrix, location);
-		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
-		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
-		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
-		transfom_Matrix = glm::scale(transfom_Matrix, glm::vec3(1.0, 1.0, 1.0));
-		glUniformMatrix4fv(glGetUniformLocation(Shader, "transform"), 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
+		if (!m_Camera->isCollisionBoxInFrustum(m_Camera->extractFrustumPlanes(camera_mat.projection * camera_mat.view), object->GetCollisionRange())) {
+			continue;
+		}
+
+
+		glm::vec3 location = object->GetLocation();
+		glm::vec3 rotation = object->GetRotation();
+
+		glm::mat4 transform_Matrix = glm::mat4(1.0f);
+		transform_Matrix = glm::translate(transform_Matrix, location);
+		transform_Matrix = glm::rotate(transform_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+		transform_Matrix = glm::rotate(transform_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+		transform_Matrix = glm::rotate(transform_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
+		transform_Matrix = glm::scale(transform_Matrix, glm::vec3(1.0, 1.0, 1.0));
+		glUniformMatrix4fv(glGetUniformLocation(Shader, "transform"), 1, GL_FALSE, glm::value_ptr(transform_Matrix));
+
+		glUniform3f(glGetUniformLocation(Shader, "actor_location"), location.x, location.y, location.z);
 
 		glm::mat4 normal_Matrix = glm::mat4(1.0f);
 		normal_Matrix = glm::rotate(normal_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
@@ -430,29 +439,28 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);
 		glActiveTexture(GL_TEXTURE0 + 0);
-		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->BaseColorID);
+		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->BaseColorID);
 
 		GLuint ul_NormalMap = glGetUniformLocation(Shader, "u_NormalMap");
 		glUniform1i(ul_NormalMap, 1);
 		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->NormalMapID);
+		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->NormalMapID);
 
-	/*	GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
-		glUniform1i(ul_Emissive, 2);
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->EmissiveID);*/
+		/*  GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
+			glUniform1i(ul_Emissive, 2);
+			glActiveTexture(GL_TEXTURE0 + 2);
+			glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->EmissiveID); */
 
 		GLuint ul_ARM = glGetUniformLocation(Shader, "u_ARM");
 		glUniform1i(ul_ARM, 3);
 		glActiveTexture(GL_TEXTURE0 + 3);
-		glBindTexture(GL_TEXTURE_2D, (*itr)->GetMaterial()->AoRoughnessMetallicID);
+		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->AoRoughnessMetallicID);
 
 		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
-		glUniform1i(ul_cast_shadow, (*itr)->setting.cast_shadow ? 0 : 1);
-		
+		glUniform1i(ul_cast_shadow, object->setting.cast_shadow ? 0 : 1);
 
-		glBindVertexArray((*itr)->GetMesh()->VAO);
-		glDrawArrays(GL_TRIANGLES, 0, (*itr)->GetMesh()->polygon_count * 3);
+		glBindVertexArray(object->GetMesh()->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
 	}
 }
