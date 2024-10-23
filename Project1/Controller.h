@@ -4,9 +4,13 @@
 #include "OpenGL.h"
 #include "Object.h"
 
+
 class Controller
 {
 	Object* mapped_obj{ nullptr };
+
+	glm::vec3 controller_direction;
+
 
 public:
 	bool Key[press(KEY_COUNT)];
@@ -17,7 +21,7 @@ public:
 	~Controller();
 
 	void MappingController(Object* obj);
-	void TickEvent();
+	void TickEvent(float delta_seconds);
 
 
 	void Debug_print();

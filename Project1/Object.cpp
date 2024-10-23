@@ -12,6 +12,7 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	location = glm::vec3(0.0);
 	rotation = glm::vec3(0.0);
 	scale = glm::vec3(1.0);
+	mass = 1.0;
 
 	AddMovementInput(loc);
 	BeginPlayEvent();
@@ -32,6 +33,14 @@ void Object::TickEvent(float delta_seconds)
 	if (!setting.isStatic)
 	{
 		if (setting.EnalbeGravity) { velocity.y -= GRAVITY * delta_seconds; }
+
+		glm::vec3 flatmoveSpeed = { velocity.x, 0.0, velocity.z };
+		if (glm::length(flatmoveSpeed) > 0)
+		{
+			AddForce(-flatmoveSpeed * mass * friction);
+		}
+		else velocity = glm::vec3(0.0);
+
 		AddMovementInput(velocity);
 	}
 
@@ -104,12 +113,15 @@ glm::vec3 Object::GetVelocity() const
 {
 	return velocity;
 }
-
 void Object::SetVelocity(glm::vec3 xyz)
 {
 	velocity = xyz;
 }
 
+void Object::AddForce(glm::vec3 xyz)
+{
+	velocity += xyz;
+}
 
 void Object::SetLocation(glm::vec3 new_location)
 {
@@ -129,27 +141,51 @@ glm::vec3 Object::GetRotation() const
 	return rotation;
 }
 
-
-
-void Object::AddMovementInput(glm::vec3 velocity)
+void Object::SetScale(glm::vec3 new_scale)
 {
-	location += velocity;
-	collision_range.min += velocity;
-	collision_range.max += velocity;
+	scale = new_scale;
 }
-void Object::AddRotationInput(glm::vec3 velocity)
+glm::vec3 Object::GetScale() const
 {
-	rotation += velocity;
+	return scale;
+}
 
+void Object::SetMass(float m)
+{
+	mass = m;
+}
+float Object::GetMass() const
+{
+	return mass;
+}
+
+
+
+
+void Object::AddMovementInput(glm::vec3 xyz)
+{
+	location += xyz;
+}
+void Object::AddRotationInput(glm::vec3 xyz)
+{
+	rotation += xyz;
 }
 
 
 void Object::SetCollisionRange()
 {
-	collision_range.min = glm::vec3(GetMesh()->min_location) + location;
-	collision_range.max = glm::vec3(GetMesh()->max_location) + location;
+	collision_range.min = glm::vec3(GetMesh()->min_location);
+	collision_range.max = glm::vec3(GetMesh()->max_location);
+	origin_collision_range = collision_range;
 	setting.EnalbeCollision = true;
 }
+
+void Object::UpdateCollisionRange()
+{
+	collision_range.min = origin_collision_range.min * scale + location;
+	collision_range.max = origin_collision_range.max * scale + location;
+}
+
 bool Object::CheckCollision(const CollisionBox& box1, const CollisionBox& box2)
 {
 	bool xCollision = (box1.max.x >= box2.min.x) && (box1.min.x <= box2.max.x);
@@ -160,9 +196,12 @@ bool Object::CheckCollision(const CollisionBox& box1, const CollisionBox& box2)
 }
 void Object::CheckAllCollisions(std::vector<Object*>& WorldObjects)
 {
+	UpdateCollisionRange();
+
+
 	for (auto& v : WorldObjects)
 	{
-		if (v != this && !isOverlapped && glm::distance(GetLocation(), v->GetLocation()) < 3.0)
+		if (v != this && !isOverlapped && v->setting.EnableRendering)
 		{
 			if (CheckCollision(this->GetCollisionRange(), v->GetCollisionRange()))
 			{

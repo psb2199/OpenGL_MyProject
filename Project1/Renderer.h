@@ -7,7 +7,7 @@
 #include "ObjectManager.h"
 #include "Importer_obj.h"
 
-#include "Light.h"
+#include "DirectionLight.h"
 #include "Camera.h"
 
 
@@ -18,7 +18,7 @@ class Renderer
 	float			aspect;
 	Importer_obj*	m_importer;
 
-	Light*			m_light;
+	DirectionLight*			m_light;
 
 	Camera*			m_Camera;
 
@@ -60,7 +60,7 @@ public:
 	Renderer(int width, int height, Importer_obj* importer);
 	~Renderer();
 
-	void			SetLight(Light* lights);
+	void			SetLight(DirectionLight* lights);
 	void			SetCamera(Camera* camera);
 
 

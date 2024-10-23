@@ -20,7 +20,7 @@
 float WorldSeconds{ 0.0 };
 
 Renderer* G_Renderer = NULL;
-Light* G_Light = nullptr;
+DirectionLight* G_Light = nullptr;
 
 ObjectManager* G_ObjMgr = nullptr;
 Importer_obj* G_Importer = nullptr;
@@ -106,7 +106,7 @@ GLvoid RenderSceneTimer(int value)
 
 	G_Renderer->DrawScene(G_ObjMgr->GetAllObjects());
 
-	G_Controller->TickEvent();
+	G_Controller->TickEvent((float)RenderFriquency / 1000.0);
 	for (auto& v : G_ObjMgr->GetAllObjects()) { v->TickEvent((float)RenderFriquency / 1000.0); }
 
 	if (DoFixMouse)
@@ -148,7 +148,8 @@ GLvoid KeyBoardDown(unsigned char Key, int x, int y)
 
 		case 'u':
 		case 'U':
-
+			Player->SetLocation({ 0,5.0,0 });
+			Player->SetVelocity({ 0,0,0 });
 			break;
 
 		case 'P':
@@ -230,7 +231,8 @@ void FixMouseInSrcreen(glm::vec2 &get_mouse_delta)
 
 void LevelDisign()
 {
-	G_Light = new Light({ 5, 5, 5 });
+	G_Light = new DirectionLight({ 5, 5, 5 });
+	G_Light->AttachDirectionLight(Player);
 	int range = 5;
 	
 	G_ObjMgr->AddObject("Base", { 0, 0, 0 });

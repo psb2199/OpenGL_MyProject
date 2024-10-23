@@ -128,7 +128,7 @@ float Renderer::GetAspect()
 {
 	return aspect;
 }
-void Renderer::SetLight(Light* lights)
+void Renderer::SetLight(DirectionLight* lights)
 {
 	m_light = lights;
 }
@@ -365,7 +365,7 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
 		transfom_Matrix = glm::rotate(transfom_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
-		transfom_Matrix = glm::scale(transfom_Matrix, glm::vec3(1.0, 1.0, 1.0));
+		transfom_Matrix = glm::scale(transfom_Matrix, (*itr)->GetScale());
 
 		unsigned int ObjectTransform = glGetUniformLocation(Shader, "transform");
 		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
@@ -410,22 +410,26 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 
 	for (Object* object : Objects)
 	{
-		if (!object->setting.EnableRendering) continue;
 
 		if (!m_Camera->isCollisionBoxInFrustum(m_Camera->extractFrustumPlanes(camera_mat.projection * camera_mat.view), object->GetCollisionRange())) {
 			continue;
 		}
 
+		if (!object->setting.EnableRendering) continue;
+
 
 		glm::vec3 location = object->GetLocation();
 		glm::vec3 rotation = object->GetRotation();
+
+		glm::vec3 camera_dir = m_Camera->GetCameraDirection();
+
 
 		glm::mat4 transform_Matrix = glm::mat4(1.0f);
 		transform_Matrix = glm::translate(transform_Matrix, location);
 		transform_Matrix = glm::rotate(transform_Matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
 		transform_Matrix = glm::rotate(transform_Matrix, glm::radians(rotation.y), glm::vec3(0, 1, 0));
 		transform_Matrix = glm::rotate(transform_Matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
-		transform_Matrix = glm::scale(transform_Matrix, glm::vec3(1.0, 1.0, 1.0));
+		transform_Matrix = glm::scale(transform_Matrix, object->GetScale());
 		glUniformMatrix4fv(glGetUniformLocation(Shader, "transform"), 1, GL_FALSE, glm::value_ptr(transform_Matrix));
 
 		glUniform3f(glGetUniformLocation(Shader, "actor_location"), location.x, location.y, location.z);

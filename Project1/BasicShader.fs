@@ -22,18 +22,14 @@ uniform float       u_ShadowMapSize;
 float               Shadow_minValue = 0.2;
 vec3                ShadowColor = vec3(0, 0.025, 0.05);
 
-uniform vec3        lightPos;
+uniform vec3        LightDir;
 uniform vec3        lightColor;
-uniform float       lightDistance;
 uniform bool        u_cast_shadow;
 
 float PI = 3.141592;
 
 out vec4 Fragcolor;
 
-// 광원의 방향 계산
-vec3 LightDir = normalize(lightPos - 0); //direction light
-//vec3 LightDir = normalize(lightPos - WorldPosition); //point light
 
 vec3 CameraDir = normalize(WorldPosition - u_CameraPos);
 float Camera_Actor_Dis = distance(WorldPosition, actor_location);

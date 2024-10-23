@@ -34,6 +34,8 @@ public:
 	Camera(glm::vec3 xyz);
 	~Camera();
 
+	glm::vec3 GetCameraDirection() const;
+
 	CameraMat DoWorking(GLuint Shader, float aspect);
 	bool isCollisionBoxInFrustum(const std::array<Plane, 6>& planes, const CollisionBox& box);
 	std::array<Plane, 6> extractFrustumPlanes(const glm::mat4& projViewMatrix);

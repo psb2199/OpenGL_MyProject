@@ -13,6 +13,12 @@ Camera::~Camera()
 {
 }
 
+glm::vec3 Camera::GetCameraDirection() const
+{
+    glm::vec3 direction = glm::normalize(look_location - location);
+    return direction;
+}
+
 CameraMat Camera::DoWorking(GLuint Shader, float aspect)
 {
     //카메라세팅 =============================================================
@@ -40,7 +46,7 @@ CameraMat Camera::DoWorking(GLuint Shader, float aspect)
         glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
     }
     else {
-        projection = glm::perspective(glm::radians(field_of_view), aspect, 0.01f, 100.0f);
+        projection = glm::perspective(glm::radians(field_of_view), aspect, 0.01f, 200.0f);
         projection = glm::translate(projection, glm::vec3(0.0, 0.0, 0.0)); //--- 공간을 약간 뒤로 미뤄줌
         unsigned int projectionLocation = glGetUniformLocation(Shader, "projection"); //--- 투영 변환 값 설정
         glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
@@ -81,6 +87,8 @@ glm::vec3 Camera::GetLocation() const
 {
 	return location;
 }
+
+
 
 float Camera::RadianToDegree(float value)
 {

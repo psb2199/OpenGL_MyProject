@@ -14,32 +14,36 @@ void Controller::MappingController(Object* obj)
 	mapped_obj = obj;
 }
 
-void Controller::TickEvent()
+void Controller::TickEvent(float delta_seconds)
 {
 	if (!mapped_obj) return;
 
-	float movespeed = 0.1;
+	controller_direction = mapped_obj->GetCamera()->GetCameraDirection();
+
+	// Ignore Pitch Value
+	glm::vec3 forwardDirection = glm::normalize(glm::vec3(controller_direction.x, 0, controller_direction.z));
+
+	// Calculate the right direction 
+	glm::vec3 rightDirection = glm::normalize(glm::cross(forwardDirection, glm::vec3(0, 1, 0)));
+
+	float movespeed = 0.01;
+
 	if (Key[press(w)])
 	{
-		//mapped_obj->AddRotationInput({ 1, 0, 0 });
-		mapped_obj->AddMovementInput({ 0,movespeed, 0, });
+		mapped_obj->AddForce(forwardDirection * movespeed);
 	}
 	if (Key[press(s)])
 	{
-		//mapped_obj->AddRotationInput({ -1, 0, 0 });
-		mapped_obj->AddMovementInput({ 0,-movespeed,0 });
+		mapped_obj->AddForce(-forwardDirection * movespeed);
 	}
 	if (Key[press(a)])
 	{
-		//mapped_obj->AddRotationInput({ 0, -1, 0 });
-		mapped_obj->AddMovementInput({ -movespeed,0,0 });
+		mapped_obj->AddForce(-rightDirection * movespeed);
 	}
 	if (Key[press(d)])
 	{
-		//mapped_obj->AddRotationInput({ 0, 1, 0 });
-		mapped_obj->AddMovementInput({ movespeed,0,0 });
+		mapped_obj->AddForce(rightDirection * movespeed);
 	}
-
 }
 
 void Controller::Debug_print()

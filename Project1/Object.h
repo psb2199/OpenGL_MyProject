@@ -21,14 +21,17 @@ class Object
 	int					id;
 	std::string			ojbect_type;
 	VertexData*			mesh;
+	CollisionBox		origin_collision_range;
 	CollisionBox		collision_range;
 	Material*			m_material;
 
 	glm::vec3			location;
 	glm::vec3			rotation;
 	glm::vec3			scale;
-
+	float				mass;
 	glm::vec3			velocity;
+	float				friction{ 0.01 };
+
 
 	bool				isOverlapped{ false };
 
@@ -39,6 +42,7 @@ class Object
 	std::vector<Object*>* AllObjects;
 	
 	void				SetCollisionRange();
+	void				UpdateCollisionRange();
 	bool				CheckCollision(const CollisionBox& box1, const CollisionBox& box2);
 	void				CheckAllCollisions(std::vector<Object*>& WorldObjects);
 public:
@@ -69,13 +73,18 @@ public:
 	glm::vec3			GetLocation() const;
 	void				SetRotation(glm::vec3 new_rotation);
 	glm::vec3			GetRotation() const;
+	void				SetScale(glm::vec3 new_scale);
+	glm::vec3			GetScale() const;
+	void				SetMass(float m);
+	float				GetMass() const;
+ 
 
-
-	void				AddMovementInput(glm::vec3 velocity);
-	void				AddRotationInput(glm::vec3 velocity);
+	void				AddMovementInput(glm::vec3 xyz);
+	void				AddRotationInput(glm::vec3 xyz);
 	glm::vec3			GetVelocity() const;
 	void				SetVelocity(glm::vec3 xyz);
-	
+	void				AddForce(glm::vec3 xyz);
+
 
 public:
 
