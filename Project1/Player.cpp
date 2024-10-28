@@ -29,18 +29,19 @@ void Player::TickEvent(float delta_sceconds)
 
 	
 	glm::vec3 camera_location = GetLocation();
-	camera_location.y = 0;
-	GetCamera()->SetLookLocation(GetLocation());
+	camera_location.y = 2.0;
+	GetCamera()->SetLookLocation(camera_location);
 
 	glm::vec3 velocity = GetVelocity();
-
-	glm::vec3 rotateDir;
-
-	rotateDir.x = velocity.x;
-	rotateDir.z = -velocity.z;
-	rotateDir.y = 0.0;
-
-	AddRotationInput(rotateDir * 10.f);
+	glm::vec3 force = GetForce();
+	glm::vec3 rotateDir = glm::vec3{ 0.0 };
+	
+	rotateDir.y = atan2(velocity.x, velocity.z);
+	static float rotateXvalue;
+	rotateXvalue -= dot(velocity, force) / 5.0;
+	rotateDir.x = glm::degrees(rotateXvalue);
+	
+	SetRotation(glm::degrees(rotateDir));
 }
 
 void Player::OverlapedCollisionEvent(Object* collision_obj)
@@ -52,7 +53,6 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 		glm::vec3 newVel = GetVelocity();
 		newVel.y *= -1.0;
 		SetVelocity(newVel);
-
 	}
 	
 }

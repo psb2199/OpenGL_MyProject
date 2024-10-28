@@ -30,7 +30,8 @@ class Object
 	glm::vec3			scale;
 	float				mass;
 	glm::vec3			velocity;
-	float				friction{ 0.01 };
+	glm::vec3			force;
+	float				friction{ 0.1 };
 
 
 	bool				isOverlapped{ false };
@@ -40,6 +41,7 @@ class Object
 	Camera*				m_Camera;
 	Importer_obj*		Importer_mesh;
 	std::vector<Object*>* AllObjects;
+
 	
 	void				SetCollisionRange();
 	void				UpdateCollisionRange();
@@ -81,10 +83,11 @@ public:
 
 	void				AddMovementInput(glm::vec3 xyz);
 	void				AddRotationInput(glm::vec3 xyz);
+
 	glm::vec3			GetVelocity() const;
 	void				SetVelocity(glm::vec3 xyz);
-	void				AddForce(glm::vec3 xyz);
-
+	void				SetForce(glm::vec3 xyz);
+	glm::vec3			GetForce() const;
 
 public:
 

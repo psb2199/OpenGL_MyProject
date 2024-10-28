@@ -1,6 +1,8 @@
 #pragma once
 #include <gl/glm/glm.hpp>
 #include <gl/glm/ext.hpp>
+#include <gl/glm/gtc/quaternion.hpp>
+#include <gl/glm/gtx/quaternion.hpp>
 #include <gl/glm/gtc/matrix_transform.hpp>
 #include <gl/glew.h>
 #include <gl/freeglut.h>
@@ -75,3 +77,8 @@ struct CollisionBox {
 	glm::vec3 max;
 
 };
+
+static void printVector3(glm::vec3 vec)
+{
+	cout << "x:" << vec.x << "  y:" << vec.x << "  z:" << vec.x << endl;
+}

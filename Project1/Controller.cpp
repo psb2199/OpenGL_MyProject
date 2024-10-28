@@ -26,23 +26,27 @@ void Controller::TickEvent(float delta_seconds)
 	// Calculate the right direction 
 	glm::vec3 rightDirection = glm::normalize(glm::cross(forwardDirection, glm::vec3(0, 1, 0)));
 
-	float movespeed = 0.01;
+	float movespeed = 0.025;
 
 	if (Key[press(w)])
 	{
-		mapped_obj->AddForce(forwardDirection * movespeed);
+		//mapped_obj->AddRotationInput({ 0,0,1 });
+		mapped_obj->SetForce(forwardDirection * movespeed);
 	}
 	if (Key[press(s)])
 	{
-		mapped_obj->AddForce(-forwardDirection * movespeed);
+		//mapped_obj->AddRotationInput({ 0,0,-1 });
+		mapped_obj->SetForce(-forwardDirection * movespeed);
 	}
 	if (Key[press(a)])
 	{
-		mapped_obj->AddForce(-rightDirection * movespeed);
+		//mapped_obj->AddRotationInput({ 0,1,0 });
+		mapped_obj->SetForce(-rightDirection * movespeed);
 	}
 	if (Key[press(d)])
 	{
-		mapped_obj->AddForce(rightDirection * movespeed);
+		//mapped_obj->AddRotationInput({ 0,-1,0 });
+		mapped_obj->SetForce(rightDirection * movespeed);
 	}
 }
 

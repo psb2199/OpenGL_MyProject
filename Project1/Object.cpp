@@ -35,11 +35,16 @@ void Object::TickEvent(float delta_seconds)
 		if (setting.EnalbeGravity) { velocity.y -= GRAVITY * delta_seconds; }
 
 		glm::vec3 flatmoveSpeed = { velocity.x, 0.0, velocity.z };
-		if (glm::length(flatmoveSpeed) > 0)
+		if (glm::length(flatmoveSpeed) > 0.001)
 		{
-			AddForce(-flatmoveSpeed * mass * friction);
+			SetForce(-flatmoveSpeed * mass * friction);
 		}
-		else velocity = glm::vec3(0.0);
+		else
+		{
+			velocity.x = 0.0;
+			velocity.z = 0.0;
+			force = glm::vec3(0.0);
+		}
 
 		AddMovementInput(velocity);
 	}
@@ -118,9 +123,16 @@ void Object::SetVelocity(glm::vec3 xyz)
 	velocity = xyz;
 }
 
-void Object::AddForce(glm::vec3 xyz)
+void Object::SetForce(glm::vec3 xyz)
 {
-	velocity += xyz;
+	force = xyz;
+
+	velocity += force;
+}
+
+glm::vec3 Object::GetForce() const
+{
+	return force;
 }
 
 void Object::SetLocation(glm::vec3 new_location)
@@ -170,6 +182,7 @@ void Object::AddRotationInput(glm::vec3 xyz)
 {
 	rotation += xyz;
 }
+
 
 
 void Object::SetCollisionRange()
