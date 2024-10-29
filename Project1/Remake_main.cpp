@@ -235,15 +235,15 @@ void LevelDisign()
 	G_Light->AttachDirectionLight(Player);
 	int range = 5;
 	
-	for (int x{ 0 }; x < range; ++x)
+	for (int x{ -range }; x < range; ++x)
 	{
-		for (int z{ 0 }; z < range; ++z)
+		for (int z{ -range }; z < range; ++z)
 		{
-
+			//G_ObjMgr->AddObject("Base", { x * 10, 0, z * 10 });
 		}
 	}
+	
 	G_ObjMgr->AddObject("Base", { 0, 0, 0 });
-
 	
 
 

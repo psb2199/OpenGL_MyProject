@@ -19,7 +19,7 @@ void Player::BeginPlayEvent()
 	Object::BeginPlayEvent();
 
 	setting.isStatic = false;
-	setting.EnalbeGravity = true;
+	setting.EnalbeGravity = false;
 	setting.EnalbeCollision = true;
 }
 
