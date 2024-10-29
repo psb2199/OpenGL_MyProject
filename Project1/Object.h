@@ -37,6 +37,7 @@ class Object
 	bool				isOverlapped{ false };
 
 	float				elapesedTime{ 0.0 };
+	float				m_delta_time;
 
 	Camera*				m_Camera;
 	Importer_obj*		Importer_mesh;
@@ -57,7 +58,9 @@ public:
 	virtual void		BeginPlayEvent();
 	virtual void		TickEvent(float delta_seconds);
 	virtual void		OverlapedCollisionEvent(Object* collision_obj);
+
 	float				GetElapsedTime();
+	float				GetDeltaTime();
 
 	CollisionBox		GetCollisionRange() const;
 	void				SetCamera(Camera* camera);

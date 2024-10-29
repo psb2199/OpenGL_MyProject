@@ -55,6 +55,7 @@ class Renderer
 	void			Render_Enviroment(GLuint Shader);
 	void			Render_PostProcessMap(GLuint Shader);
 
+	void			GetObjectTrnasformMatrix(GLuint shader, Object* obj);
 
 public:
 	Renderer(int width, int height, Importer_obj* importer);

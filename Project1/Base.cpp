@@ -20,7 +20,7 @@ void Base::BeginPlayEvent()
 	setting.isStatic = true;
 	setting.EnalbeCollision = true;
 	setting.EnableRendering = true;
-	SetScale({ 50,1,50 });
+	SetScale({ 5,1,5 });                                                                                                                                   
 }
 
 void Base::TickEvent(float delta_sceconds)

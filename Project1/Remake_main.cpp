@@ -243,6 +243,7 @@ void LevelDisign()
 		}
 	}
 	G_ObjMgr->AddObject("Base", { 0, 0, 0 });
+
 	
 
 

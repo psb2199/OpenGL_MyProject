@@ -322,6 +322,29 @@ void Renderer::Initialize_EviromentVAO()
 	glBindVertexArray(0);
 }
 
+void Renderer::GetObjectTrnasformMatrix(GLuint shader, Object* obj)
+{
+	glm::vec3 location = obj->GetLocation();
+	glm::vec3 rotation = obj->GetRotation();
+	glm::quat quaternionRotation = glm::quat(glm::radians(rotation));
+
+	float halfheight = obj->GetMesh()->min_location.y;
+
+	glm::mat4 transfom_Matrix = glm::mat4(1.0f);
+	transfom_Matrix = glm::translate(transfom_Matrix, location + glm::vec3(0.0, halfheight, 0.0));
+	transfom_Matrix = glm::scale(transfom_Matrix, obj->GetScale());
+	transfom_Matrix = glm::translate(transfom_Matrix, -glm::vec3(0.0, halfheight, 0.0));
+	transfom_Matrix *= glm::toMat4(quaternionRotation);
+
+	unsigned int ObjectTransform = glGetUniformLocation(shader, "transform");
+	glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
+
+	glUniform3f(glGetUniformLocation(shader, "actor_location"), location.x, location.y, location.z);
+
+	glm::mat4 normal_Matrix = glm::mat4(1.0f);
+	normal_Matrix *= glm::toMat4(quaternionRotation);
+	glUniformMatrix4fv(glGetUniformLocation(shader, "normal_transform"), 1, GL_FALSE, glm::value_ptr(normal_Matrix));
+}
 
 
 void Renderer::DrawScene(std::vector<Object*>Objects)
@@ -357,17 +380,7 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 	// 객체별로 변환 행렬 설정 및 렌더링
 	for (Object* object : Objects)
 	{
-		glm::vec3 location = object->GetLocation();
-		glm::vec3 rotation = object->GetRotation();
-		glm::quat quaternionRotation = glm::quat(glm::radians(rotation));
-
-		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
-		transfom_Matrix = glm::translate(transfom_Matrix, location);
-		transfom_Matrix *= glm::toMat4(quaternionRotation);
-		transfom_Matrix = glm::scale(transfom_Matrix, object->GetScale());
-
-		unsigned int ObjectTransform = glGetUniformLocation(Shader, "transform");
-		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
+		GetObjectTrnasformMatrix(Shader, object);
 
 		glBindVertexArray(object->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
@@ -416,26 +429,11 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 
 		if (!object->setting.EnableRendering) continue;
 
-
-		glm::vec3 location = object->GetLocation();
-		glm::vec3 rotation = object->GetRotation();
-
-		glm::quat quaternionRotation = glm::quat(glm::radians(rotation));
-
 		glm::vec3 camera_dir = m_Camera->GetCameraDirection();
 
+		GetObjectTrnasformMatrix(Shader, object);
 
-		glm::mat4 transform_Matrix = glm::mat4(1.0f);
-		transform_Matrix = glm::translate(transform_Matrix, location);
-		transform_Matrix *= glm::toMat4(quaternionRotation);
-		transform_Matrix = glm::scale(transform_Matrix, object->GetScale());
-		glUniformMatrix4fv(glGetUniformLocation(Shader, "transform"), 1, GL_FALSE, glm::value_ptr(transform_Matrix));
-
-		glUniform3f(glGetUniformLocation(Shader, "actor_location"), location.x, location.y, location.z);
-
-		glm::mat4 normal_Matrix = glm::mat4(1.0f);
-		normal_Matrix *= glm::toMat4(quaternionRotation);
-		glUniformMatrix4fv(glGetUniformLocation(Shader, "normal_transform"), 1, GL_FALSE, glm::value_ptr(normal_Matrix));
+		
 
 		GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);
@@ -481,18 +479,7 @@ void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 	// 객체별로 변환 행렬 설정 및 렌더링
 	for (Object* object : Objects)
 	{
-		glm::vec3 location = object->GetLocation();
-		glm::vec3 rotation = object->GetRotation();
-
-		glm::quat quaternionRotation = glm::quat(glm::radians(rotation));
-
-		glm::mat4 transfom_Matrix = glm::mat4(1.0f);
-		transfom_Matrix = glm::translate(transfom_Matrix, location);
-		transfom_Matrix *= glm::toMat4(quaternionRotation); 
-		transfom_Matrix = glm::scale(transfom_Matrix, object->GetScale());
-
-		unsigned int ObjectTransform = glGetUniformLocation(Shader, "transform");
-		glUniformMatrix4fv(ObjectTransform, 1, GL_FALSE, glm::value_ptr(transfom_Matrix));
+		GetObjectTrnasformMatrix(Shader, object);
 
 		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
 		glUniform1i(ul_Emissive, 0);
@@ -551,3 +538,4 @@ void Renderer::Render_PostProcessMap(GLuint Shader)
 	glDrawArrays(GL_TRIANGLES, 0, 6); // 화면에 텍스처 그리기
 	glBindVertexArray(0);
 }
+

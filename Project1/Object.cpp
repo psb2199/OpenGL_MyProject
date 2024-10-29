@@ -29,6 +29,7 @@ void Object::BeginPlayEvent()
 void Object::TickEvent(float delta_seconds)
 {
 	elapesedTime += delta_seconds;
+	m_delta_time = delta_seconds;
 
 	if (!setting.isStatic)
 	{
@@ -64,6 +65,11 @@ void Object::OverlapedCollisionEvent(Object* collision_obj)
 float Object::GetElapsedTime()
 {
 	return elapesedTime;
+}
+
+float Object::GetDeltaTime()
+{
+	return m_delta_time;
 }
 
 void Object::SetCamera(Camera* camera)
