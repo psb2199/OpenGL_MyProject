@@ -61,6 +61,7 @@ void DirectionLight::LightWorks(GLuint Shader)
 	glm::vec3 light_color = GetLightColor();
 	glUniform3f(lightColorLocation, light_color.r, light_color.g, light_color.b);
 
+
 	glm::vec3 light_location = GetLocation();
 	glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, -100.f, 20.f);
 	glm::mat4 lightView = glm::lookAt(light_location, light_location - Light_direction, glm::vec3(0.0f, 1.0f, 0.0f));

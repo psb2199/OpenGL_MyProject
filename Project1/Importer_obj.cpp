@@ -16,6 +16,7 @@ void Importer_obj::Initialize()
 	{
 		ReadObj("objs/Ball.obj");
 		ReadObj("objs/Base.obj");
+		ReadObj("objs/Coin.obj");
 	}
 
 	// Import Textures
@@ -27,6 +28,10 @@ void Importer_obj::Initialize()
 		Ball_BaseColor,
 		Ball_Normal,
 		Ball_ARM,
+
+		Coin_BaseColor,
+		Coin_Normal,
+		Coin_ARM,
 
 		Base_BaseColor,
 		Base_Normal,
@@ -62,6 +67,14 @@ void Importer_obj::Initialize()
 		Textures[Base_Normal] =		LoadTexture("textures/Base/Normal.png");
 		Textures[Base_ARM] =		LoadTexture("textures/Base/ARM.png");
 
+		Textures[Grass_BaseColor] = LoadTexture("textures/Grass/BaseColor.png");
+		Textures[Grass_Normal] = LoadTexture("textures/Grass/Normal.png");
+		Textures[Grass_ARM] = LoadTexture("textures/Grass/ARM.png");
+
+		Textures[Coin_BaseColor] = LoadTexture("textures/Coin/BaseColor.png");
+		Textures[Coin_Normal] = LoadTexture("textures/Coin/Normal.png");
+		Textures[Coin_ARM] = LoadTexture("textures/Coin/ARM.png");
+
 
 		std::vector<string> cubeMap_filepathes;
 		cubeMap_filepathes.push_back("textures/skybox/right.png");
@@ -92,6 +105,22 @@ void Importer_obj::Initialize()
 			Textures[Base_Normal],
 			NULL,	 
 			Textures[Base_ARM]
+		);
+
+		MakeMaterial(
+			"Grass",
+			Textures[Grass_BaseColor],
+			Textures[Grass_Normal],
+			NULL,
+			Textures[Grass_ARM]
+		);
+
+		MakeMaterial(
+			"Coin",
+			Textures[Coin_BaseColor],
+			Textures[Coin_Normal],
+			NULL,	 
+			Textures[Coin_ARM]
 		);
 	}
 

@@ -4,7 +4,7 @@ Base::Base(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, 
 	: Object(obj_id, type, loc, importer, _AllObjects)
 {
 	SetMesh("Base.obj");
-	SetMaterial("Base");
+	SetMaterial("Grass");
 
 	BeginPlayEvent();
 }
@@ -20,7 +20,7 @@ void Base::BeginPlayEvent()
 	setting.isStatic = true;
 	setting.EnalbeCollision = true;
 	setting.EnableRendering = true;
-	SetScale({ 50,1,50 });                                                                                                                                   
+	SetScale({ 10,1,10 });                                                                                                                                   
 }
 
 void Base::TickEvent(float delta_sceconds)

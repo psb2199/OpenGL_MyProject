@@ -7,6 +7,7 @@
 
 #include "Player.h"
 #include "Base.h"
+#include "Coin.h"
 
 
 class ObjectManager

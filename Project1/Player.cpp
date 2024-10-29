@@ -19,7 +19,7 @@ void Player::BeginPlayEvent()
 	Object::BeginPlayEvent();
 
 	setting.isStatic = false;
-	setting.EnalbeGravity = false;
+	setting.EnalbeGravity = true;
 	setting.EnalbeCollision = true;
 }
 
@@ -43,9 +43,11 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 
 	if (GetObjectType(collision_obj) == "Base")
 	{
+
 		hitLocation = GetLocation();
 
 		hitVelocity = GetVelocity();
+
 		hitVelocity.y *= -1;
 		SetVelocity(hitVelocity);
 

@@ -80,5 +80,5 @@ struct CollisionBox {
 
 static void printVector3(glm::vec3 vec)
 {
-	cout << "x:" << vec.x << "  y:" << vec.x << "  z:" << vec.x << endl;
+	cout << "x:" << vec.x << "  y:" << vec.y << "  z:" << vec.z << endl;
 }

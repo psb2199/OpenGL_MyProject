@@ -233,6 +233,7 @@ void LevelDisign()
 {
 	G_Light = new DirectionLight({ 5, 5, 5 });
 	G_Light->AttachDirectionLight(Player);
+
 	int range = 5;
 	
 	for (int x{ -range }; x < range; ++x)
@@ -245,7 +246,7 @@ void LevelDisign()
 	
 	G_ObjMgr->AddObject("Base", { 0, 0, 0 });
 	
-
+	G_ObjMgr->AddObject("Coin", { 4,2,4 });
 
 	G_Renderer->SetLight(G_Light);
 	G_Camera->SetLookLocation(Player->GetLocation());

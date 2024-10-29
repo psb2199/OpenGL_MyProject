@@ -21,6 +21,10 @@ Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
     {
         newObj = dynamic_cast<Object*>(new Base(AllOjectCount, type, location, m_importer, &WorldObjects));
     }
+    else if (type == "Coin")
+    {
+        newObj = dynamic_cast<Object*>(new Coin(AllOjectCount, type, location, m_importer, &WorldObjects));
+    }
     else
     {
         cout << "There is no c++ class about " << type << endl;
