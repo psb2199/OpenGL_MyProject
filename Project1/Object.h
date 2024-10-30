@@ -20,7 +20,7 @@ struct Setting {
 class Object
 {	
 	int					id;
-	std::string			ojbect_type;
+	std::string			object_type;
 	VertexData*			mesh;
 	CollisionBox		origin_collision_range;
 	CollisionBox		collision_range;
@@ -93,6 +93,7 @@ public:
 	void				SetForce(glm::vec3 xyz);
 	glm::vec3			GetForce() const;
 
+	static void			printObject(Object* obj);
 public:
 
 	bool operator==(const Object& other) const {

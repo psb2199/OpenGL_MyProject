@@ -8,7 +8,7 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	Importer_mesh = importer;
 	m_objectmgr = objmgr;
 	id = obj_id;
-	ojbect_type = type;
+	object_type = type;
 
 	location = glm::vec3(0.0);
 	rotation = glm::vec3(0.0);
@@ -97,7 +97,7 @@ int Object::GetID()
 }
 std::string Object::GetObjectType(Object* obj)
 {
-	return obj->ojbect_type;
+	return obj->object_type;
 }
 
 
@@ -145,6 +145,13 @@ glm::vec3 Object::GetForce() const
 {
 	return force;
 }
+
+void Object::printObject(Object* obj)
+{
+	cout << obj->object_type << obj->id << endl;
+}
+
+
 
 void Object::SetLocation(glm::vec3 new_location)
 {

@@ -3,6 +3,8 @@
 
 #include "Object.h"
 
+class ObjectManager;
+
 class Player : public Object
 {
 	void BeginPlayEvent() override;

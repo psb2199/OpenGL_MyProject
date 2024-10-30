@@ -21,7 +21,7 @@ void Coin::BeginPlayEvent()
 	setting.EnalbeCollision = true;
 	setting.EnableRendering = true;
 
-	SetScale(glm::vec3(2.0));
+	SetScale(glm::vec3(1.0));
 }
 
 void Coin::TickEvent(float delta_sceconds)

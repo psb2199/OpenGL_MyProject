@@ -24,6 +24,7 @@ vec3                ShadowColor = vec3(0, 0.025, 0.05);
 
 uniform vec3        LightDir;
 uniform vec3        lightColor;
+float               lihgt_power = 1.2;
 uniform bool        u_cast_shadow;
 
 float PI = 3.141592;
@@ -254,7 +255,7 @@ void PBR_Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float
     float NdotL = max(dot(N, L), 0.0);
     vec3 Lo = (kD * BaseColor / PI + specular) * NdotL;
 
-    vec3 LightValue = lightColor;
+    vec3 LightValue = lightColor * lihgt_power;
     vec3 ambient = LightValue * BaseColor * AO;
 
     vec3 reflectedColor = GetBlurReflectedColor(N, Roughness);
