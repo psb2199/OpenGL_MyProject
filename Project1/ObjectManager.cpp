@@ -15,15 +15,15 @@ Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
 
     if      (type == "Player")
     {
-        newObj = dynamic_cast<Object*>(new Player(AllOjectCount, type, location, m_importer, &WorldObjects));
+        newObj = dynamic_cast<Object*>(new Player(AllOjectCount, type, location, m_importer, this));
     }
     else if (type == "Base")
     {
-        newObj = dynamic_cast<Object*>(new Base(AllOjectCount, type, location, m_importer, &WorldObjects));
+        newObj = dynamic_cast<Object*>(new Base(AllOjectCount, type, location, m_importer, this));
     }
     else if (type == "Coin")
     {
-        newObj = dynamic_cast<Object*>(new Coin(AllOjectCount, type, location, m_importer, &WorldObjects));
+        newObj = dynamic_cast<Object*>(new Coin(AllOjectCount, type, location, m_importer, this));
     }
     else
     {

@@ -1,11 +1,12 @@
 #pragma once
-#include <iostream>
 
 #include "OpenGL.h"
+
 #include "Importer_obj.h"
 #include "Camera.h"
 
 #define GRAVITY	1
+class ObjectManager;
 
 struct Setting {
 	bool				isStatic{ false };
@@ -41,18 +42,17 @@ class Object
 
 	Camera*				m_Camera;
 	Importer_obj*		Importer_mesh;
-	std::vector<Object*>* AllObjects;
-
+	ObjectManager*		m_objectmgr;
 	
 	void				SetCollisionRange();
 	void				UpdateCollisionRange();
 	bool				CheckCollision(const CollisionBox& box1, const CollisionBox& box2);
-	void				CheckAllCollisions(std::vector<Object*>& WorldObjects);
+	void				CheckAllCollisions(std::vector<Object*> WorldObjects);
 public:
 	Setting				setting;
 
 	Object() = default;
-	Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, std::vector<Object*>* _AllObjects);
+	Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr);
 	~Object();
 
 	virtual void		BeginPlayEvent();
@@ -61,6 +61,7 @@ public:
 
 	float				GetElapsedTime();
 	float				GetDeltaTime();
+	ObjectManager*		GetWorld();
 
 	CollisionBox		GetCollisionRange() const;
 	void				SetCamera(Camera* camera);

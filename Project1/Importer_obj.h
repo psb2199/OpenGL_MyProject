@@ -1,9 +1,7 @@
 #pragma once
-#include <iostream>
+
 #include <fstream>
-#include <string>
 #include <sstream>
-#include <vector>
 
 #include "OpenGL.h"
 #include "LoadPng.h"

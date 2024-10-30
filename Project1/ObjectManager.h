@@ -1,14 +1,11 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <algorithm> 
+#include "OpenGL.h"
 
 #include "Object.h"
 
 #include "Player.h"
-#include "Base.h"
 #include "Coin.h"
-
+#include "Base.h"
 
 class ObjectManager
 {

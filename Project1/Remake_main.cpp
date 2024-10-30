@@ -6,12 +6,14 @@
 
 #include <Windows.h>
 
+#include "OpenGL.h"
+
 #include "Renderer.h"
 #include "Camera.h"
+#include "DirectionLight.h"
 #include "Controller.h"
-#include "ObjectManager.h"
-#include "Importer_obj.h"
 
+#include "ObjectManager.h"
 
 #define RenderFriquency 10 //100밀리 초 마다 한번
 #define WINDOW_WIDTH 1200
@@ -56,12 +58,17 @@ int main(int argc, char** argv)
 	//glDisable(GL_CULL_FACE);
 	glEnable(GL_CULL_FACE);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
-	//glEnable(GL_POLYGON_SMOOTH);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+
+	glEnable(GL_POLYGON_SMOOTH);
 	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);*/
 	
 
 

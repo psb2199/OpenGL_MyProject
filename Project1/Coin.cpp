@@ -1,7 +1,7 @@
 #include "Coin.h"
 
-Coin::Coin(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, std::vector<Object*>* _AllObjects)
-	: Object(obj_id, type, loc, importer, _AllObjects)
+Coin::Coin(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr)
+	: Object(obj_id, type, loc, importer, objmgr)
 {
 	SetMesh("Coin.obj");
 	SetMaterial("Coin");
@@ -17,7 +17,7 @@ void Coin::BeginPlayEvent()
 {
 	Object::BeginPlayEvent();
 
-	setting.isStatic = true;
+	setting.isStatic = false;
 	setting.EnalbeCollision = true;
 	setting.EnableRendering = true;
 
@@ -31,3 +31,4 @@ void Coin::TickEvent(float delta_sceconds)
 	AddRotationInput({ 0,1,0 });
 
 }
+

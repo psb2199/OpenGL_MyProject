@@ -63,7 +63,7 @@ void DirectionLight::LightWorks(GLuint Shader)
 
 
 	glm::vec3 light_location = GetLocation();
-	glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, -100.f, 20.f);
+	glm::mat4 lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, -10.f, 100.f);
 	glm::mat4 lightView = glm::lookAt(light_location, light_location - Light_direction, glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 	unsigned int ulightSpaceMatrix = glGetUniformLocation(Shader, "lightSpaceMatrix");

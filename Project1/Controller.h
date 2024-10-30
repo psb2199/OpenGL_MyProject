@@ -1,9 +1,7 @@
 #pragma once
-#include <iostream>
-
 #include "OpenGL.h"
-#include "Object.h"
 
+#include "Object.h"
 
 class Controller
 {

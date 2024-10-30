@@ -1,14 +1,15 @@
+
 #include "Object.h"
+#include "ObjectManager.h"
 
 
-
-Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, std::vector<Object*>* _AllObjects)
+Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr)
 {
 	Importer_mesh = importer;
-	AllObjects = _AllObjects;
+	m_objectmgr = objmgr;
 	id = obj_id;
 	ojbect_type = type;
-	
+
 	location = glm::vec3(0.0);
 	rotation = glm::vec3(0.0);
 	scale = glm::vec3(1.0);
@@ -52,13 +53,12 @@ void Object::TickEvent(float delta_seconds)
 
 	if (setting.EnalbeCollision)
 	{
-		CheckAllCollisions(*AllObjects);
+		CheckAllCollisions(m_objectmgr->GetAllObjects());
 	}
 }
 
 void Object::OverlapedCollisionEvent(Object* collision_obj)
 {
-	isOverlapped = false;
 }
 
 
@@ -72,8 +72,13 @@ float Object::GetDeltaTime()
 	return m_delta_time;
 }
 
+ObjectManager* Object::GetWorld()
+{
+	return m_objectmgr;
+}
+
 void Object::SetCamera(Camera* camera)
-{	
+{
 	if (camera) m_Camera = camera;
 	else cout << "There is no Camera" << endl;
 }
@@ -213,23 +218,23 @@ bool Object::CheckCollision(const CollisionBox& box1, const CollisionBox& box2)
 
 	return xCollision && yCollision && zCollision;
 }
-void Object::CheckAllCollisions(std::vector<Object*>& WorldObjects)
+void Object::CheckAllCollisions(std::vector<Object*> WorldObjects)
 {
 	UpdateCollisionRange();
 
-
 	for (auto& v : WorldObjects)
 	{
-		if (v != this && !isOverlapped && v->setting.EnableRendering)
+		if (v != this && v->setting.EnableRendering)
 		{
-			if (CheckCollision(this->GetCollisionRange(), v->GetCollisionRange()))
+			if (CheckCollision(collision_range, v->GetCollisionRange()))
 			{
-				isOverlapped = true;
-				AddMovementInput(-velocity);
+				if (v->setting.isStatic) AddMovementInput(-velocity);
 				OverlapedCollisionEvent(v);
 			}
+
 		}
 	}
+
 }
 CollisionBox Object::GetCollisionRange() const
 {

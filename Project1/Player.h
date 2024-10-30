@@ -1,4 +1,6 @@
 #pragma once
+#include "OpenGL.h"
+
 #include "Object.h"
 
 class Player : public Object
@@ -15,7 +17,7 @@ class Player : public Object
 	glm::vec3 hitLocation;
 
 public:
-	Player(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, std::vector<Object*>* _AllObjects);
+	Player(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr);
 	~Player();
 };
 

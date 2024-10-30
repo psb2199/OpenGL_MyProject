@@ -1,15 +1,12 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <fstream>
 
 #include "OpenGL.h"
-#include "ObjectManager.h"
-#include "Importer_obj.h"
 
+#include "Importer_obj.h"
 #include "DirectionLight.h"
 #include "Camera.h"
-
 
 class Renderer
 {	
