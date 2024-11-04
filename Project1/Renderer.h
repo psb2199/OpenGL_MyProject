@@ -24,6 +24,7 @@ class Renderer
 	GLuint			Bloom_Shader;
 	GLuint			PostProcess_Shader;
 	GLuint			Enviroment_Shader;
+	GLuint			Particle_Shader;
 
 	FrameData		Shadow;
 	FrameData		Bloom;
@@ -36,9 +37,9 @@ class Renderer
 	unsigned int	rbo;
 
 
-	GLuint			CompileShaders(std::string FileNameVS, std::string FileNameFS);
-	bool			ReadShaderFile(std::string filename, std::string* target);
-	void			AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
+	static GLuint	CompileShaders(std::string FileNameVS, std::string FileNameFS);
+	static bool		ReadShaderFile(std::string filename, std::string* target);
+	static void		AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 
 	void			Initialize(int width, int height);
 	void			Initialize_ShadowMap(const unsigned int width, const unsigned int height);
@@ -51,6 +52,7 @@ class Renderer
 	void			Render_DefaultColor(GLuint Shader, std::vector<Object*>Objects);
 	void			Render_Enviroment(GLuint Shader);
 	void			Render_PostProcessMap(GLuint Shader);
+	void			Render_Particle(GLuint Shader);
 
 	void			GetObjectTrnasformMatrix(GLuint shader, Object* obj);
 
@@ -63,7 +65,7 @@ public:
 
 
 	float			GetAspect();
-	GLuint			GetShader();
+	GLuint			GetShader(string type);
 	void			DrawScene(std::vector<Object*>Objects);
 };
 

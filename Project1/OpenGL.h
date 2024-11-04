@@ -7,6 +7,8 @@
 #include <gl/glew.h>
 #include <gl/freeglut.h>
 
+#include <random>
+
 #include <iostream>
 #include <vector>
 #include <array>
@@ -81,4 +83,13 @@ struct CollisionBox {
 static void printVector3(glm::vec3 vec)
 {
 	cout << "x:" << vec.x << "  y:" << vec.y << "  z:" << vec.z << endl;
+}
+
+static int GetRandint(int min, int max) {
+	
+	static std::random_device rd;
+	static std::mt19937 gen(rd());  
+	std::uniform_int_distribution<> dist(min, max);
+
+	return dist(gen);  
 }

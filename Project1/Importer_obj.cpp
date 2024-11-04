@@ -10,6 +10,8 @@ Importer_obj::~Importer_obj()
 {
 }
 
+
+
 void Importer_obj::Initialize()
 {
 	// Import Obj

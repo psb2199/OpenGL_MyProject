@@ -64,6 +64,9 @@
     <Filter Include="소스 파일\Object\Coin">
       <UniqueIdentifier>{d07ba0c6-df98-4b12-8ac3-e5e2091fbd4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Shaders\Particles">
+      <UniqueIdentifier>{b1e60b00-f870-44c2-b69f-6992b84f8120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertexlight.glsl">
@@ -101,6 +104,12 @@
     </None>
     <None Include="BloomShader.fs">
       <Filter>소스 파일\Shaders\Bloom</Filter>
+    </None>
+    <None Include="ParticleShader.vs">
+      <Filter>소스 파일\Shaders\Particles</Filter>
+    </None>
+    <None Include="ParticleShader.fs">
+      <Filter>소스 파일\Shaders\Particles</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +152,9 @@
     <ClCompile Include="Coin.cpp">
       <Filter>소스 파일\Object\Coin</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
@@ -180,6 +192,9 @@
     </ClInclude>
     <ClInclude Include="Coin.h">
       <Filter>소스 파일\Object\Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

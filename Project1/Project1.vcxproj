@@ -23,6 +23,8 @@
     <None Include="BasicShader.vs" />
     <None Include="BloomShader.fs" />
     <None Include="BloomShader.vs" />
+    <None Include="ParticleShader.fs" />
+    <None Include="ParticleShader.vs" />
     <None Include="PostProcessShader.fs" />
     <None Include="PostProcessShader.vs" />
     <None Include="EnviromentShader.fs" />
@@ -42,6 +44,7 @@
     <ClCompile Include="LoadPng.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Remake_main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -63,6 +66,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
   </ItemGroup>

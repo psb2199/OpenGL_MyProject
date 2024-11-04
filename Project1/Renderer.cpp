@@ -119,9 +119,10 @@ bool Renderer::ReadShaderFile(std::string filename, std::string* target)
 	}
 	return true;
 }
-GLuint Renderer::GetShader()
+GLuint Renderer::GetShader(string type)
 {
-	return Basic_Shader;
+	if (type == "Basic") return Basic_Shader;
+	else if (type == "Particle") return Particle_Shader;
 }
 
 float Renderer::GetAspect()
@@ -144,6 +145,7 @@ void Renderer::Initialize(int width, int height)
 	window_height = height;
 
 	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
+	Particle_Shader = CompileShaders("ParticleShader.vs", "ParticleShader.fs");
 
 	Enviroment_Shader = CompileShaders("EnviromentShader.vs", "EnviromentShader.fs");
 	Initialize_EviromentVAO();
@@ -359,6 +361,7 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	glBindFramebuffer(GL_FRAMEBUFFER, post_process.FBO);
 	Render_Enviroment(Enviroment_Shader);
 	Render_DefaultColor(Basic_Shader, Objects);
+	Render_Particle(Particle_Shader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	Render_PostProcessMap(PostProcess_Shader);
@@ -393,7 +396,6 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 }
-
 void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 {
 	glEnable(GL_DEPTH_TEST);
@@ -404,7 +406,6 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 
 	m_light->LightWorks(Shader);
 
-	int index{ 0 };
 
 	// 깊이 맵 텍스처를 쉐이더로 전달 (깊이 맵 자체가 화면에 그려지지 않도록 관리)
 	GLuint ul_Depth = glGetUniformLocation(Shader, "u_DepthMap");
@@ -445,11 +446,6 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->NormalMapID);
 
-		/*  GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
-			glUniform1i(ul_Emissive, 2);
-			glActiveTexture(GL_TEXTURE0 + 2);
-			glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->EmissiveID); */
-
 		GLuint ul_ARM = glGetUniformLocation(Shader, "u_ARM");
 		glUniform1i(ul_ARM, 3);
 		glActiveTexture(GL_TEXTURE0 + 3);
@@ -463,7 +459,13 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glBindVertexArray(0);
 	}
 }
+void Renderer::Render_Particle(GLuint Shader)
+{
+	glUseProgram(Shader);
+	CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
 
+
+}
 void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, Bloom.FBO);
@@ -496,7 +498,6 @@ void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 
 	glDisable(GL_DEPTH_TEST);
 }
-
 void Renderer::Render_Enviroment(GLuint Shader)
 {
 	glDepthMask(GL_FALSE);
@@ -517,7 +518,6 @@ void Renderer::Render_Enviroment(GLuint Shader)
 
 	glDepthMask(GL_TRUE);
 }
-
 void Renderer::Render_PostProcessMap(GLuint Shader)
 {
 	glUseProgram(Shader);
@@ -538,4 +538,6 @@ void Renderer::Render_PostProcessMap(GLuint Shader)
 	glDrawArrays(GL_TRIANGLES, 0, 6); // 화면에 텍스처 그리기
 	glBindVertexArray(0);
 }
+
+
 
