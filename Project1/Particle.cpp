@@ -99,7 +99,7 @@ void Particle::CreateParticleObject(int particle_count)
 }
 
 
-Particle::Particle(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr)
+Particle::Particle(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
 	CreateParticleObject(100);

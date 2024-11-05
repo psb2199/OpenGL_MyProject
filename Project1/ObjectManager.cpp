@@ -1,6 +1,6 @@
 #include "ObjectManager.h"
 
-ObjectManager::ObjectManager(Importer_obj* importer)
+ObjectManager::ObjectManager(Importer* importer)
 {
     m_importer = importer;
 }

@@ -2,7 +2,7 @@
 
 #include "ObjectManager.h"
 
-Player::Player(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr)
+Player::Player(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
 	SetMesh("Ball.obj");

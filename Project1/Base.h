@@ -9,7 +9,7 @@ class Base : public Object
 	void TickEvent(float delta_sceconds) override;
 
 public:
-	Base(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr);
+	Base(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
 	~Base();
 
 };

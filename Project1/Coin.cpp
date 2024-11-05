@@ -1,6 +1,6 @@
 #include "Coin.h"
 
-Coin::Coin(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr)
+Coin::Coin(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
 	SetMesh("Coin.obj");

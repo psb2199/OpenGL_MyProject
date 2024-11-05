@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 
-Renderer::Renderer(int width, int height, Importer_obj* importer)
+Renderer::Renderer(int width, int height, Importer* importer)
 {
 	Initialize(width, height);
 	m_importer = importer;

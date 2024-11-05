@@ -9,7 +9,7 @@ class Coin : public Object
 	void TickEvent(float delta_sceconds) override;
 
 public:
-	Coin(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr);
+	Coin(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
 	~Coin();
 
 };

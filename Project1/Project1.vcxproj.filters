@@ -131,7 +131,7 @@
     <ClCompile Include="Object.cpp">
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Importer_obj.cpp">
+    <ClCompile Include="Importer.cpp">
       <Filter>소스 파일\Importer</Filter>
     </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
@@ -169,7 +169,7 @@
     <ClInclude Include="Object.h">
       <Filter>소스 파일\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Importer_obj.h">
+    <ClInclude Include="Importer.h">
       <Filter>소스 파일\Importer</Filter>
     </ClInclude>
     <ClInclude Include="ObjectManager.h">

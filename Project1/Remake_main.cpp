@@ -26,7 +26,7 @@ Renderer* G_Renderer = NULL;
 DirectionLight* G_Light = nullptr;
 
 ObjectManager* G_ObjMgr = nullptr;
-Importer_obj* G_Importer = nullptr;
+Importer* G_Importer = nullptr;
 
 Controller* G_Controller = nullptr;
 Camera* G_Camera = nullptr;
@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 	
 
 
-	G_Importer = new Importer_obj;
+	G_Importer = new Importer;
 	G_Renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT, G_Importer);
 	G_Camera = new Camera(glm::vec3(0.f));
 	G_Controller = new Controller;

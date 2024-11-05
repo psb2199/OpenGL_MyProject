@@ -7,7 +7,7 @@
 #include "LoadPng.h"
 
 
-class Importer_obj
+class Importer
 {
 	//GLuint VAO, VBO, EBO;
 
@@ -41,7 +41,7 @@ public:
 	VertexData* FindMesh(std::string filename);
 	void setupMesh(VertexData* VB);
 
-	Importer_obj();
-	~Importer_obj();
+	Importer();
+	~Importer();
 };
 

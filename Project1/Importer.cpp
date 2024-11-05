@@ -1,21 +1,21 @@
-#include "Importer_obj.h"
+#include "Importer.h"
 
 #include "Renderer.h"
 
 
-Importer_obj::Importer_obj()
+Importer::Importer()
 {
 	Initialize();
 }
 
 
-Importer_obj::~Importer_obj()
+Importer::~Importer()
 {
 }
 
 
 
-void Importer_obj::Initialize()
+void Importer::Initialize()
 {
 	// Import Obj
 	{
@@ -150,7 +150,7 @@ void Importer_obj::Initialize()
 }
 
 
-GLuint Importer_obj::LoadTexture(const char* filepath)
+GLuint Importer::LoadTexture(const char* filepath)
 {
 	//Load Png
 	GLuint texture;
@@ -178,7 +178,7 @@ GLuint Importer_obj::LoadTexture(const char* filepath)
 
 	return texture;
 }
-GLuint Importer_obj::LoadEnviromentTextures(std::vector<string> filepathes)
+GLuint Importer::LoadEnviromentTextures(std::vector<string> filepathes)
 {
 	// Load PNG
 	GLuint texture;
@@ -214,7 +214,7 @@ GLuint Importer_obj::LoadEnviromentTextures(std::vector<string> filepathes)
 	return texture;
 }
 
-Material* Importer_obj::GetMaterial(std::string filename)
+Material* Importer::GetMaterial(std::string filename)
 {
 	for (auto& v : Materials) {
 
@@ -224,12 +224,12 @@ Material* Importer_obj::GetMaterial(std::string filename)
 	std::cout << "Can not find" << filename << "Material Asset." << std::endl;
 	return nullptr;
 }
-GLuint Importer_obj::GetEnviromentMaterial()
+GLuint Importer::GetEnviromentMaterial()
 {
 	return enviroment_Material;
 }
 
-void Importer_obj::MakeMaterial(const std::string MaterialName, std::string shaderName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM)
+void Importer::MakeMaterial(const std::string MaterialName, std::string shaderName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM)
 {
 	Material* newMaterial = new Material;
 
@@ -243,7 +243,7 @@ void Importer_obj::MakeMaterial(const std::string MaterialName, std::string shad
 	Materials.push_back(newMaterial);
 }
 
-void Importer_obj::CalculateTangentBitangent(
+void Importer::CalculateTangentBitangent(
 	const glm::vec3& pos1, const glm::vec3& pos2, const glm::vec3& pos3,
 	const glm::vec2& uv1, const glm::vec2& uv2, const glm::vec2& uv3,
 	glm::vec3& tangent, glm::vec3& bitangent)
@@ -265,7 +265,7 @@ void Importer_obj::CalculateTangentBitangent(
 	bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
 	bitangent = glm::normalize(bitangent);
 }
-void Importer_obj::ReadObj(const string filePath) {
+void Importer::ReadObj(const string filePath) {
 	ifstream objFile(filePath);
 
 	if (!objFile.is_open()) {
@@ -347,7 +347,7 @@ void Importer_obj::ReadObj(const string filePath) {
 	// VertexBuffer 리스트에 추가
 	VertexBuffers.push_back(newVertexData);
 }
-void Importer_obj::setupMesh(VertexData* VD) {
+void Importer::setupMesh(VertexData* VD) {
 	glGenVertexArrays(1, &VD->VAO);
 	glGenBuffers(1, &VD->VBO);
 	glGenBuffers(1, &VD->texCoordVBO);
@@ -437,7 +437,7 @@ void Importer_obj::setupMesh(VertexData* VD) {
 }
 
 
-VertexData* Importer_obj::FindMesh(std::string filename)
+VertexData* Importer::FindMesh(std::string filename)
 {
 	for (std::vector<VertexData*>::iterator itr = VertexBuffers.begin(); itr != VertexBuffers.end(); ++itr)
 	{
@@ -448,7 +448,7 @@ VertexData* Importer_obj::FindMesh(std::string filename)
 	return nullptr;
 }
 
-void Importer_obj::DeBugVertexData(VertexData* VD)
+void Importer::DeBugVertexData(VertexData* VD)
 {
 	int count{ 0 };
 	for (auto& v : VD->vertexs) {
@@ -477,7 +477,7 @@ void Importer_obj::DeBugVertexData(VertexData* VD)
 	std::cout << count << endl;
 }
 
-std::string Importer_obj::removeSubstring(const std::string& str, const std::string& toRemove) {
+std::string Importer::removeSubstring(const std::string& str, const std::string& toRemove) {
 
 	std::size_t pos = str.find(toRemove);
 

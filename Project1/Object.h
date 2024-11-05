@@ -2,7 +2,7 @@
 
 #include "OpenGL.h"
 
-#include "Importer_obj.h"
+#include "Importer.h"
 #include "Camera.h"
 
 #define GRAVITY	1
@@ -41,7 +41,7 @@ class Object
 	float				m_delta_time;
 
 	Camera*				m_Camera;
-	Importer_obj*		Importer_mesh;
+	Importer*		Importer_mesh;
 	ObjectManager*		m_objectmgr;
 	
 	void				SetCollisionRange();
@@ -52,7 +52,7 @@ public:
 	Setting				setting;
 
 	Object() = default;
-	Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* importer, ObjectManager* objmgr);
+	Object(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
 	~Object();
 
 	virtual void		BeginPlayEvent();

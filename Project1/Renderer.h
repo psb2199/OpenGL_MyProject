@@ -4,7 +4,7 @@
 
 #include "OpenGL.h"
 
-#include "Importer_obj.h"
+#include "Importer.h"
 #include "DirectionLight.h"
 #include "Camera.h"
 
@@ -13,7 +13,7 @@ class Renderer
 	int				window_width;
 	int				window_height;
 	float			aspect;
-	Importer_obj*	m_importer;
+	Importer*	m_importer;
 
 	DirectionLight*			m_light;
 
@@ -57,7 +57,7 @@ class Renderer
 	void			GetObjectTrnasformMatrix(GLuint shader, Object* obj);
 
 public:
-	Renderer(int width, int height, Importer_obj* importer);
+	Renderer(int width, int height, Importer* importer);
 	~Renderer();
 
 	void			SetLight(DirectionLight* lights);

@@ -13,10 +13,10 @@ class ObjectManager
 {
 	std::vector<Object*> WorldObjects;
 	int AllOjectCount{ 0 };
-	Importer_obj* m_importer;
+	Importer* m_importer;
 
 public:
-	ObjectManager(Importer_obj* importer);
+	ObjectManager(Importer* importer);
 	~ObjectManager();
 
 	Object* AddObject(std::string type, glm::vec3 location);
