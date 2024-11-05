@@ -67,13 +67,14 @@ void Particle::CreateParticleObject(int particle_count)
 				break;
 			}
 
-			vertices_data.push_back(start_time); // Start time
+			vertices_data.push_back(start_time);
+
+			vertices_data.push_back(center_x);
+			vertices_data.push_back(center_y);
+			vertices_data.push_back(center_z);
 		}
 	}
 
-	enum attribute {
-		pos, coord, start_time
-	};
 
 	glGenVertexArrays(1, &m_Particle_VAO);
 	glBindVertexArray(m_Particle_VAO);
@@ -83,17 +84,24 @@ void Particle::CreateParticleObject(int particle_count)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, vertices_data.size() * sizeof(float), vertices_data.data(), GL_STATIC_DRAW);
 
-	// Position attribute
+
+	enum attribute {
+		pos, coord, start_time, center_pos
+		// x,y,z  u,v   t   
+	};
+	int stride = sizeof(float) * 9;
+
 	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * (6), (void*)0);
+	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
 
-	// Texture coordinate attribute
 	glEnableVertexAttribArray(coord);
-	glVertexAttribPointer(coord, 2, GL_FLOAT, GL_FALSE, sizeof(float) * (6), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(coord, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
 
-	// Start time attribute
 	glEnableVertexAttribArray(start_time);
-	glVertexAttribPointer(start_time, 1, GL_FLOAT, GL_FALSE, sizeof(float) * (6), (void*)(5 * sizeof(float)));
+	glVertexAttribPointer(start_time, 1, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
+
+	glEnableVertexAttribArray(center_pos);
+	glVertexAttribPointer(center_pos, 3, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
 
 	glBindVertexArray(0);
 }

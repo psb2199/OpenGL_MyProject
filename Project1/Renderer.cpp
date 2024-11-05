@@ -453,7 +453,7 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
 		glUniform1i(ul_cast_shadow, object->setting.cast_shadow ? 0 : 1);
 
-		//if(object->GetObjectType(object) == "Particle")glDepthMask(GL_FALSE);
+		if(object->GetObjectType(object) == "Particle") glDepthMask(GL_FALSE);
 
 		glBindVertexArray(object->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);

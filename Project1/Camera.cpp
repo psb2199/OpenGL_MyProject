@@ -38,6 +38,13 @@ CameraMat Camera::DoWorking(GLuint Shader, float aspect)
 
     glUniform3f(glGetUniformLocation(Shader, "u_CameraPos"), location.x, location.y, location.z);
 
+    glm::mat4 rotation_matrix = glm::mat4(1.0f);
+    rotation_matrix = glm::rotate(rotation_matrix, rotation.x, { 1.0, 0.0, 0.0 });
+    rotation_matrix = glm::rotate(rotation_matrix, rotation.y, { 0.0, 0.0, 1.0 });
+    rotation_matrix = glm::rotate(rotation_matrix, rotation.z, { 0.0, 1.0, 0.0 });
+    glUniformMatrix4fv(glGetUniformLocation(Shader, "camera_rotation_matrix"), 1, GL_FALSE, glm::value_ptr(rotation_matrix));
+
+
     //원근법 유무(Perspective = 원근투영)
     glm::mat4 projection = glm::mat4(1.0f);
     if (isOrthoGraphic) {
