@@ -28,7 +28,7 @@ class Importer_obj
 		const glm::vec2& uv1, const glm::vec2& uv2, const glm::vec2& uv3,
 		glm::vec3& tangent, glm::vec3& bitangent);
 
-	void MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM);
+	void MakeMaterial(const std::string MaterialName, std::string shaderName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM);
 
 public:
 	GLuint LoadTexture(const char* filepath);

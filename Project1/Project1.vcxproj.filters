@@ -67,6 +67,9 @@
     <Filter Include="소스 파일\Shaders\Particles">
       <UniqueIdentifier>{b1e60b00-f870-44c2-b69f-6992b84f8120}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Object\Particle">
+      <UniqueIdentifier>{fe4b4701-653a-43a4-b21b-98ec047077c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertexlight.glsl">
@@ -153,13 +156,10 @@
       <Filter>소스 파일\Object\Coin</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Object\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OpenGL.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>소스 파일\Camera</Filter>
     </ClInclude>
@@ -194,6 +194,9 @@
       <Filter>소스 파일\Object\Coin</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
+      <Filter>소스 파일\Object\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

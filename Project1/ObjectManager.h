@@ -3,6 +3,8 @@
 
 #include "Object.h"
 
+#include "Particle.h"
+
 #include "Player.h"
 #include "Coin.h"
 #include "Base.h"

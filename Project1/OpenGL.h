@@ -68,6 +68,8 @@ struct FrameData {
 struct Material {
 	std::string material_name;
 
+	std::string shader_name;
+
 	GLuint BaseColorID;
 	GLuint NormalMapID;
 	GLuint AoRoughnessMetallicID;

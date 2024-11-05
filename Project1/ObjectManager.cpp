@@ -25,6 +25,10 @@ Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
     {
         newObj = dynamic_cast<Object*>(new Coin(AllOjectCount, type, location, m_importer, this));
     }
+    else if (type == "Particle")
+    {
+        newObj = dynamic_cast<Object*>(new Particle(AllOjectCount, type, location, m_importer, this));
+    }
     else
     {
         cout << "There is no c++ class about " << type << endl;

@@ -1,5 +1,8 @@
 #include "Importer_obj.h"
 
+#include "Renderer.h"
+
+
 Importer_obj::Importer_obj()
 {
 	Initialize();
@@ -39,6 +42,8 @@ void Importer_obj::Initialize()
 		Base_Normal,
 		Base_ARM,
 
+		Particle_Base,
+
 		Enviroment,
 
 		MAX
@@ -77,6 +82,7 @@ void Importer_obj::Initialize()
 		Textures[Coin_Normal] = LoadTexture("textures/Coin/Normal.png");
 		Textures[Coin_ARM] = LoadTexture("textures/Coin/ARM.png");
 
+		Textures[Particle_Base] = LoadTexture("textures/Particle/Base.png");
 
 		std::vector<string> cubeMap_filepathes;
 		cubeMap_filepathes.push_back("textures/skybox/right.png");
@@ -95,6 +101,7 @@ void Importer_obj::Initialize()
 	{
 		MakeMaterial(
 			"Ball",
+			"Basic",
 			Textures[Ball_BaseColor],
 			Textures[Ball_Normal],
 			NULL, 
@@ -103,6 +110,7 @@ void Importer_obj::Initialize()
 
 		MakeMaterial(
 			"Base",
+			"Basic",
 			Textures[Base_BaseColor],
 			Textures[Base_Normal],
 			NULL,	 
@@ -111,6 +119,7 @@ void Importer_obj::Initialize()
 
 		MakeMaterial(
 			"Grass",
+			"Basic",
 			Textures[Grass_BaseColor],
 			Textures[Grass_Normal],
 			NULL,
@@ -119,11 +128,23 @@ void Importer_obj::Initialize()
 
 		MakeMaterial(
 			"Coin",
+			"Basic",
 			Textures[Coin_BaseColor],
 			Textures[Coin_Normal],
 			NULL,	 
 			Textures[Coin_ARM]
 		);
+
+		MakeMaterial(
+			"Particle",
+			"Particle",
+			Textures[Particle_Base],
+			NULL,
+			NULL,
+			NULL
+		);
+
+		
 	}
 
 }
@@ -208,10 +229,12 @@ GLuint Importer_obj::GetEnviromentMaterial()
 	return enviroment_Material;
 }
 
-void Importer_obj::MakeMaterial(const std::string MaterialName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM)
+void Importer_obj::MakeMaterial(const std::string MaterialName, std::string shaderName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM)
 {
 	Material* newMaterial = new Material;
+
 	newMaterial->material_name = MaterialName;
+	newMaterial->shader_name = shaderName;
 	newMaterial->BaseColorID = BaseColor;
 	newMaterial->NormalMapID = NormalMap;
 	newMaterial->EmissiveID = Emissive;

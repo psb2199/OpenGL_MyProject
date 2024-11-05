@@ -9,6 +9,7 @@ Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer_obj* import
 	m_objectmgr = objmgr;
 	id = obj_id;
 	object_type = type;
+	mesh = nullptr;
 
 	location = glm::vec3(0.0);
 	rotation = glm::vec3(0.0);
@@ -112,6 +113,31 @@ VertexData* Object::GetMesh()
 void Object::SetMesh(std::string filename)
 {
 	mesh = Importer_mesh->FindMesh(filename);
+	SetCollisionRange();
+}
+void Object::SetMeshForParticle(GLuint vao, int polycount)
+{
+	VertexData* newmesh = new VertexData;
+
+	newmesh->filename = "particle";
+	newmesh->VAO = vao;
+	newmesh->polygon_count = polycount;
+
+	newmesh->VBO = NULL;
+	newmesh->texCoordVBO = NULL;
+	newmesh->normalVBO = NULL;
+	newmesh->tangentVBO = NULL;
+	newmesh->bitangentVBO = NULL;
+	
+	newmesh->vertexs.push_back(glm::vec3(0.0));
+	newmesh->texCoords.push_back(glm::vec2(0.0));
+	newmesh->normals.push_back(glm::vec3(0.0));
+
+	newmesh->faceIndices.push_back(glm::vec3(0.0));
+	newmesh->texCoordIndices.push_back(glm::vec3(0.0));
+	newmesh->normalIndices.push_back(glm::vec3(0.0));
+
+	mesh = newmesh;
 	SetCollisionRange();
 }
 Material* Object::GetMaterial()

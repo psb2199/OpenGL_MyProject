@@ -360,7 +360,7 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, post_process.FBO);
 	Render_Enviroment(Enviroment_Shader);
-	Render_DefaultColor(Basic_Shader, Objects);
+	Render_DefaultColor(Objects);
 	Render_Particle(Particle_Shader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -385,6 +385,8 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 	{
 		GetObjectTrnasformMatrix(Shader, object);
 
+		if (!object->setting.cast_shadow) continue;
+
 		glBindVertexArray(object->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
@@ -396,33 +398,32 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 }
-void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
+void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT); // 프레임 클리어 추가
 
-	glUseProgram(Shader);
-	CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
-
-	m_light->LightWorks(Shader);
-
-
-	// 깊이 맵 텍스처를 쉐이더로 전달 (깊이 맵 자체가 화면에 그려지지 않도록 관리)
-	GLuint ul_Depth = glGetUniformLocation(Shader, "u_DepthMap");
-	glUniform1i(ul_Depth, 4);  // 3번 텍스처 슬롯을 사용한다고 지정
-	glActiveTexture(GL_TEXTURE0 + 4);  // 3번 텍스처 슬롯 활성화
-	glBindTexture(GL_TEXTURE_2D, Shadow.SceneID);  // 깊이 맵 텍스처 바인딩
-
-	GLuint ul_ShadowMapSize = glGetUniformLocation(Shader, "u_ShadowMapSize");
-	glUniform1f(ul_ShadowMapSize, Shadow.width);
-
-	GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
-	glUniform1i(ul_enviroment, 5);
-	glActiveTexture(GL_TEXTURE0 + 5);  // 3번 텍스처 슬롯 활성화
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
-
 	for (Object* object : Objects)
 	{
+		GLuint Shader = GetShader(object->GetMaterial()->shader_name);
+
+		glUseProgram(Shader);
+		CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
+
+		m_light->LightWorks(Shader);
+
+		GLuint ul_Depth = glGetUniformLocation(Shader, "u_DepthMap");
+		glUniform1i(ul_Depth, 4);  
+		glActiveTexture(GL_TEXTURE0 + 4);  
+		glBindTexture(GL_TEXTURE_2D, Shadow.SceneID);  
+
+		GLuint ul_ShadowMapSize = glGetUniformLocation(Shader, "u_ShadowMapSize");
+		glUniform1f(ul_ShadowMapSize, Shadow.width);
+
+		GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
+		glUniform1i(ul_enviroment, 5);
+		glActiveTexture(GL_TEXTURE0 + 5);  
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
 
 		if (!m_Camera->isCollisionBoxInFrustum(m_Camera->extractFrustumPlanes(camera_mat.projection * camera_mat.view), object->GetCollisionRange())) {
 			continue;
@@ -433,8 +434,6 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		glm::vec3 camera_dir = m_Camera->GetCameraDirection();
 
 		GetObjectTrnasformMatrix(Shader, object);
-
-		
 
 		GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);
@@ -454,9 +453,13 @@ void Renderer::Render_DefaultColor(GLuint Shader, std::vector<Object*> Objects)
 		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
 		glUniform1i(ul_cast_shadow, object->setting.cast_shadow ? 0 : 1);
 
+		//if(object->GetObjectType(object) == "Particle")glDepthMask(GL_FALSE);
+
 		glBindVertexArray(object->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
+
+		glDepthMask(GL_TRUE);
 	}
 }
 void Renderer::Render_Particle(GLuint Shader)
@@ -481,6 +484,7 @@ void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 	// 객체별로 변환 행렬 설정 및 렌더링
 	for (Object* object : Objects)
 	{
+		VertexData* mesh = object->GetMesh();
 		GetObjectTrnasformMatrix(Shader, object);
 
 		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
@@ -488,8 +492,8 @@ void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 		glActiveTexture(GL_TEXTURE0 + 0);
 		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->EmissiveID);
 
-		glBindVertexArray(object->GetMesh()->VAO);
-		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
+		glBindVertexArray(mesh->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, mesh->polygon_count * 3);
 		glBindVertexArray(0);
 	}
 
