@@ -19,7 +19,7 @@ void main()
     vec3 imageColor = image.rgb;
     float alpha = image.a;
 
-    vec3 color = vec3(1.0, 1.0, fadeOut_time);
+    vec3 color = vec3(1.0, 1.0 - fadeOut_time, fadeOut_time);
     resultColor = imageColor * color;
 
     float highLight = pow(image.a, 4);

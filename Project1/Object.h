@@ -72,6 +72,7 @@ public:
 
 	VertexData*			GetMesh();
 	void				SetMesh(std::string filename);
+	void				SetMesh(VertexData* data);
 	Material*			GetMaterial();
 	void				SetMaterial(std::string filename);
 

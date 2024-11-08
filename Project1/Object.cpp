@@ -116,6 +116,12 @@ void Object::SetMesh(std::string filename)
 	SetCollisionRange();
 }
 
+void Object::SetMesh(VertexData* data)
+{
+	mesh = data;
+	SetCollisionRange();
+}
+
 Material* Object::GetMaterial()
 {
 	return m_material;
