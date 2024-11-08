@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LESS); // or glDepthFunc(GL_LEQUAL);
 	//glDisable(GL_CULL_FACE);
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -251,9 +251,11 @@ void LevelDisign()
 	{
 		for (int z{ -range }; z <= range; ++z)
 		{
-			G_ObjMgr->AddObject("Coin", { x * 5, 2, z * 5 });
+			//G_ObjMgr->AddObject("Coin", { x * 5, 2, z * 5 });
 		}
 	}
+	G_ObjMgr->AddObject("Coin", { 0, 2, 5});
+	G_ObjMgr->AddObject("Coin", { 5, 2, 0});
 	
 	G_ObjMgr->AddObject("Base", { 0, 0, 0 });
 	

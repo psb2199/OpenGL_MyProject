@@ -158,6 +158,9 @@
     <ClCompile Include="Particle.cpp">
       <Filter>소스 파일\Object\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleMaker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -197,6 +200,9 @@
       <Filter>소스 파일\Object\Particle</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleMaker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

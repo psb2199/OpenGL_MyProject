@@ -147,6 +147,9 @@ void Importer::Initialize()
 		
 	}
 
+	//Make Particles
+	VertexBuffers.push_back(ParticleMaker::CreateParticleObject("baseParticle", 1000));
+
 }
 
 

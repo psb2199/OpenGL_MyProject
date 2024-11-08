@@ -72,7 +72,6 @@ public:
 
 	VertexData*			GetMesh();
 	void				SetMesh(std::string filename);
-	void				SetMeshForParticle(GLuint vao, int polycount);
 	Material*			GetMaterial();
 	void				SetMaterial(std::string filename);
 

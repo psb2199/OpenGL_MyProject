@@ -17,9 +17,10 @@ class Camera
 {
 	glm::vec3 look_location;
 	glm::vec3 location;
+	glm::vec3 rotation;
 	CameraMat Camera_Matrix;
 
-	glm::vec3 rotation;
+	glm::vec3 mouse_xy_value;
 
 	float camera_arm_length{ 20.f };
 
@@ -27,8 +28,6 @@ class Camera
 	float field_of_view{ 45 };
 	bool isOrthoGraphic{ false };
 
-	float RadianToDegree(float value);
-	float DegreeToRadian(float value);
 
 public:
 	Camera(glm::vec3 xyz);
