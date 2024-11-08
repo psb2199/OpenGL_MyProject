@@ -2,10 +2,20 @@
 
 #include "ObjectManager.h"
 
+void Particle::SetFollowObject(Object* obj)
+{
+	followLocation = obj->GetLocation();
+}
+
+glm::vec3 Particle::GetFollowLocation()
+{
+	return followLocation;
+}
+
 Particle::Particle(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
-	SetMesh(ParticleMaker::CreateParticleObject("baseParticle", 1000));
+	SetMesh(ParticleMaker::CreateParticleObject("baseParticle", 1));
 	SetMaterial("Particle");
 
 	BeginPlayEvent();

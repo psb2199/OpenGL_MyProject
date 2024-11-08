@@ -1,5 +1,5 @@
 #include "Renderer.h"
-
+#include "Particle.h"
 
 Renderer::Renderer(int width, int height, Importer* importer)
 {
@@ -346,8 +346,14 @@ void Renderer::GetObjectShaderAttributes(GLuint shader, Object* obj)
 	glm::mat4 normal_Matrix = glm::mat4(1.0f);
 	normal_Matrix *= glm::toMat4(quaternionRotation);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "normal_transform"), 1, GL_FALSE, glm::value_ptr(normal_Matrix));
-
+	
 	glUniform1f(glGetUniformLocation(shader, "elapsedTime"), obj->GetElapsedTime());
+
+	if (obj->GetObjectType(obj) == "Particle")
+	{
+		Particle* asParticle = dynamic_cast<Particle*>(obj);
+		
+	}
 }
 
 
