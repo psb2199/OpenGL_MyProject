@@ -17,8 +17,8 @@
 
 
 #define RenderFriquency 10 //100밀리 초 마다 한번
-#define WINDOW_WIDTH 1200
-#define WINDOW_HEIGHT 700
+#define WINDOW_WIDTH 1900
+#define WINDOW_HEIGHT 1000
 
 float WorldSeconds{ 0.0 };
 
@@ -245,21 +245,21 @@ void LevelDisign()
 	G_Light = new DirectionLight({ 5, 5, 5 });
 	G_Light->AttachDirectionLight(Player);
 
-	int range = 0;
+	int range = 3;
 	
 	for (int x{ -range }; x <= range; ++x)
 	{
 		for (int z{ -range }; z <= range; ++z)
 		{
-			//G_ObjMgr->AddObject("Coin", { x * 5, 2, z * 5 });
+			G_ObjMgr->AddObject("Coin", { x * 5, 2, z * 5 });
 		}
 	}
-	G_ObjMgr->AddObject("Coin", { 0, 2, 5});
-	G_ObjMgr->AddObject("Coin", { 5, 2, 0});
+	/*G_ObjMgr->AddObject("Coin", { 0, 2, 5});
+	G_ObjMgr->AddObject("Coin", { 5, 2, 0});*/
 	
 	G_ObjMgr->AddObject("Base", { 0, 0, 0 });
 	
-	G_ObjMgr->AddObject("Particle", { 0,2,0 });
+	
 
 	G_Renderer->SetLight(G_Light);
 	G_Camera->SetLookLocation(Player->GetLocation());

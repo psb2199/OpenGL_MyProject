@@ -324,7 +324,7 @@ void Renderer::Initialize_EviromentVAO()
 	glBindVertexArray(0);
 }
 
-void Renderer::GetObjectTrnasformMatrix(GLuint shader, Object* obj)
+void Renderer::GetObjectShaderAttributes(GLuint shader, Object* obj)
 {
 	glm::vec3 location = obj->GetLocation();
 	glm::vec3 rotation = obj->GetRotation();
@@ -346,6 +346,8 @@ void Renderer::GetObjectTrnasformMatrix(GLuint shader, Object* obj)
 	glm::mat4 normal_Matrix = glm::mat4(1.0f);
 	normal_Matrix *= glm::toMat4(quaternionRotation);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "normal_transform"), 1, GL_FALSE, glm::value_ptr(normal_Matrix));
+
+	glUniform1f(glGetUniformLocation(shader, "elapsedTime"), obj->GetElapsedTime());
 }
 
 
@@ -383,7 +385,7 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 	// 객체별로 변환 행렬 설정 및 렌더링
 	for (Object* object : Objects)
 	{
-		GetObjectTrnasformMatrix(Shader, object);
+		GetObjectShaderAttributes(Shader, object);
 
 		if (!object->setting.cast_shadow) continue;
 
@@ -433,7 +435,7 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 
 		glm::vec3 camera_dir = m_Camera->GetCameraDirection();
 
-		GetObjectTrnasformMatrix(Shader, object);
+		GetObjectShaderAttributes(Shader, object);
 
 		GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);
@@ -485,7 +487,7 @@ void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 	for (Object* object : Objects)
 	{
 		VertexData* mesh = object->GetMesh();
-		GetObjectTrnasformMatrix(Shader, object);
+		GetObjectShaderAttributes(Shader, object);
 
 		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
 		glUniform1i(ul_Emissive, 0);

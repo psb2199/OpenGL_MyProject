@@ -4,16 +4,29 @@ VertexData* ParticleMaker::CreateParticleObject(std::string name, int particle_c
 {
 	VertexData* newParticle = new VertexData;
 
-
 	std::vector<float> vertices_data;
 
 	for (int i = 0; i < particle_count; ++i)
 	{
-		float center_x = static_cast<float>(GetRandint(-5000, 5000)) / 100.0f;
-		float center_y = static_cast<float>(GetRandint(-5000, 5000)) / 100.0f;
-		float center_z = static_cast<float>(GetRandint(-5000, 5000)) / 100.0f;
-		float size = 0.1;
-		float start_time = static_cast<float>(GetRandint(0, 100)) / 100.0f;
+		//static_cast<float>(GetRandint(-5000, 5000)) / 100.0f;
+
+		float size = static_cast<float>(GetRandint(10, 30)) / 100.0f;
+
+		float center_x = static_cast<float>(GetRandint(-100, 100)) / 100.0f;
+		float center_y = static_cast<float>(GetRandint(-100, 100)) / 100.0f;
+		float center_z = static_cast<float>(GetRandint(-100, 100)) / 100.0f;
+
+		glm::vec3 dir;
+		dir.x = static_cast<float>(GetRandint(-50, 50)) / 100.0f;
+		dir.y = static_cast<float>(GetRandint(95, 100)) / 100.0f;
+		dir.z = static_cast<float>(GetRandint(-50, 50)) / 100.0f;
+		dir = glm::normalize(dir);
+
+		float velocity = static_cast<float>(GetRandint(1500, 3000)) / 100.0f;
+
+		dir *= velocity;
+
+		float fadeOut_time = static_cast<float>(GetRandint(0, 50)) / 100.0f;
 
 		for (int j = 0; j < 6; ++j)
 		{
@@ -68,11 +81,15 @@ VertexData* ParticleMaker::CreateParticleObject(std::string name, int particle_c
 				break;
 			}
 
-			vertices_data.push_back(start_time);
+			vertices_data.push_back(fadeOut_time);
 
 			vertices_data.push_back(center_x);
 			vertices_data.push_back(center_y);
 			vertices_data.push_back(center_z);
+
+			vertices_data.push_back(dir.x);
+			vertices_data.push_back(dir.y);
+			vertices_data.push_back(dir.z);
 		}
 
 		newParticle->max_location.x = max(newParticle->max_location.x, center_x);
@@ -95,10 +112,10 @@ VertexData* ParticleMaker::CreateParticleObject(std::string name, int particle_c
 
 
 	enum attribute {
-		pos, coord, start_time, center_pos
+		pos, coord, fadeOut_time, center_pos, velocity
 		// x,y,z  u,v   t   
 	};
-	int stride = sizeof(float) * 9;
+	int stride = sizeof(float) * 12;
 
 	glEnableVertexAttribArray(pos);
 	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
@@ -106,11 +123,14 @@ VertexData* ParticleMaker::CreateParticleObject(std::string name, int particle_c
 	glEnableVertexAttribArray(coord);
 	glVertexAttribPointer(coord, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
 
-	glEnableVertexAttribArray(start_time);
-	glVertexAttribPointer(start_time, 1, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(fadeOut_time);
+	glVertexAttribPointer(fadeOut_time, 1, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
 
 	glEnableVertexAttribArray(center_pos);
 	glVertexAttribPointer(center_pos, 3, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
+
+	glEnableVertexAttribArray(velocity);
+	glVertexAttribPointer(velocity, 3, GL_FLOAT, GL_FALSE, stride, (void*)(9 * sizeof(float)));
 
 	glBindVertexArray(0);
 

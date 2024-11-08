@@ -1,5 +1,7 @@
 #include "Coin.h"
 
+#include "ObjectManager.h"
+
 Coin::Coin(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
@@ -30,5 +32,14 @@ void Coin::TickEvent(float delta_sceconds)
 
 	AddRotationInput({ 0,1,0 });
 
+}
+
+void Coin::OverlapedCollisionEvent(Object* collision_obj)
+{
+	if (GetObjectType(collision_obj) == "Player")
+	{
+		GetWorld()->AddObject("Particle", GetLocation());
+		GetWorld()->DeleteObject(this);
+	}
 }
 

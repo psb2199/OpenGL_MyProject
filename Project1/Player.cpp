@@ -55,11 +55,7 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 		DoBounceAnim = true;
 	}
 
-	if (GetObjectType(collision_obj) == "Coin")
-	{
-		//printObject(collision_obj);
-		GetWorld()->DeleteObject(collision_obj);
-	}
+
 	
 }
 

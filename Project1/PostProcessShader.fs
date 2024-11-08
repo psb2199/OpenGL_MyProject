@@ -74,6 +74,7 @@ void main()
     vec3 pp =  texture(u_PostProcess, texCoords).rgb;
 
     vec3 resultColor = pp + bloom;
+    //vec3 resultColor = pp;
     
     //resultColor = AntiAliasing(texCoords);
 

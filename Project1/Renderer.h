@@ -54,7 +54,7 @@ class Renderer
 	void			Render_PostProcessMap(GLuint Shader);
 	void			Render_Particle(GLuint Shader);
 
-	void			GetObjectTrnasformMatrix(GLuint shader, Object* obj);
+	void			GetObjectShaderAttributes(GLuint shader, Object* obj);
 
 public:
 	Renderer(int width, int height, Importer* importer);
