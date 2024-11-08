@@ -38,7 +38,10 @@ void Coin::OverlapedCollisionEvent(Object* collision_obj)
 {
 	if (GetObjectType(collision_obj) == "Player")
 	{
-		GetWorld()->AddObject("Particle", GetLocation());
+		Object* newobj = GetWorld()->AddObject("Particle", GetLocation());
+		Particle* asParticle = dynamic_cast<Particle*>(newobj);
+		asParticle->SetFollowObject(collision_obj);
+
 		GetWorld()->DeleteObject(this);
 	}
 }

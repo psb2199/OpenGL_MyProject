@@ -4,18 +4,18 @@
 
 void Particle::SetFollowObject(Object* obj)
 {
-	followLocation = obj->GetLocation();
+	followObject = obj;
 }
 
 glm::vec3 Particle::GetFollowLocation()
 {
-	return followLocation;
+	return followObject->GetLocation();
 }
 
 Particle::Particle(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
-	SetMesh(ParticleMaker::CreateParticleObject("baseParticle", 1));
+	SetMesh(ParticleMaker::CreateParticleObject("baseParticle", 1000));
 	SetMaterial("Particle");
 
 	BeginPlayEvent();
@@ -40,7 +40,7 @@ void Particle::TickEvent(float delta_sceconds)
 	Object::TickEvent(delta_sceconds);
 
 
-	if (GetElapsedTime() > 1.5)
+	if (GetElapsedTime() > 1.0)
 	{
 		GetWorld()->DeleteObject(this);
 	}

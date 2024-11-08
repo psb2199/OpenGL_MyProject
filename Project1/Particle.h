@@ -12,7 +12,8 @@ class Particle : public Object
 	void TickEvent(float delta_sceconds) override;
 	void OverlapedCollisionEvent(Object* collision_obj) override;
 
-	glm::vec3 followLocation;
+	Object* followObject;
+
 public:
 	void SetFollowObject(Object* obj);
 	glm::vec3 GetFollowLocation();

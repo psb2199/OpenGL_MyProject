@@ -14,6 +14,9 @@ uniform vec3 u_CameraPos;
 
 uniform float elapsedTime;
 
+uniform vec3 follow_location;
+
+
 out vec2 texCoords;
 out float fadeOut_time;
 
@@ -25,6 +28,8 @@ void main()
     float gravity = 50.0;
     addMovement.y -= 0.5 * gravity * elapsedTime * elapsedTime;
     Pos.xyz += addMovement;
+
+     //Pos.xyz = mix(Pos.xyz, follow_location, elapsedTime);
 
     gl_Position = projection * view * transform * Pos;
 
