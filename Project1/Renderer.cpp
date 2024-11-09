@@ -352,8 +352,7 @@ void Renderer::GetObjectShaderAttributes(GLuint shader, Object* obj)
 	if (obj->GetObjectType(obj) == "Particle")
 	{
 		Particle* asParticle = dynamic_cast<Particle*>(obj);
-		glm::vec3 follow_loc = asParticle->GetFollowLocation();
-		glUniform3f(glGetUniformLocation(shader, "follow_location"), follow_loc.x, follow_loc.y, follow_loc.z);
+		asParticle->DoParticleUniform(shader);
 	}
 }
 

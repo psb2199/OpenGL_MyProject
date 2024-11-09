@@ -5,7 +5,6 @@
 
 #include "OpenGL.h"
 #include "LoadPng.h"
-#include "ParticleMaker.h"
 
 
 class Importer

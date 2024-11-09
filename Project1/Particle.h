@@ -3,20 +3,30 @@
 
 #include "Object.h"
 
-class ObjectManager;
 
 
 class Particle : public Object
 {
-	void BeginPlayEvent() override;
-	void TickEvent(float delta_sceconds) override;
-	void OverlapedCollisionEvent(Object* collision_obj) override;
+	void						BeginPlayEvent() override;
+	void						TickEvent(float delta_sceconds) override;
+	void						OverlapedCollisionEvent(Object* collision_obj) override;
 
-	Object* followObject;
+	VertexData*					CreateParticleObject(std::string name, int particle_count);
+
+	glm::vec3					particleColor{ glm::vec3(0.f)};
+	float						randomSeedValue;
+	float						lifeTime;
+	float						fadeOutTime;
+
+	Object*						followObject;
 
 public:
-	void SetFollowObject(Object* obj);
-	glm::vec3 GetFollowLocation();
+	void						DoParticleUniform(GLuint shader);
+
+	void						SetFollowObject(Object* obj);
+	glm::vec3					GetFollowLocation();
+
+
 
 	Particle(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
 	~Particle();

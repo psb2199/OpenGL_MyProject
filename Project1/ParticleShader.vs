@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec3 vPos;
 layout (location = 1) in vec2 vTexPos;
-layout (location = 2) in float vfadeOut_time;
+layout (location = 2) in float vrandomSeed;
 layout (location = 3) in vec3 vCenter;
 layout (location = 4) in vec3 vVelocity;
 
@@ -13,12 +13,13 @@ uniform mat4 view;
 uniform vec3 u_CameraPos;
 
 uniform float elapsedTime;
+uniform float lifeTime;
 
 uniform vec3 follow_location;
 
 
 out vec2 texCoords;
-out float fadeOut_time;
+out float randomSeed;
 
 void main() 
 {
@@ -34,5 +35,5 @@ void main()
     gl_Position = projection * view * transform * Pos;
 
     texCoords = vec2(vTexPos.x , -vTexPos.y);
-    fadeOut_time = vfadeOut_time;
+    randomSeed = vrandomSeed;
 }

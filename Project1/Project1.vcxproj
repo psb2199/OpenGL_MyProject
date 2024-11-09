@@ -45,7 +45,6 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="ParticleMaker.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Remake_main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -68,7 +67,6 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Particle.h" />
-    <ClInclude Include="ParticleMaker.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
   </ItemGroup>
