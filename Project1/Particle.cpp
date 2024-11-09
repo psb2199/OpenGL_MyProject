@@ -3,10 +3,10 @@
 #include "ObjectManager.h"
 
 
-Particle::Particle(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
+Particle::Particle(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
-	SetMesh(CreateParticleObject("baseParticle", 50));
+	SetMesh(CreateParticleObject(particle_name, 50));
 	SetMaterial("Particle");
 
 	BeginPlayEvent();
@@ -28,8 +28,6 @@ void Particle::TickEvent(float delta_sceconds)
 {
 	Object::TickEvent(delta_sceconds);
 
-
-
 	if (GetElapsedTime() > lifeTime)
 	{
 		GetWorld()->DeleteObject(this);
@@ -40,6 +38,11 @@ void Particle::OverlapedCollisionEvent(Object* collision_obj)
 	Object::OverlapedCollisionEvent(collision_obj);
 
 
+}
+
+void Particle::SetParticleName(std::string name)
+{
+	particle_name = name;
 }
 
 void Particle::DoParticleUniform(GLuint shader)

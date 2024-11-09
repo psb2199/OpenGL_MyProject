@@ -13,6 +13,8 @@ class Particle : public Object
 
 	VertexData*					CreateParticleObject(std::string name, int particle_count);
 
+	std::string					particle_name;
+
 	glm::vec3					particleColor{ glm::vec3(0.f)};
 	float						randomSeedValue;
 	float						lifeTime;
@@ -21,6 +23,8 @@ class Particle : public Object
 	Object*						followObject = nullptr;
 
 public:
+	void						SetParticleName(std::string name);
+
 	void						DoParticleUniform(GLuint shader);
 
 	void						SetFollowObject(Object* obj);
@@ -28,7 +32,7 @@ public:
 
 
 
-	Particle(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
+	Particle(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
 	~Particle();
 };
 

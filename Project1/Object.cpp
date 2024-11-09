@@ -3,7 +3,7 @@
 #include "ObjectManager.h"
 
 
-Object::Object(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
+Object::Object(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 {
 	Importer_mesh = importer;
 	m_objectmgr = objmgr;
@@ -96,7 +96,7 @@ int Object::GetID()
 {
 	return id;
 }
-std::string Object::GetObjectType(Object* obj)
+int Object::GetObjectType(Object* obj)
 {
 	return obj->object_type;
 }

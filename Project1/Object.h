@@ -20,7 +20,7 @@ struct Setting {
 class Object
 {	
 	int					id;
-	std::string			object_type;
+	int					object_type;
 	VertexData*			mesh;
 	CollisionBox		origin_collision_range;
 	CollisionBox		collision_range;
@@ -52,7 +52,7 @@ public:
 	Setting				setting;
 
 	Object() = default;
-	Object(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
+	Object(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
 	~Object();
 
 	virtual void		BeginPlayEvent();
@@ -68,7 +68,7 @@ public:
 	Camera*				GetCamera();
 
 	int					GetID();
-	std::string			GetObjectType(Object* obj);
+	int					GetObjectType(Object* obj);
 
 	VertexData*			GetMesh();
 	void				SetMesh(std::string filename);

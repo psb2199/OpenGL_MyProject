@@ -2,7 +2,7 @@
 
 #include "ObjectManager.h"
 
-Player::Player(int obj_id, std::string type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
+Player::Player(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
 	SetMesh("Ball.obj");
@@ -43,7 +43,7 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 {
 	Object::OverlapedCollisionEvent(collision_obj);
 
-	if (GetObjectType(collision_obj) == "Base")
+	if (GetObjectType(collision_obj) == type_Base)
 	{
 		hitLocation = GetLocation();
 

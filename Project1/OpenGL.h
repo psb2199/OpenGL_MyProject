@@ -16,14 +16,14 @@ using namespace std;
 
 enum press { w, a, s, d, KEY_COUNT};
 
-struct vector3 
-{ 
-	float x, y, z; 
+enum objtype
+{
+	type_Player,
+	type_Base,
+	type_Coin,
+	type_Particle,
 
-	void print_vec3() 
-	{
-		cout << " x:" << x << " y:" << y << " z:" << z << endl;
-	}
+	P_PopCoin
 };
 
 struct VertexData {

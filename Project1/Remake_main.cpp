@@ -82,7 +82,7 @@ int main(int argc, char** argv)
 	G_Controller = new Controller;
 	G_ObjMgr = new ObjectManager(G_Importer);
 
-	Player = G_ObjMgr->AddObject("Player", { 0,5.0,0 });
+	Player = G_ObjMgr->AddObject(type_Player, { 0,5.0,0 });
 	Player->SetCamera(G_Camera);
 	G_Controller->MappingController(Player);
 	G_Renderer->SetCamera(G_Camera);
@@ -251,13 +251,13 @@ void LevelDisign()
 	{
 		for (int z{ -range }; z <= range; ++z)
 		{
-			G_ObjMgr->AddObject("Coin", { x * 5, 2, z * 5 });
+			G_ObjMgr->AddObject(type_Coin, { x * 5, 2, z * 5 });
 		}
 	}
 	/*G_ObjMgr->AddObject("Coin", { 0, 2, 5});
 	G_ObjMgr->AddObject("Coin", { 5, 2, 0});*/
 	
-	G_ObjMgr->AddObject("Base", { 0, 0, 0 });
+	G_ObjMgr->AddObject(type_Base, { 0, 0, 0 });
 	
 	
 

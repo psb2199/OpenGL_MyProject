@@ -9,34 +9,42 @@ ObjectManager::~ObjectManager()
 {
 }
 
-Object* ObjectManager::AddObject(std::string type, glm::vec3 location)
+Object* ObjectManager::AddObject(int type, glm::vec3 location)
 {
     Object* newObj;
 
-    if      (type == "Player")
+    switch (type)
     {
+    case type_Player:
         newObj = dynamic_cast<Object*>(new Player(AllOjectCount, type, location, m_importer, this));
-    }
-    else if (type == "Base")
-    {
+        break;
+
+    case type_Base:
         newObj = dynamic_cast<Object*>(new Base(AllOjectCount, type, location, m_importer, this));
-    }
-    else if (type == "Coin")
-    {
+        break;
+
+    case type_Coin:
         newObj = dynamic_cast<Object*>(new Coin(AllOjectCount, type, location, m_importer, this));
+        break;
     }
-    else if (type == "Particle")
-    {
-        newObj = dynamic_cast<Object*>(new Particle(AllOjectCount, type, location, m_importer, this));
-    }
-    else
-    {
-        cout << "There is no c++ class about " << type << endl;
-        return nullptr;
-    }
- 
+
 
 	WorldObjects.push_back(newObj);
+    AllOjectCount++;
+
+    return newObj;
+}
+
+Object* ObjectManager::AddParticle(std::string name, glm::vec3 location)
+{   
+    Particle* newParticle = new Particle(AllOjectCount, type_Particle, location, m_importer, this);
+    newParticle->SetParticleName(name);
+
+    Object* newObj;
+
+    newObj = dynamic_cast<Object*>(newParticle);
+
+    WorldObjects.push_back(newObj);
     AllOjectCount++;
 
     return newObj;
