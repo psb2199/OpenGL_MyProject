@@ -28,6 +28,8 @@ void Particle::TickEvent(float delta_sceconds)
 {
 	Object::TickEvent(delta_sceconds);
 
+
+
 	if (GetElapsedTime() > lifeTime)
 	{
 		GetWorld()->DeleteObject(this);
@@ -57,7 +59,7 @@ VertexData* Particle::CreateParticleObject(std::string name, int particle_count)
 {
 	particleColor = { 1.f, 1.f, 0.5f };
 	randomSeedValue = 0.5f;
-	lifeTime = 1.0;
+	lifeTime = 0.75;
 	fadeOutTime = 0.5;
 
 	VertexData* newParticle = new VertexData;

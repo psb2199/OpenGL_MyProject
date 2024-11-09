@@ -16,7 +16,7 @@ uniform float elapsedTime;
 uniform float lifeTime;
 
 uniform vec3 follow_location;
-
+uniform vec3 actor_location;
 
 out vec2 texCoords;
 out float randomSeed;
@@ -29,8 +29,6 @@ void main()
     float gravity = 50.0;
     addMovement.y -= 0.5 * gravity * elapsedTime * elapsedTime;
     Pos.xyz += addMovement;
-
-     //Pos.xyz = mix(Pos.xyz, follow_location, elapsedTime);
 
     gl_Position = projection * view * transform * Pos;
 

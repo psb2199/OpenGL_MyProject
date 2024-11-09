@@ -16,6 +16,7 @@ uniform float           randomSeedValue;
 
 uniform vec3            particleColor;
 
+
 void main()
 {
     vec3 resultColor;

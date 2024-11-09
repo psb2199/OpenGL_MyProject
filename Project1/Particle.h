@@ -18,7 +18,7 @@ class Particle : public Object
 	float						lifeTime;
 	float						fadeOutTime;
 
-	Object*						followObject;
+	Object*						followObject = nullptr;
 
 public:
 	void						DoParticleUniform(GLuint shader);
