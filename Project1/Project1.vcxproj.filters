@@ -108,10 +108,10 @@
     <None Include="BloomShader.fs">
       <Filter>소스 파일\Shaders\Bloom</Filter>
     </None>
-    <None Include="ParticleShader.vs">
+    <None Include="ParticleShader.vert">
       <Filter>소스 파일\Shaders\Particles</Filter>
     </None>
-    <None Include="ParticleShader.fs">
+    <None Include="ParticleShader.frag">
       <Filter>소스 파일\Shaders\Particles</Filter>
     </None>
   </ItemGroup>

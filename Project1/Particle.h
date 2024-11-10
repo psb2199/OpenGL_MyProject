@@ -11,9 +11,9 @@ class Particle : public Object
 	void						TickEvent(float delta_sceconds) override;
 	void						OverlapedCollisionEvent(Object* collision_obj) override;
 
-	VertexData*					CreateParticleObject(std::string name, int particle_count);
+	VertexData*					CreateParticleObject(int type, int particle_count);
 
-	std::string					particle_name;
+	int							particle_type;
 
 	glm::vec3					particleColor{ glm::vec3(0.f)};
 	float						randomSeedValue;
@@ -23,7 +23,7 @@ class Particle : public Object
 	Object*						followObject = nullptr;
 
 public:
-	void						SetParticleName(std::string name);
+	void						SetParticleType(int t);
 
 	void						DoParticleUniform(GLuint shader);
 

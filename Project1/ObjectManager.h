@@ -20,7 +20,7 @@ public:
 	~ObjectManager();
 
 	Object* AddObject(int type, glm::vec3 location);
-	Object* AddParticle(std::string name, glm::vec3 location);
+	Object* SpawnParticle(int type, glm::vec3 location);
 	void DeleteObject(Object* obj);
 	std::vector<Object*> GetAllObjects();
 };

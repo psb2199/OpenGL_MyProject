@@ -35,10 +35,10 @@ Object* ObjectManager::AddObject(int type, glm::vec3 location)
     return newObj;
 }
 
-Object* ObjectManager::AddParticle(std::string name, glm::vec3 location)
+Object* ObjectManager::SpawnParticle(int type, glm::vec3 location)
 {   
     Particle* newParticle = new Particle(AllOjectCount, type_Particle, location, m_importer, this);
-    newParticle->SetParticleName(name);
+    newParticle->SetParticleType(type);
 
     Object* newObj;
 

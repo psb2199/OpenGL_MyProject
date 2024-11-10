@@ -6,7 +6,7 @@
 Particle::Particle(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
-	SetMesh(CreateParticleObject(particle_name, 50));
+	SetMesh(CreateParticleObject(particle_type, 50));
 	SetMaterial("Particle");
 
 	BeginPlayEvent();
@@ -40,13 +40,15 @@ void Particle::OverlapedCollisionEvent(Object* collision_obj)
 
 }
 
-void Particle::SetParticleName(std::string name)
+void Particle::SetParticleType(int t)
 {
-	particle_name = name;
+	particle_type = t;
 }
 
 void Particle::DoParticleUniform(GLuint shader)
 {
+	glUniform1i(glGetUniformLocation(shader, "particle_type"), particle_type);
+
 	glm::vec3 follow_loc = followObject->GetLocation();
 	glUniform3f(glGetUniformLocation(shader, "follow_location"), follow_loc.x, follow_loc.y, follow_loc.z);
 
@@ -55,10 +57,11 @@ void Particle::DoParticleUniform(GLuint shader)
 	glUniform1f(glGetUniformLocation(shader, "randomSeedValue"), randomSeedValue);
 	glUniform1f(glGetUniformLocation(shader, "lifeTime"), lifeTime);
 	glUniform1f(glGetUniformLocation(shader, "fadeOutTime"), fadeOutTime);
+
 }
 
 
-VertexData* Particle::CreateParticleObject(std::string name, int particle_count)
+VertexData* Particle::CreateParticleObject(int type, int particle_count)
 {
 	particleColor = { 1.f, 1.f, 0.5f };
 	randomSeedValue = 0.5f;
@@ -198,7 +201,7 @@ VertexData* Particle::CreateParticleObject(std::string name, int particle_count)
 	glBindVertexArray(0);
 
 
-	newParticle->filename = name;
+	newParticle->filename = type;
 	newParticle->polygon_count = particle_count * 2;
 	newParticle->VBO = NULL;
 	newParticle->texCoordVBO = NULL;

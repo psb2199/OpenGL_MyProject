@@ -23,8 +23,8 @@
     <None Include="BasicShader.vs" />
     <None Include="BloomShader.fs" />
     <None Include="BloomShader.vs" />
-    <None Include="ParticleShader.fs" />
-    <None Include="ParticleShader.vs" />
+    <None Include="ParticleShader.frag" />
+    <None Include="ParticleShader.vert" />
     <None Include="PostProcessShader.fs" />
     <None Include="PostProcessShader.vs" />
     <None Include="EnviromentShader.fs" />
@@ -48,6 +48,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Remake_main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="term.cpp">

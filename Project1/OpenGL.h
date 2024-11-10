@@ -21,8 +21,11 @@ enum objtype
 	type_Player,
 	type_Base,
 	type_Coin,
-	type_Particle,
+	type_Particle
+};
 
+enum particleType
+{
 	P_PopCoin
 };
 

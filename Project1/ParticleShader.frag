@@ -16,8 +16,10 @@ uniform float           randomSeedValue;
 
 uniform vec3            particleColor;
 
+uniform int             particle_type;
+const   int             P_PopCoin = 0;
 
-void main()
+void PopCoin()
 {
     vec3 resultColor;
 
@@ -44,4 +46,13 @@ void main()
     }
 
     Fragcolor = vec4(resultColor, resultAlpha);
+}
+
+void main()
+{
+    switch( particle_type )
+    {
+    case P_PopCoin: PopCoin();
+        break;
+    }
 }

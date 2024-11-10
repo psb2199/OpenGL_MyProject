@@ -38,7 +38,7 @@ void Coin::OverlapedCollisionEvent(Object* collision_obj)
 {
 	if (GetObjectType(collision_obj) == type_Player)
 	{
-		Object* newobj = GetWorld()->AddParticle("PopCoin", GetLocation());
+		Object* newobj = GetWorld()->SpawnParticle(P_PopCoin, GetLocation());
 		Particle* asParticle = dynamic_cast<Particle*>(newobj);
 		asParticle->SetFollowObject(collision_obj);
 
