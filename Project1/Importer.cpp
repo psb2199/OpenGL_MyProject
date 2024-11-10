@@ -43,6 +43,7 @@ void Importer::Initialize()
 		Base_ARM,
 
 		Particle_Base,
+		Particle_Leaf,
 
 		Enviroment,
 
@@ -83,6 +84,7 @@ void Importer::Initialize()
 		Textures[Coin_ARM] = LoadTexture("textures/Coin/ARM.png");
 
 		Textures[Particle_Base] = LoadTexture("textures/Particle/Base.png");
+		Textures[Particle_Leaf] = LoadTexture("textures/Particle/Leaf.png");
 
 		std::vector<string> cubeMap_filepathes;
 		cubeMap_filepathes.push_back("textures/skybox/right.png");
@@ -136,9 +138,18 @@ void Importer::Initialize()
 		);
 
 		MakeMaterial(
-			"Particle",
+			"Base",
 			"Particle",
 			Textures[Particle_Base],
+			NULL,
+			NULL,
+			NULL
+		);
+
+		MakeMaterial(
+			"Leaf",
+			"Particle",
+			Textures[Particle_Leaf],
 			NULL,
 			NULL,
 			NULL

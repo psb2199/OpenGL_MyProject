@@ -144,19 +144,19 @@ void Renderer::Initialize(int width, int height)
 	window_width = width;
 	window_height = height;
 
-	Basic_Shader = CompileShaders("BasicShader.vs", "BasicShader.fs");
-	Particle_Shader = CompileShaders("ParticleShader.vs", "ParticleShader.fs");
+	Basic_Shader = CompileShaders("BasicShader.vert", "BasicShader.frag");
+	Particle_Shader = CompileShaders("ParticleShader.vert", "ParticleShader.frag");
 
-	Enviroment_Shader = CompileShaders("EnviromentShader.vs", "EnviromentShader.fs");
+	Enviroment_Shader = CompileShaders("EnviromentShader.vert", "EnviromentShader.frag");
 	Initialize_EviromentVAO();
 
-	Shadow_Shader = CompileShaders("ShadowShader.vs", "ShadowShader.fs");
+	Shadow_Shader = CompileShaders("ShadowShader.vert", "ShadowShader.frag");
 	Initialize_ShadowMap(2048, 2048);
 
-	Bloom_Shader = CompileShaders("BloomShader.vs", "BloomShader.fs");
+	Bloom_Shader = CompileShaders("BloomShader.vert", "BloomShader.frag");
 	Initialize_BloomMap(window_width, window_height);
 
-	PostProcess_Shader = CompileShaders("PostProcessShader.vs", "PostProcessShader.fs");
+	PostProcess_Shader = CompileShaders("PostProcessShader.vert", "PostProcessShader.frag");
 	Initialize_PostProcessMap(window_width, window_height);
 }
 void Renderer::Initialize_ShadowMap(const unsigned int width, const unsigned int height)

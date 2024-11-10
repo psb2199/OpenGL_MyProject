@@ -19,19 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicShader.fs" />
-    <None Include="BasicShader.vs" />
-    <None Include="BloomShader.fs" />
-    <None Include="BloomShader.vs" />
+    <None Include="BasicShader.frag" />
+    <None Include="BasicShader.vert" />
+    <None Include="BloomShader.frag" />
+    <None Include="BloomShader.vert" />
     <None Include="ParticleShader.frag" />
     <None Include="ParticleShader.vert" />
-    <None Include="PostProcessShader.fs" />
-    <None Include="PostProcessShader.vs" />
-    <None Include="EnviromentShader.fs" />
-    <None Include="EnviromentShader.vs" />
+    <None Include="PostProcessShader.frag" />
+    <None Include="PostProcessShader.vert" />
+    <None Include="EnviromentShader.frag" />
+    <None Include="EnviromentShader.vert" />
     <None Include="fragmentlight.glsl" />
-    <None Include="ShadowShader.fs" />
-    <None Include="ShadowShader.vs" />
+    <None Include="ShadowShader.frag" />
+    <None Include="ShadowShader.vert" />
     <None Include="vertexlight.glsl" />
   </ItemGroup>
   <ItemGroup>

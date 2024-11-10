@@ -78,34 +78,34 @@
     <None Include="fragmentlight.glsl">
       <Filter>소스 파일\PreVersion</Filter>
     </None>
-    <None Include="BasicShader.fs">
+    <None Include="BasicShader.frag">
       <Filter>소스 파일\Shaders\BasicShader</Filter>
     </None>
-    <None Include="BasicShader.vs">
+    <None Include="BasicShader.vert">
       <Filter>소스 파일\Shaders\BasicShader</Filter>
     </None>
-    <None Include="EnviromentShader.fs">
+    <None Include="EnviromentShader.frag">
       <Filter>소스 파일\Shaders\Enviroment</Filter>
     </None>
-    <None Include="EnviromentShader.vs">
+    <None Include="EnviromentShader.vert">
       <Filter>소스 파일\Shaders\Enviroment</Filter>
     </None>
-    <None Include="PostProcessShader.fs">
+    <None Include="PostProcessShader.frag">
       <Filter>소스 파일\Shaders\PostProcess</Filter>
     </None>
-    <None Include="PostProcessShader.vs">
+    <None Include="PostProcessShader.vert">
       <Filter>소스 파일\Shaders\PostProcess</Filter>
     </None>
-    <None Include="ShadowShader.fs">
+    <None Include="ShadowShader.frag">
       <Filter>소스 파일\Shaders\Shadow</Filter>
     </None>
-    <None Include="ShadowShader.vs">
+    <None Include="ShadowShader.vert">
       <Filter>소스 파일\Shaders\Shadow</Filter>
     </None>
-    <None Include="BloomShader.vs">
+    <None Include="BloomShader.vert">
       <Filter>소스 파일\Shaders\Bloom</Filter>
     </None>
-    <None Include="BloomShader.fs">
+    <None Include="BloomShader.frag">
       <Filter>소스 파일\Shaders\Bloom</Filter>
     </None>
     <None Include="ParticleShader.vert">

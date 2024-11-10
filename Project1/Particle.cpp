@@ -7,7 +7,7 @@ Particle::Particle(int obj_id, int type, glm::vec3 loc, Importer* importer, Obje
 	: Object(obj_id, type, loc, importer, objmgr)
 {
 	SetMesh(CreateParticleObject(particle_type, 50));
-	SetMaterial("Particle");
+	SetMaterial("Leaf");
 
 	BeginPlayEvent();
 }
