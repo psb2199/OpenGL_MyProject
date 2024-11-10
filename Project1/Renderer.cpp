@@ -546,7 +546,7 @@ void Renderer::Render_PostProcessMap(GLuint Shader)
 	GLuint ul_PostProcess = glGetUniformLocation(Shader, "u_PostProcess");
 	glUniform1i(ul_PostProcess, 1);
 	glActiveTexture(GL_TEXTURE0 + 1);
-	glBindTexture(GL_TEXTURE_2D, post_process.SceneID); 
+	glBindTexture(GL_TEXTURE_2D, post_process.SceneID);
 
 	glBindVertexArray(frameVAO); // 정점 배열 객체 바인딩
 	glDrawArrays(GL_TRIANGLES, 0, 6); // 화면에 텍스처 그리기

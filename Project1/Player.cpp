@@ -55,7 +55,9 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 
 		DoBounceAnim = true;
 
-		GetWorld()->SpawnParticle(P_Leaf, hitLocation);
+		Object* obj = GetWorld()->SpawnParticle(P_Leaf, hitLocation);
+		Particle* asParticle = dynamic_cast<Particle*>(obj);
+		asParticle->SetFollowObject(this);
 	}
 
 

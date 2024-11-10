@@ -100,6 +100,9 @@ void Particle::DoParticleUniform(GLuint shader)
 	{
 		glm::vec3 follow_loc = particle_setting.followObject->GetLocation();
 		glUniform3f(glGetUniformLocation(shader, "follow_location"), follow_loc.x, follow_loc.y, follow_loc.z);
+
+		glm::vec3 follow_vel = particle_setting.followObject->GetVelocity();
+		glUniform3f(glGetUniformLocation(shader, "follow_velocity"), follow_vel.x, follow_vel.y, follow_vel.z);
 	}
 	
 	glm::vec3 color = particle_setting.particleColor;

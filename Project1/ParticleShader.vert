@@ -17,6 +17,7 @@ uniform float           elapsedTime;
 uniform float           lifeTime;
 
 uniform vec3            follow_location;
+uniform vec3            follow_velocity;
 uniform vec3            actor_location;
 
 out vec2 texCoords;
@@ -54,7 +55,6 @@ mat4 rotationX(float angle) {
 
     return translateBack * rotation * translateToCenter;
 }
-
 mat4 rotationY(float angle) {
     float c = cos(angle);
     float s = sin(angle);
@@ -82,7 +82,6 @@ mat4 rotationY(float angle) {
 
     return translateBack * rotation * translateToCenter;
 }
-
 mat4 rotationZ(float angle) {
     float c = cos(angle);
     float s = sin(angle);
@@ -142,7 +141,6 @@ void Leaf()
     float gravity = 50.0;
     addMovement.y -= 0.5 * gravity * elapsedTime * elapsedTime;
     Pos.xyz += addMovement;
-
 
     gl_Position = projection * view * transform * Pos;
 }
