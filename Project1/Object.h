@@ -14,6 +14,8 @@ struct Setting {
 	bool				cast_shadow{ true };
 	bool				EnalbeCollision{ false };
 	bool				EnableRendering{ true };
+
+	bool				EnalbeTwoFace{ false };
 };
 
 

@@ -27,10 +27,100 @@ uniform int             particle_type;
 const   int             P_PopCoin = 0;
 const   int             P_Leaf = 1;
 
+mat4 rotationX(float angle) {
+    float c = cos(angle);
+    float s = sin(angle);
+
+    mat4 translateToCenter = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        -vCenter.x, -vCenter.y, -vCenter.z, 1.0
+    );
+
+    mat4 rotation = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, c, -s, 0.0,
+        0.0, s, c, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    );
+
+    mat4 translateBack = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        vCenter.x, vCenter.y, vCenter.z, 1.0
+    );
+
+    return translateBack * rotation * translateToCenter;
+}
+
+mat4 rotationY(float angle) {
+    float c = cos(angle);
+    float s = sin(angle);
+
+    mat4 translateToCenter = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        -vCenter.x, -vCenter.y, -vCenter.z, 1.0
+    );
+
+    mat4 rotation = mat4(
+        c, 0.0, s, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        -s, 0.0, c, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    );
+
+    mat4 translateBack = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        vCenter.x, vCenter.y, vCenter.z, 1.0
+    );
+
+    return translateBack * rotation * translateToCenter;
+}
+
+mat4 rotationZ(float angle) {
+    float c = cos(angle);
+    float s = sin(angle);
+
+    mat4 translateToCenter = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        -vCenter.x, -vCenter.y, -vCenter.z, 1.0
+    );
+
+    mat4 rotation = mat4(
+        c, -s, 0.0, 0.0,
+        s, c, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    );
+
+    mat4 translateBack = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        vCenter.x, vCenter.y, vCenter.z, 1.0
+    );
+
+    return translateBack * rotation * translateToCenter;
+}
+
+vec4 DoBillBoard()
+{
+    vec4 Pos = vec4(vCenter, 1.0) + billboard * vec4((vPos - vCenter) * 2, 1.0);
+
+    return Pos;
+}
 
 void PopCoin()
 {
-    vec4 Pos = vec4(vCenter, 1.0) + billboard * vec4((vPos - vCenter) * 2, 1.0);
+    vec4 Pos = DoBillBoard();
 
     vec3 addMovement = elapsedTime * vVelocity;
     float gravity = 50.0;
@@ -40,21 +130,36 @@ void PopCoin()
     gl_Position = projection * view * transform * Pos;
 }
 
+void Leaf()
+{   
+    float speed = 0.75;
+    float T = elapsedTime * speed;
+    mat4 rotate = rotationX(vVelocity.x * T) * rotationY(vVelocity.y * T) * rotationZ(vVelocity.z);
+
+    vec4 Pos = rotate * vec4(vPos, 1.0);
+
+    vec3 addMovement = elapsedTime * vVelocity;
+    float gravity = 50.0;
+    addMovement.y -= 0.5 * gravity * elapsedTime * elapsedTime;
+    Pos.xyz += addMovement;
+
+
+    gl_Position = projection * view * transform * Pos;
+}
+
 void main() 
 {
+    
+
     switch( particle_type )
     {
     case P_PopCoin: PopCoin();
         break;
 
-    case P_Leaf:
-        vec3 newPos = vPos;
-        newPos.y -= 1.0;
-
-        gl_Position = projection * view * transform * vec4(newPos, 1.0);
+    case P_Leaf: Leaf();
         break;
     }
-   
+    
     texCoords = vec2(vTexPos.x , -vTexPos.y);
     randomSeed = vrandomSeed;
 }

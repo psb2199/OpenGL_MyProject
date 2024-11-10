@@ -462,12 +462,14 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 		glUniform1i(ul_cast_shadow, object->setting.cast_shadow ? 0 : 1);
 
 		if(object->GetObjectType(object) == type_Particle) glDepthMask(GL_FALSE);
+		if(object->setting.EnalbeTwoFace) glDisable(GL_CULL_FACE);
 
 		glBindVertexArray(object->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
 
 		glDepthMask(GL_TRUE);
+		glEnable(GL_CULL_FACE);
 	}
 }
 void Renderer::Render_Particle(GLuint Shader)

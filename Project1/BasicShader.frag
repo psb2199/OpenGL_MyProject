@@ -86,7 +86,7 @@ float CalShadowFactor()
 
     // PCF 샘플링 범위
     float shadow = 0.0;
-    float bias = 0.01;
+    float bias = 0.005;
     int samples = 5;  // 샘플 갯수
     float texelSize = 1.0 / u_ShadowMapSize;  // 그림자 맵 해상도에 따른 텍셀 크기
 

@@ -3,7 +3,26 @@
 
 #include "Object.h"
 
+struct ParticleSetting
+{
+	int							particleCount		{ 1 };
+	glm::vec3					particleColor		{ glm::vec3(0.f) };
+	float						randomSeedValue		{ 0.0 };
+	float						lifeTime			{ 1.0 };
+	float						fadeOutTime			{ 0.0 };
 
+	glm::vec2					size_range			{ glm::vec2(100) };
+	glm::vec2					center_x_range		{ glm::vec2(0) };
+	glm::vec2					center_y_range		{ glm::vec2(0) };
+	glm::vec2					center_z_range		{ glm::vec2(0) };
+	glm::vec2					dir_x_range			{ glm::vec2(0) };
+	glm::vec2					dir_y_range			{ glm::vec2(0) };
+	glm::vec2					dir_z_range			{ glm::vec2(0) };
+	glm::vec2					velocity_range		{ glm::vec2(0) };
+	glm::vec2					randomSeed_range	{ glm::vec2(0) };
+
+	Object*						followObject		{ nullptr };
+};
 
 class Particle : public Object
 {
@@ -14,13 +33,8 @@ class Particle : public Object
 	VertexData*					CreateParticleObject(int particle_count);
 
 	int							particle_type;
-
-	glm::vec3					particleColor{ glm::vec3(0.f)};
-	float						randomSeedValue;
-	float						lifeTime;
-	float						fadeOutTime;
-
-	Object*						followObject = nullptr;
+	ParticleSetting				particle_setting;
+	void						SetParticleSetting();
 
 public:
 	void						SetParticleType(int t);

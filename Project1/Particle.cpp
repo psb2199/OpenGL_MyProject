@@ -8,19 +8,8 @@ Particle::Particle(int obj_id, int type, int p_type, glm::vec3 loc, Importer* im
 {
 	particle_type = p_type;
 
-	switch (particle_type)
-	{
-	case P_PopCoin:
-		SetMesh(CreateParticleObject(20));
-		SetMaterial("PM_Base");
-		break;
-
-	case P_Leaf:
-		SetMesh(CreateParticleObject(10));
-		SetMaterial("PM_Leaf");
-		break;
-	}
-
+	SetParticleSetting();
+	SetMesh(CreateParticleObject(particle_setting.particleCount));
 
 	BeginPlayEvent();
 }
@@ -41,7 +30,7 @@ void Particle::TickEvent(float delta_sceconds)
 {
 	Object::TickEvent(delta_sceconds);
 
-	if (GetElapsedTime() > lifeTime)
+	if (GetElapsedTime() > particle_setting.lifeTime)
 	{
 		GetWorld()->DeleteObject(this);
 	}
@@ -53,62 +42,102 @@ void Particle::OverlapedCollisionEvent(Object* collision_obj)
 
 }
 
-void Particle::SetParticleType(int t)
+void Particle::SetParticleSetting()
 {
-	particle_type = t;
+	switch (particle_type)
+	{
+	case P_PopCoin:
+		SetMaterial("PM_Base");
+		particle_setting.particleCount = 20;
+
+		particle_setting.particleColor = { 1.f, 1.f, 0.5f };
+		particle_setting.randomSeedValue = 0.5f;
+		particle_setting.lifeTime = 0.75;
+		particle_setting.fadeOutTime = 0.5;
+
+		particle_setting.size_range =		{ 10, 30 };
+		particle_setting.center_x_range =	{ -100, 100 };
+		particle_setting.center_y_range =	{ -100, 100 };
+		particle_setting.center_z_range =	{ -100, 100 };
+		particle_setting.dir_x_range =		{ -50, 50 };
+		particle_setting.dir_y_range =		{ 95, 100 };
+		particle_setting.dir_z_range =		{ -50, 50 };
+		particle_setting.velocity_range =	{ 1500, 3000 };
+		particle_setting.randomSeed_range = { 0, 50 };
+		break;
+
+	case P_Leaf:
+		setting.EnalbeTwoFace = true;
+		setting.cast_shadow = true;
+
+		SetMaterial("PM_Leaf");
+		particle_setting.particleCount = 50;
+
+		particle_setting.particleColor = { 0.34, 0.37, 0.14 };
+		particle_setting.randomSeedValue = 0.5f;
+		particle_setting.lifeTime = 0.5;
+		particle_setting.fadeOutTime = 0.4;
+
+		particle_setting.size_range = { 30, 40 };
+		particle_setting.center_x_range = { -100, 100 };
+		particle_setting.center_y_range = { -80, -80 };
+		particle_setting.center_z_range = { -100, 100 };
+		particle_setting.dir_x_range = { -30, 30 };
+		particle_setting.dir_y_range = { 90, 100 };
+		particle_setting.dir_z_range = { -30, 30 };
+		particle_setting.velocity_range = { 1200, 1400 };
+		particle_setting.randomSeed_range = { -100, 100 };
+		break;
+	}
 }
+
 
 void Particle::DoParticleUniform(GLuint shader)
 {
 	glUniform1i(glGetUniformLocation(shader, "particle_type"), particle_type);
 
-	if (followObject)
+	if (particle_setting.followObject)
 	{
-		glm::vec3 follow_loc = followObject->GetLocation();
+		glm::vec3 follow_loc = particle_setting.followObject->GetLocation();
 		glUniform3f(glGetUniformLocation(shader, "follow_location"), follow_loc.x, follow_loc.y, follow_loc.z);
 	}
-	glUniform3f(glGetUniformLocation(shader, "particleColor"), particleColor.r, particleColor.g, particleColor.b);
+	
+	glm::vec3 color = particle_setting.particleColor;
+	glUniform3f(glGetUniformLocation(shader, "particleColor"),		color.r, color.g, color.b);
 
-	glUniform1f(glGetUniformLocation(shader, "randomSeedValue"), randomSeedValue);
-	glUniform1f(glGetUniformLocation(shader, "lifeTime"), lifeTime);
-	glUniform1f(glGetUniformLocation(shader, "fadeOutTime"), fadeOutTime);
+	glUniform1f(glGetUniformLocation(shader, "randomSeedValue"),	particle_setting.randomSeedValue);
+	glUniform1f(glGetUniformLocation(shader, "lifeTime"),			particle_setting.lifeTime);
+	glUniform1f(glGetUniformLocation(shader, "fadeOutTime"),		particle_setting.fadeOutTime);
 
 }
 
 
 VertexData* Particle::CreateParticleObject(int particle_count)
 {
-	particleColor = { 1.f, 1.f, 0.5f };
-	if(particle_type == P_Leaf) particleColor = { 0.f, 1.f, 0.f };
-	randomSeedValue = 0.5f;
-	lifeTime = 0.75;
-	fadeOutTime = 0.5;
-
 	VertexData* newParticle = new VertexData;
 
 	std::vector<float> vertices_data;
 
 	for (int i = 0; i < particle_count; ++i)
 	{
-		//static_cast<float>(GetRandint(-5000, 5000)) / 100.0f;
+		ParticleSetting s = particle_setting;
+		float size = static_cast<float>(GetRandint(s.size_range.x, s.size_range.y)) / 100.0f;
 
-		float size = static_cast<float>(GetRandint(10, 30)) / 100.0f;
-
-		float center_x = static_cast<float>(GetRandint(-100, 100)) / 100.0f;
-		float center_y = static_cast<float>(GetRandint(-100, 100)) / 100.0f;
-		float center_z = static_cast<float>(GetRandint(-100, 100)) / 100.0f;
+		float center_x = static_cast<float>(GetRandint(s.center_x_range.x, s.center_x_range.y)) / 100.0f;
+		float center_y = static_cast<float>(GetRandint(s.center_y_range.x, s.center_y_range.y)) / 100.0f;
+		float center_z = static_cast<float>(GetRandint(s.center_z_range.x, s.center_z_range.y)) / 100.0f;
 
 		glm::vec3 dir;
-		dir.x = static_cast<float>(GetRandint(-50, 50)) / 100.0f;
-		dir.y = static_cast<float>(GetRandint(95, 100)) / 100.0f;
-		dir.z = static_cast<float>(GetRandint(-50, 50)) / 100.0f;
+		dir.x = static_cast<float>(GetRandint(s.dir_x_range.x, s.dir_x_range.y)) / 100.0f;
+		dir.y = static_cast<float>(GetRandint(s.dir_y_range.x, s.dir_y_range.y)) / 100.0f;
+		dir.z = static_cast<float>(GetRandint(s.dir_z_range.x, s.dir_z_range.y)) / 100.0f;
 		dir = glm::normalize(dir);
 
-		float velocity = static_cast<float>(GetRandint(1500, 3000)) / 100.0f;
+		float velocity = static_cast<float>(GetRandint(s.velocity_range.x, s.velocity_range.y)) / 100.0f;
 
 		dir *= velocity;
 
-		float randomSeed = static_cast<float>(GetRandint(0, 50)) / 100.0f;
+		float randomSeed = static_cast<float>(GetRandint(s.randomSeed_range.x, s.randomSeed_range.y)) / 100.0f;
 
 		for (int j = 0; j < 6; ++j)
 		{
@@ -195,7 +224,6 @@ VertexData* Particle::CreateParticleObject(int particle_count)
 
 	enum attribute {
 		pos, coord, random_seed, center_pos, velocity
-		// x,y,z  u,v   t   
 	};
 	int stride = sizeof(float) * 12;
 
@@ -239,10 +267,15 @@ VertexData* Particle::CreateParticleObject(int particle_count)
 
 void Particle::SetFollowObject(Object* obj)
 {
-	followObject = obj;
+	particle_setting.followObject = obj;
 }
 
 glm::vec3 Particle::GetFollowLocation()
 {
-	return followObject->GetLocation();
+	return particle_setting.followObject->GetLocation();
+}
+
+void Particle::SetParticleType(int t)
+{
+	particle_type = t;
 }
