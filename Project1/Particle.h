@@ -11,7 +11,7 @@ class Particle : public Object
 	void						TickEvent(float delta_sceconds) override;
 	void						OverlapedCollisionEvent(Object* collision_obj) override;
 
-	VertexData*					CreateParticleObject(int type, int particle_count);
+	VertexData*					CreateParticleObject(int particle_count);
 
 	int							particle_type;
 
@@ -32,7 +32,7 @@ public:
 
 
 
-	Particle(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
+	Particle(int obj_id, int type, int p_type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
 	~Particle();
 };
 

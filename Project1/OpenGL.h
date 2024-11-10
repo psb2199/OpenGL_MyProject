@@ -26,7 +26,8 @@ enum objtype
 
 enum particleType
 {
-	P_PopCoin
+	P_PopCoin,
+	P_Leaf
 };
 
 struct VertexData {

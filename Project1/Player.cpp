@@ -45,6 +45,7 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 
 	if (GetObjectType(collision_obj) == type_Base)
 	{
+
 		hitLocation = GetLocation();
 
 		hitVelocity = GetVelocity();
@@ -53,6 +54,8 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 		SetVelocity(hitVelocity);
 
 		DoBounceAnim = true;
+
+		GetWorld()->SpawnParticle(P_Leaf, hitLocation);
 	}
 
 

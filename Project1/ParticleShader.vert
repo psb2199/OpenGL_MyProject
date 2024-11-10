@@ -25,6 +25,7 @@ out float randomSeed;
 
 uniform int             particle_type;
 const   int             P_PopCoin = 0;
+const   int             P_Leaf = 1;
 
 
 void PopCoin()
@@ -44,6 +45,13 @@ void main()
     switch( particle_type )
     {
     case P_PopCoin: PopCoin();
+        break;
+
+    case P_Leaf:
+        vec3 newPos = vPos;
+        newPos.y -= 1.0;
+
+        gl_Position = projection * view * transform * vec4(newPos, 1.0);
         break;
     }
    

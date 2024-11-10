@@ -138,7 +138,7 @@ void Importer::Initialize()
 		);
 
 		MakeMaterial(
-			"Base",
+			"PM_Base",
 			"Particle",
 			Textures[Particle_Base],
 			NULL,
@@ -147,7 +147,7 @@ void Importer::Initialize()
 		);
 
 		MakeMaterial(
-			"Leaf",
+			"PM_Leaf",
 			"Particle",
 			Textures[Particle_Leaf],
 			NULL,

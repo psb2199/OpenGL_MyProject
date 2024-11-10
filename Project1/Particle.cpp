@@ -3,11 +3,24 @@
 #include "ObjectManager.h"
 
 
-Particle::Particle(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
+Particle::Particle(int obj_id, int type, int p_type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
-	SetMesh(CreateParticleObject(particle_type, 50));
-	SetMaterial("Leaf");
+	particle_type = p_type;
+
+	switch (particle_type)
+	{
+	case P_PopCoin:
+		SetMesh(CreateParticleObject(20));
+		SetMaterial("PM_Base");
+		break;
+
+	case P_Leaf:
+		SetMesh(CreateParticleObject(10));
+		SetMaterial("PM_Leaf");
+		break;
+	}
+
 
 	BeginPlayEvent();
 }
@@ -49,9 +62,11 @@ void Particle::DoParticleUniform(GLuint shader)
 {
 	glUniform1i(glGetUniformLocation(shader, "particle_type"), particle_type);
 
-	glm::vec3 follow_loc = followObject->GetLocation();
-	glUniform3f(glGetUniformLocation(shader, "follow_location"), follow_loc.x, follow_loc.y, follow_loc.z);
-
+	if (followObject)
+	{
+		glm::vec3 follow_loc = followObject->GetLocation();
+		glUniform3f(glGetUniformLocation(shader, "follow_location"), follow_loc.x, follow_loc.y, follow_loc.z);
+	}
 	glUniform3f(glGetUniformLocation(shader, "particleColor"), particleColor.r, particleColor.g, particleColor.b);
 
 	glUniform1f(glGetUniformLocation(shader, "randomSeedValue"), randomSeedValue);
@@ -61,9 +76,10 @@ void Particle::DoParticleUniform(GLuint shader)
 }
 
 
-VertexData* Particle::CreateParticleObject(int type, int particle_count)
+VertexData* Particle::CreateParticleObject(int particle_count)
 {
 	particleColor = { 1.f, 1.f, 0.5f };
+	if(particle_type == P_Leaf) particleColor = { 0.f, 1.f, 0.f };
 	randomSeedValue = 0.5f;
 	lifeTime = 0.75;
 	fadeOutTime = 0.5;
@@ -201,7 +217,7 @@ VertexData* Particle::CreateParticleObject(int type, int particle_count)
 	glBindVertexArray(0);
 
 
-	newParticle->filename = type;
+	newParticle->filename = particle_type;
 	newParticle->polygon_count = particle_count * 2;
 	newParticle->VBO = NULL;
 	newParticle->texCoordVBO = NULL;

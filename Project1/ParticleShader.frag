@@ -18,6 +18,7 @@ uniform vec3            particleColor;
 
 uniform int             particle_type;
 const   int             P_PopCoin = 0;
+const   int             P_Leaf = 1;
 
 void PopCoin()
 {
@@ -53,6 +54,9 @@ void main()
     switch( particle_type )
     {
     case P_PopCoin: PopCoin();
+        break;
+
+    case P_Leaf: PopCoin();
         break;
     }
 }
