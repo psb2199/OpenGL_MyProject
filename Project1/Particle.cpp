@@ -71,7 +71,7 @@ void Particle::SetParticleSetting()
 		setting.cast_shadow = true;
 
 		SetMaterial("PM_Leaf");
-		particle_setting.particleCount = 50;
+		particle_setting.particleCount = 20;
 
 		particle_setting.particleColor = { 0.34, 0.37, 0.14 };
 		particle_setting.randomSeedValue = 0.5f;
@@ -104,6 +104,8 @@ void Particle::DoParticleUniform(GLuint shader)
 		glm::vec3 follow_vel = particle_setting.followObject->GetVelocity();
 		glUniform3f(glGetUniformLocation(shader, "follow_velocity"), follow_vel.x, follow_vel.y, follow_vel.z);
 	}
+	glm::vec3 after_vel = particle_setting.afterVelocity;
+	glUniform3f(glGetUniformLocation(shader, "afterVelocity"), after_vel.x, after_vel.y, after_vel.z);
 	
 	glm::vec3 color = particle_setting.particleColor;
 	glUniform3f(glGetUniformLocation(shader, "particleColor"),		color.r, color.g, color.b);

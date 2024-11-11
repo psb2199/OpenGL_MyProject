@@ -57,7 +57,7 @@ void Player::OverlapedCollisionEvent(Object* collision_obj)
 
 		Object* obj = GetWorld()->SpawnParticle(P_Leaf, hitLocation);
 		Particle* asParticle = dynamic_cast<Particle*>(obj);
-		asParticle->SetFollowObject(this);
+		asParticle->particle_setting.afterVelocity = { hitVelocity.x, 0.0, hitVelocity.z };
 	}
 
 

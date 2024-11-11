@@ -22,6 +22,7 @@ struct ParticleSetting
 	glm::vec2					randomSeed_range	{ glm::vec2(0) };
 
 	Object*						followObject		{ nullptr };
+	glm::vec3					afterVelocity		{ glm::vec3(0.0) };
 };
 
 class Particle : public Object
@@ -33,10 +34,10 @@ class Particle : public Object
 	VertexData*					CreateParticleObject(int particle_count);
 
 	int							particle_type;
-	ParticleSetting				particle_setting;
 	void						SetParticleSetting();
 
 public:
+	ParticleSetting				particle_setting;
 	void						SetParticleType(int t);
 
 	void						DoParticleUniform(GLuint shader);

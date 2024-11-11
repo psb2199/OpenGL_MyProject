@@ -18,6 +18,7 @@ uniform float           lifeTime;
 
 uniform vec3            follow_location;
 uniform vec3            follow_velocity;
+uniform vec3            afterVelocity;
 uniform vec3            actor_location;
 
 out vec2 texCoords;
@@ -137,7 +138,7 @@ void Leaf()
 
     vec4 Pos = rotate * vec4(vPos, 1.0);
 
-    vec3 addMovement = elapsedTime * vVelocity;
+    vec3 addMovement = elapsedTime * (vVelocity + afterVelocity * 30);
     float gravity = 50.0;
     addMovement.y -= 0.5 * gravity * elapsedTime * elapsedTime;
     Pos.xyz += addMovement;
