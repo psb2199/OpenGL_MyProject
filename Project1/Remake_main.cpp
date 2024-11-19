@@ -59,8 +59,8 @@ int main(int argc, char** argv)
 	//glDisable(GL_CULL_FACE);
 	glEnable(GL_CULL_FACE);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
 	/*glEnable(GL_BLEND);
 	glEnable(GL_MULTISAMPLE);
@@ -245,19 +245,21 @@ void LevelDisign()
 	G_Light = new DirectionLight({ 5, 5, 5 });
 	G_Light->AttachDirectionLight(Player);
 
-	int range = 3;
+	int range = 10;
 	
-	for (int x{ -range }; x <= range; ++x)
+	for (int x{ 0 }; x <= range; ++x)
 	{
-		for (int z{ -range }; z <= range; ++z)
+		for (int z{ 0 }; z <= range; ++z)
 		{
 			G_ObjMgr->AddObject(type_Coin, { x * 5, 2, z * 5 });
+
+			G_ObjMgr->AddObject(type_Base, { x * 5, -2, z * 5 });
 		}
 	}
 	/*G_ObjMgr->AddObject("Coin", { 0, 2, 5});
 	G_ObjMgr->AddObject("Coin", { 5, 2, 0});*/
 	
-	G_ObjMgr->AddObject(type_Base, { 0, 0, 0 });
+	
 	
 	
 

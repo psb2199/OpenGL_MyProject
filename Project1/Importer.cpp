@@ -20,7 +20,7 @@ void Importer::Initialize()
 	// Import Obj
 	{
 		ReadObj("objs/Ball.obj");
-		ReadObj("objs/Base.obj");
+		ReadObj("objs/Block.obj");
 		ReadObj("objs/Coin.obj");
 	}
 
@@ -38,9 +38,9 @@ void Importer::Initialize()
 		Coin_Normal,
 		Coin_ARM,
 
-		Base_BaseColor,
-		Base_Normal,
-		Base_ARM,
+		Block_BaseColor,
+		Block_Normal,
+		Block_ARM,
 
 		Particle_Base,
 		Particle_Leaf,
@@ -71,9 +71,9 @@ void Importer::Initialize()
 		Textures[Ball_Normal] =		LoadTexture("textures/Ball/Normal.png");
 		Textures[Ball_ARM] =		LoadTexture("textures/Ball/ARM.png");
 
-		Textures[Base_BaseColor] =	LoadTexture("textures/Base/BaseColor.png");
-		Textures[Base_Normal] =		LoadTexture("textures/Base/Normal.png");
-		Textures[Base_ARM] =		LoadTexture("textures/Base/ARM.png");
+		Textures[Block_BaseColor] =	LoadTexture("textures/Block/BaseColor.png");
+		Textures[Block_Normal] =		LoadTexture("textures/Block/Normal.png");
+		Textures[Block_ARM] =		LoadTexture("textures/Block/ARM.png");
 
 		Textures[Grass_BaseColor] = LoadTexture("textures/Grass/BaseColor.png");
 		Textures[Grass_Normal] = LoadTexture("textures/Grass/Normal.png");
@@ -111,12 +111,12 @@ void Importer::Initialize()
 		);
 
 		MakeMaterial(
-			"Base",
+			"Block",
 			"Basic",
-			Textures[Base_BaseColor],
-			Textures[Base_Normal],
+			Textures[Block_BaseColor],
+			Textures[Block_Normal],
 			NULL,	 
-			Textures[Base_ARM]
+			Textures[Block_ARM]
 		);
 
 		MakeMaterial(

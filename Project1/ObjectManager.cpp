@@ -54,6 +54,7 @@ void ObjectManager::DeleteObject(Object* obj)
     auto it = std::find(WorldObjects.begin(), WorldObjects.end(), obj);
 
     if (it != WorldObjects.end()) {
+        delete (*it);
         WorldObjects.erase(it);
         AllOjectCount--;
     }

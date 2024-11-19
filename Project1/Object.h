@@ -55,7 +55,7 @@ public:
 
 	Object() = default;
 	Object(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);
-	~Object();
+	virtual ~Object();
 
 	virtual void		BeginPlayEvent();
 	virtual void		TickEvent(float delta_seconds);

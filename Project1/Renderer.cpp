@@ -369,7 +369,6 @@ void Renderer::DrawScene(std::vector<Object*>Objects)
 	glBindFramebuffer(GL_FRAMEBUFFER, post_process.FBO);
 	Render_Enviroment(Enviroment_Shader);
 	Render_DefaultColor(Objects);
-	Render_Particle(Particle_Shader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	Render_PostProcessMap(PostProcess_Shader);
@@ -413,7 +412,13 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 
 	for (Object* object : Objects)
 	{
-		GLuint Shader = GetShader(object->GetMaterial()->shader_name);
+		Material* obj_material = object->GetMaterial();
+		GLuint Shader = GetShader(obj_material->shader_name);
+		if (obj_material->shader_name == "Particle")
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
 
 		glUseProgram(Shader);
 		CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
@@ -446,17 +451,17 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 		GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
 		glUniform1i(ul_BaseColor, 0);
 		glActiveTexture(GL_TEXTURE0 + 0);
-		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->BaseColorID);
+		glBindTexture(GL_TEXTURE_2D, obj_material->BaseColorID);
 
 		GLuint ul_NormalMap = glGetUniformLocation(Shader, "u_NormalMap");
 		glUniform1i(ul_NormalMap, 1);
 		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->NormalMapID);
+		glBindTexture(GL_TEXTURE_2D, obj_material->NormalMapID);
 
 		GLuint ul_ARM = glGetUniformLocation(Shader, "u_ARM");
 		glUniform1i(ul_ARM, 3);
 		glActiveTexture(GL_TEXTURE0 + 3);
-		glBindTexture(GL_TEXTURE_2D, object->GetMaterial()->AoRoughnessMetallicID);
+		glBindTexture(GL_TEXTURE_2D, obj_material->AoRoughnessMetallicID);
 
 		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
 		glUniform1i(ul_cast_shadow, object->setting.cast_shadow ? 0 : 1);
@@ -472,13 +477,7 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 		glEnable(GL_CULL_FACE);
 	}
 }
-void Renderer::Render_Particle(GLuint Shader)
-{
-	glUseProgram(Shader);
-	CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
 
-
-}
 void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, Bloom.FBO);
