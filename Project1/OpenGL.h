@@ -69,7 +69,7 @@ struct FrameData {
 	unsigned int height;
 };
 
-struct Material {
+struct prev_Material {
 	std::string material_name;
 
 	std::string shader_name;

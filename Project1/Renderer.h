@@ -50,7 +50,6 @@ class Renderer
 	void			Render_ShadowMap(GLuint Shader, std::vector<Object*>Objects);
 	void			Render_BloomMap(GLuint Shader, std::vector<Object*>Objects);
 	void			Render_DefaultColor(std::vector<Object*>Objects);
-	void			Render_DefaultColor2(std::vector<Object*>Objects);
 	void			Render_Enviroment(GLuint Shader);
 	void			Render_PostProcessMap(GLuint Shader);
 

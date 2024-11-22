@@ -122,7 +122,7 @@ void Object::SetMesh(VertexData* data)
 	SetCollisionRange();
 }
 
-Material* Object::GetMaterial()
+prev_Material* Object::GetMaterial()
 {
 	return m_material;
 }

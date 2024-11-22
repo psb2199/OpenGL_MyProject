@@ -225,7 +225,7 @@ GLuint Importer::LoadEnviromentTextures(std::vector<string> filepathes)
 	return texture;
 }
 
-Material* Importer::GetMaterial(std::string filename)
+prev_Material* Importer::GetMaterial(std::string filename)
 {
 	for (auto& v : Materials) {
 
@@ -242,7 +242,7 @@ GLuint Importer::GetEnviromentMaterial()
 
 void Importer::MakeMaterial(const std::string MaterialName, std::string shaderName, GLuint BaseColor, GLuint NormalMap, GLuint Emissive, GLuint ARM)
 {
-	Material* newMaterial = new Material;
+	prev_Material* newMaterial = new prev_Material;
 
 	newMaterial->material_name = MaterialName;
 	newMaterial->shader_name = shaderName;

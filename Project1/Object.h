@@ -26,7 +26,7 @@ class Object
 	VertexData*			mesh;
 	CollisionBox		origin_collision_range;
 	CollisionBox		collision_range;
-	Material*			m_material;
+	prev_Material*			m_material;
 
 	glm::vec3			location;
 	glm::vec3			rotation;
@@ -75,7 +75,7 @@ public:
 	VertexData*			GetMesh();
 	void				SetMesh(std::string filename);
 	void				SetMesh(VertexData* data);
-	Material*			GetMaterial();
+	prev_Material*			GetMaterial();
 	void				SetMaterial(std::string filename);
 
 	void				SetLocation(glm::vec3 new_location);

@@ -15,7 +15,7 @@ class Importer
 	//VertexBuffer VertexBuffers[ObjFile(MAX_COUNT)];
 
 	std::vector<VertexData*> VertexBuffers;
-	std::vector<Material*> Materials;
+	std::vector<prev_Material*> Materials;
 	GLuint enviroment_Material;
 
 	void Initialize();
@@ -34,7 +34,7 @@ public:
 	GLuint LoadTexture(const char* filepath);
 	GLuint LoadEnviromentTextures(std::vector<string> filepathes);
 
-	Material* GetMaterial(std::string filename);
+	prev_Material* GetMaterial(std::string filename);
 	GLuint GetEnviromentMaterial();
 
 	void ReadObj(const string filePath);
