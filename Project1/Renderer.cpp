@@ -357,7 +357,7 @@ void Renderer::GetObjectShaderAttributes(GLuint shader, Object* obj)
 }
 
 
-void Renderer::DrawScene(std::vector<Object*>Objects)
+void Renderer::DrawScene(std::vector<Object*>&Objects)
 {
 	window_width = glutGet(GLUT_WINDOW_WIDTH);
 	window_height = glutGet(GLUT_WINDOW_HEIGHT);
@@ -412,6 +412,10 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 
 	for (Object* object : Objects)
 	{
+		if (!object->setting.EnableRendering) continue;
+
+
+
 		Material* obj_material = object->GetMaterial();
 		GLuint Shader = GetShader(obj_material->shader_name);
 		if (obj_material->shader_name == "Particle")
@@ -422,6 +426,12 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 
 		glUseProgram(Shader);
 		CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
+
+		if (!m_Camera->isCollisionBoxInFrustum(m_Camera->extractFrustumPlanes(camera_mat.projection * camera_mat.view), object->GetCollisionRange())) {
+			continue;
+		}
+
+		//object->printObject(object);
 
 		m_light->LightWorks(Shader);
 
@@ -437,12 +447,6 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 		glUniform1i(ul_enviroment, 5);
 		glActiveTexture(GL_TEXTURE0 + 5);  
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
-
-		if (!m_Camera->isCollisionBoxInFrustum(m_Camera->extractFrustumPlanes(camera_mat.projection * camera_mat.view), object->GetCollisionRange())) {
-			continue;
-		}
-
-		if (!object->setting.EnableRendering) continue;
 
 		glm::vec3 camera_dir = m_Camera->GetCameraDirection();
 
@@ -477,6 +481,112 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 		glEnable(GL_CULL_FACE);
 	}
 }
+void Renderer::Render_DefaultColor2(std::vector<Object*> Objects)
+{
+	glEnable(GL_DEPTH_TEST);
+	glClear(GL_DEPTH_BUFFER_BIT); // Clear depth buffer once for the frame
+
+	GLuint lastShader = 0;
+	GLuint lastBaseColor = 0, lastNormalMap = 0, lastARM = 0, lastEnviroment = 0, lastShadowMap = 0;
+
+	for (Object* object : Objects)
+	{
+		if (!object->setting.EnableRendering) continue;
+
+		Material* obj_material = object->GetMaterial();
+		GLuint Shader = GetShader(obj_material->shader_name);
+
+		// Check if the shader is the same as the last used shader to avoid redundant calls to glUseProgram
+		if (Shader != lastShader) {
+			glUseProgram(Shader);
+			lastShader = Shader;
+		}
+
+		// Handle Particle-specific settings
+		if (obj_material->shader_name == "Particle")
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
+
+		// Use camera matrices and frustum culling
+		CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
+		if (!m_Camera->isCollisionBoxInFrustum(m_Camera->extractFrustumPlanes(camera_mat.projection * camera_mat.view), object->GetCollisionRange())) {
+			continue;
+		}
+
+		// Set light information (only if the light or camera settings change)
+		m_light->LightWorks(Shader);
+
+		// Optimize shadow map uniform setting (set once per shader)
+		if (lastShadowMap != Shadow.SceneID) {
+			GLuint ul_Depth = glGetUniformLocation(Shader, "u_DepthMap");
+			glUniform1i(ul_Depth, 4);
+			glActiveTexture(GL_TEXTURE0 + 4);
+			glBindTexture(GL_TEXTURE_2D, Shadow.SceneID);
+			lastShadowMap = Shadow.SceneID;
+		}
+
+		GLuint ul_ShadowMapSize = glGetUniformLocation(Shader, "u_ShadowMapSize");
+		glUniform1f(ul_ShadowMapSize, Shadow.width);
+
+		// Environment map (set once per shader)
+		if (lastEnviroment != m_importer->GetEnviromentMaterial()) {
+			GLuint ul_enviroment = glGetUniformLocation(Shader, "u_enviroment");
+			glUniform1i(ul_enviroment, 5);
+			glActiveTexture(GL_TEXTURE0 + 5);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, m_importer->GetEnviromentMaterial());
+			lastEnviroment = m_importer->GetEnviromentMaterial();
+		}
+
+		// Base color texture (set once per material)
+		if (obj_material->BaseColorID != lastBaseColor) {
+			GLuint ul_BaseColor = glGetUniformLocation(Shader, "u_BaseColor");
+			glUniform1i(ul_BaseColor, 0);
+			glActiveTexture(GL_TEXTURE0 + 0);
+			glBindTexture(GL_TEXTURE_2D, obj_material->BaseColorID);
+			lastBaseColor = obj_material->BaseColorID;
+		}
+
+		// Normal map (set once per material)
+		if (obj_material->NormalMapID != lastNormalMap) {
+			GLuint ul_NormalMap = glGetUniformLocation(Shader, "u_NormalMap");
+			glUniform1i(ul_NormalMap, 1);
+			glActiveTexture(GL_TEXTURE0 + 1);
+			glBindTexture(GL_TEXTURE_2D, obj_material->NormalMapID);
+			lastNormalMap = obj_material->NormalMapID;
+		}
+
+		// AoRoughnessMetallic texture (set once per material)
+		if (obj_material->AoRoughnessMetallicID != lastARM) {
+			GLuint ul_ARM = glGetUniformLocation(Shader, "u_ARM");
+			glUniform1i(ul_ARM, 3);
+			glActiveTexture(GL_TEXTURE0 + 3);
+			glBindTexture(GL_TEXTURE_2D, obj_material->AoRoughnessMetallicID);
+			lastARM = obj_material->AoRoughnessMetallicID;
+		}
+
+		// Set casting shadow uniform
+		GLuint ul_cast_shadow = glGetUniformLocation(Shader, "u_cast_shadow");
+		glUniform1i(ul_cast_shadow, object->setting.cast_shadow ? 0 : 1);
+
+		// Disable depth writing for particles and set culling face mode if needed
+		if (object->GetObjectType(object) == type_Particle) glDepthMask(GL_FALSE);
+		if (object->setting.EnalbeTwoFace) glDisable(GL_CULL_FACE);
+
+		// Draw the object
+		glBindVertexArray(object->GetMesh()->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
+		glBindVertexArray(0);
+
+		// Restore state for next iteration
+		glDepthMask(GL_TRUE);
+		glEnable(GL_CULL_FACE);
+	}
+
+	glDisable(GL_BLEND); // Disable blending after particles
+}
+
 
 void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 {
@@ -493,6 +603,13 @@ void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 	// 객체별로 변환 행렬 설정 및 렌더링
 	for (Object* object : Objects)
 	{
+
+		CameraMat camera_mat = m_Camera->DoWorking(Shader, aspect);
+
+		if (!m_Camera->isCollisionBoxInFrustum(m_Camera->extractFrustumPlanes(camera_mat.projection * camera_mat.view), object->GetCollisionRange())) {
+			continue;
+		}
+
 		VertexData* mesh = object->GetMesh();
 		GetObjectShaderAttributes(Shader, object);
 

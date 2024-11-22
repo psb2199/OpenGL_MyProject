@@ -61,7 +61,7 @@ void ObjectManager::DeleteObject(Object* obj)
 
 }
 
-std::vector<Object*> ObjectManager::GetAllObjects()
+std::vector<Object*>& ObjectManager::GetAllObjects()
 {
 	return WorldObjects;
 }

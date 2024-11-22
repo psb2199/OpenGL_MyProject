@@ -156,7 +156,20 @@ glm::vec3 Object::GetForce() const
 
 void Object::printObject(Object* obj)
 {
-	cout << obj->object_type << obj->id << endl;
+	std::string type;
+	switch (obj->object_type)
+	{
+	case type_Coin:
+		type = "Coin";
+		break;
+	case type_Base:
+		type = "Base";
+		break;
+	case type_Player:
+		type = "Player";
+		break;
+	}
+	cout << type << obj->id << endl;
 }
 
 

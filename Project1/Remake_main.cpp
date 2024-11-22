@@ -114,7 +114,6 @@ GLvoid RenderScene()
 }
 GLvoid RenderSceneTimer(int value)
 {
-
 	G_Renderer->DrawScene(G_ObjMgr->GetAllObjects());
 
 	G_Controller->TickEvent((float)RenderFriquency / 1000.0);
@@ -251,13 +250,18 @@ void LevelDisign()
 	{
 		for (int z{ 0 }; z <= range; ++z)
 		{
-			G_ObjMgr->AddObject(type_Coin, { x * 5, 2, z * 5 });
+			Object* obj = G_ObjMgr->AddObject(type_Coin, { x * 5, 2, z * 5 });
+			//obj->setting.EnableRendering = false;
 
 			G_ObjMgr->AddObject(type_Base, { x * 5, -2, z * 5 });
 		}
 	}
-	/*G_ObjMgr->AddObject("Coin", { 0, 2, 5});
-	G_ObjMgr->AddObject("Coin", { 5, 2, 0});*/
+	G_ObjMgr->AddObject(type_Base, { 0, 0, 0});
+
+	/*G_ObjMgr->AddObject(type_Coin, {30, 0, 0});
+	G_ObjMgr->AddObject(type_Coin, { -30, 0, 0});
+	G_ObjMgr->AddObject(type_Coin, { 0, 0, 30});
+	G_ObjMgr->AddObject(type_Coin, { 0, 0, -30});*/
 	
 	
 	

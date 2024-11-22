@@ -50,8 +50,11 @@ class Renderer
 	void			Render_ShadowMap(GLuint Shader, std::vector<Object*>Objects);
 	void			Render_BloomMap(GLuint Shader, std::vector<Object*>Objects);
 	void			Render_DefaultColor(std::vector<Object*>Objects);
+	void			Render_DefaultColor2(std::vector<Object*>Objects);
 	void			Render_Enviroment(GLuint Shader);
 	void			Render_PostProcessMap(GLuint Shader);
+
+
 
 	void			GetObjectShaderAttributes(GLuint shader, Object* obj);
 
@@ -65,6 +68,6 @@ public:
 
 	float			GetAspect();
 	GLuint			GetShader(string type);
-	void			DrawScene(std::vector<Object*>Objects);
+	void			DrawScene(std::vector<Object*>&Objects);
 };
 

@@ -23,10 +23,3 @@ void Base::BeginPlayEvent()
 	setting.EnableRendering = true;                                                                                                                                 
 }
 
-void Base::TickEvent(float delta_sceconds)
-{
-	Object::TickEvent(delta_sceconds);
-
-	
-
-}
