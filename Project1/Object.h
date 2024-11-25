@@ -16,6 +16,15 @@ struct Setting {
 	bool				EnableRendering{ true };
 
 	bool				EnalbeTwoFace{ false };
+
+	bool				testRenderingMode{ false };
+};
+
+struct Materialsetting
+{
+	glm::vec3 basecolor = glm::vec3(0.f);
+	float roughness{ 0.001 };
+	float metallic{ 0.0 };
 };
 
 
@@ -52,6 +61,7 @@ class Object
 	void				CheckAllCollisions(std::vector<Object*> WorldObjects);
 public:
 	Setting				setting;
+	Materialsetting		materialsetting;
 
 	Object() = default;
 	Object(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr);

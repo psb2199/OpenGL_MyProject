@@ -5,7 +5,6 @@
 Player::Player(int obj_id, int type, glm::vec3 loc, Importer* importer, ObjectManager* objmgr)
 	: Object(obj_id, type, loc, importer, objmgr)
 {
-	
 
 	BeginPlayEvent();
 }

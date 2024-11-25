@@ -14,7 +14,7 @@
 #include <array>
 using namespace std;
 
-enum press { w, a, s, d, KEY_COUNT};
+enum press { w, a, s, d, q, e, KEY_COUNT};
 
 enum objtype
 {

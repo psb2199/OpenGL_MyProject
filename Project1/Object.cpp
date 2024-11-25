@@ -37,14 +37,14 @@ void Object::TickEvent(float delta_seconds)
 	{
 		if (setting.EnalbeGravity) { velocity.y -= GRAVITY * delta_seconds; }
 
-		glm::vec3 flatmoveSpeed = { velocity.x, 0.0, velocity.z };
-		if (glm::length(flatmoveSpeed) > 0.001)
+		if (glm::length(velocity) > 0.001)
 		{
-			SetForce(-flatmoveSpeed * mass * friction);
+			SetForce(-velocity * mass * friction);
 		}
 		else
 		{
 			velocity.x = 0.0;
+			velocity.y = 0.0;
 			velocity.z = 0.0;
 			force = glm::vec3(0.0);
 		}

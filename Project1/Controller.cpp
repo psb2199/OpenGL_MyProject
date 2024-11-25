@@ -30,23 +30,27 @@ void Controller::TickEvent(float delta_seconds)
 
 	if (Key[press(w)])
 	{
-		//mapped_obj->AddRotationInput({ 0,0,1 });
 		mapped_obj->SetForce(forwardDirection * movespeed);
 	}
 	if (Key[press(s)])
 	{
-		//mapped_obj->AddRotationInput({ 0,0,-1 });
 		mapped_obj->SetForce(-forwardDirection * movespeed);
 	}
 	if (Key[press(a)])
 	{
-		//mapped_obj->AddRotationInput({ 0,1,0 });
 		mapped_obj->SetForce(-rightDirection * movespeed);
 	}
 	if (Key[press(d)])
 	{
-		//mapped_obj->AddRotationInput({ 0,-1,0 });
 		mapped_obj->SetForce(rightDirection * movespeed);
+	}
+	if (Key[press(q)])
+	{
+		mapped_obj->SetForce(glm::vec3(0.0f, 1.0f, 0.0f) * movespeed);
+	}
+	if (Key[press(e)])
+	{
+		mapped_obj->SetForce(glm::vec3(0.0f, -1.0f, 0.0f) * movespeed);
 	}
 }
 

@@ -16,6 +16,11 @@ uniform sampler2D   u_BaseColor;
 uniform sampler2D   u_NormalMap;
 uniform sampler2D   u_ARM;
 
+uniform bool        u_testRendering;
+uniform vec3        t_BaseColor;
+uniform float       t_Metallic;
+uniform float       t_Roughness;
+
 uniform sampler2D   u_DepthMap;
 in vec4             LightSpacePos;
 uniform float       u_ShadowMapSize;
@@ -37,20 +42,24 @@ float Camera_Actor_Dis = distance(WorldPosition, actor_location);
 
 float GetAO() 
 {
-    return texture(u_ARM, texCoords).r; 
+    if(!u_testRendering) return texture(u_ARM, texCoords).r; 
+    else return 1.f;
 }
 float GetRoughness() 
 { 
-    return texture(u_ARM, texCoords).g; 
+    if(!u_testRendering) return texture(u_ARM, texCoords).g; 
+    else return t_Roughness;
 }
 float GetMetallic() 
 { 
-    return texture(u_ARM, texCoords).b; 
+     if(!u_testRendering) return texture(u_ARM, texCoords).b; 
+      else return t_Metallic;
 }
 
 vec3 GetBaseColor() 
 {   
-    return texture(u_BaseColor, texCoords).rgb;
+    if(!u_testRendering) return texture(u_BaseColor, texCoords).rgb;
+    else return t_BaseColor;
 }
 
 
@@ -166,6 +175,7 @@ void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Met
 
     //Roughness==============================================================
     vec3 reflectedColor = GetBlurReflectedColor(NormalMap, Roughness);
+    resultColor *= reflectedColor;
     float Highlight = pow(dot(NormalMap, LightDir), 64);
     //=======================================================================
 
@@ -180,7 +190,7 @@ void Render(vec3 BaseColor, vec3 NormalMap, float AO, float Roughness, float Met
     
 
     //Shadow=================================================================
-    //resultColor += Highlight;
+    resultColor += Highlight;
     resultColor *= max(dot(LightDir, NormalMap) * CalShadowFactor(), Shadow_minValue);
     //=======================================================================
    

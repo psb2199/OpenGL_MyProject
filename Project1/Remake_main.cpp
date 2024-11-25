@@ -31,6 +31,7 @@ Importer* G_Importer = nullptr;
 Controller* G_Controller = nullptr;
 Camera* G_Camera = nullptr;
 Object* Player = nullptr;
+Object* testRendering = nullptr;
 
 GLvoid RenderScene();
 GLvoid RenderSceneTimer(int value);
@@ -82,7 +83,7 @@ int main(int argc, char** argv)
 	G_Controller = new Controller;
 	G_ObjMgr = new ObjectManager(G_Importer);
 
-	Player = G_ObjMgr->AddObject(type_Player, { 0,5.0,0 });
+	Player = G_ObjMgr->AddObject(type_Player, { 0,0,5 });
 	Player->SetCamera(G_Camera);
 	G_Controller->MappingController(Player);
 	G_Renderer->SetCamera(G_Camera);
@@ -135,6 +136,8 @@ GLvoid KeyBoardDown(unsigned char Key, int x, int y)
 {
 	if (G_Controller)
 	{
+		bool check = testRendering->setting.testRenderingMode;
+
 		switch (Key)
 		{
 		case 'W':
@@ -157,10 +160,59 @@ GLvoid KeyBoardDown(unsigned char Key, int x, int y)
 			G_Controller->Key[press(d)] = true;
 			break;
 
+		case 'Q':
+		case 'q':
+			G_Controller->Key[press(q)] = true;
+			break;
+
+		case 'E':
+		case 'e':
+			G_Controller->Key[press(e)] = true;
+			break;
+
 		case 'u':
 		case 'U':
 			Player->SetLocation({ 0,5.0,0 });
 			Player->SetVelocity({ 0,0,0 });
+			break;
+
+		case 'r':
+		case 'R':
+			if (check) testRendering->setting.testRenderingMode = false;
+			else testRendering->setting.testRenderingMode = true;
+			break;
+
+		case '7': testRendering->materialsetting.basecolor.r += 0.1;
+			testRendering->materialsetting.basecolor.r = min(testRendering->materialsetting.basecolor.r, 1.f);
+			break;
+		case '8': testRendering->materialsetting.basecolor.g += 0.1;
+			testRendering->materialsetting.basecolor.g = min(testRendering->materialsetting.basecolor.g, 1.f);
+			break;
+		case '9': testRendering->materialsetting.basecolor.b += 0.1;
+			testRendering->materialsetting.basecolor.b = min(testRendering->materialsetting.basecolor.b, 1.f);
+			break;
+		case '4': testRendering->materialsetting.basecolor.r -= 0.1;
+			testRendering->materialsetting.basecolor.r = max(testRendering->materialsetting.basecolor.r, 0.f);
+			break;
+		case '5': testRendering->materialsetting.basecolor.g -= 0.1;
+			testRendering->materialsetting.basecolor.g = max(testRendering->materialsetting.basecolor.g, 0.f);
+			break;
+		case '6': testRendering->materialsetting.basecolor.b -= 0.1;
+			testRendering->materialsetting.basecolor.b = max(testRendering->materialsetting.basecolor.b, 0.f);
+			break;
+
+		case '1': testRendering->materialsetting.roughness += 0.1;
+			testRendering->materialsetting.roughness = min(testRendering->materialsetting.roughness, 1.f);
+			break;
+		case '0': testRendering->materialsetting.roughness -= 0.1;
+			testRendering->materialsetting.roughness = max(testRendering->materialsetting.roughness, 0.001f);
+			break;
+
+		case '2': testRendering->materialsetting.metallic += 0.1;
+			testRendering->materialsetting.metallic = min(testRendering->materialsetting.metallic, 1.f);
+			break;
+		case '3': testRendering->materialsetting.metallic -= 0.1;
+			testRendering->materialsetting.metallic = max(testRendering->materialsetting.metallic, 0.f);
 			break;
 
 		case 'P':
@@ -208,6 +260,16 @@ GLvoid KeyBoardUP(unsigned char Key, int x, int y)
 		case 'd':
 			G_Controller->Key[press(d)] = false;
 			break;
+
+		case 'Q':
+		case 'q':
+			G_Controller->Key[press(q)] = false;
+			break;
+
+		case 'E':
+		case 'e':
+			G_Controller->Key[press(e)] = false;
+			break;
 		}
 	}
 }
@@ -245,23 +307,7 @@ void LevelDisign()
 	G_Light = new DirectionLight({ 5, 5, 5 });
 	G_Light->AttachDirectionLight(Player);
 
-	int range = 5;
-	float rangesize = 8;
-	for (int x{ 0 }; x <= range; ++x)
-	{
-		for (int z{ 0 }; z <= range; ++z)
-		{
-			G_ObjMgr->AddObject(type_Coin, { x * rangesize, 2, z * rangesize });
-
-			G_ObjMgr->AddObject(type_Base, { x * rangesize, -2, z * rangesize });
-		}
-	}
-	/*G_ObjMgr->AddObject("Coin", { 0, 2, 5});
-	G_ObjMgr->AddObject("Coin", { 5, 2, 0});*/
-	
-	
-	
-	
+	testRendering = G_ObjMgr->AddObject(type_Coin, { 0, 2, 0});
 
 	G_Renderer->SetLight(G_Light);
 	G_Camera->SetLookLocation(Player->GetLocation());

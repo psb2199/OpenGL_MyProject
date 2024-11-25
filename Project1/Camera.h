@@ -22,7 +22,7 @@ class Camera
 
 	glm::vec3 mouse_xy_value;
 
-	float camera_arm_length{ 20.f };
+	float camera_arm_length{ 0.001f };
 
 	float rotate_camera_sensitive{ 0.001 };
 	float field_of_view{ 45 };
