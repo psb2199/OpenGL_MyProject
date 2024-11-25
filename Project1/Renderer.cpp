@@ -330,12 +330,10 @@ void Renderer::GetObjectShaderAttributes(GLuint shader, Object* obj)
 	glm::vec3 rotation = obj->GetRotation();
 	glm::quat quaternionRotation = glm::quat(glm::radians(rotation));
 
-	float halfheight = obj->GetMesh()->min_location.y;
 
 	glm::mat4 transfom_Matrix = glm::mat4(1.0f);
-	transfom_Matrix = glm::translate(transfom_Matrix, location + glm::vec3(0.0, halfheight, 0.0));
+	transfom_Matrix = glm::translate(transfom_Matrix, location);
 	transfom_Matrix = glm::scale(transfom_Matrix, obj->GetScale());
-	transfom_Matrix = glm::translate(transfom_Matrix, -glm::vec3(0.0, halfheight, 0.0));
 	transfom_Matrix *= glm::toMat4(quaternionRotation);
 
 	unsigned int ObjectTransform = glGetUniformLocation(shader, "transform");
@@ -394,6 +392,8 @@ void Renderer::Render_ShadowMap(GLuint Shader, std::vector<Object*> Objects)
 
 		if (!object->setting.cast_shadow) continue;
 
+		if (!object->GetMesh()) continue;
+
 		glBindVertexArray(object->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
@@ -413,6 +413,7 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 	for (Object* object : Objects)
 	{
 		Material* obj_material = object->GetMaterial();
+		if (!obj_material) continue;
 		GLuint Shader = GetShader(obj_material->shader_name);
 		if (obj_material->shader_name == "Particle")
 		{
@@ -469,6 +470,7 @@ void Renderer::Render_DefaultColor(std::vector<Object*> Objects)
 		if(object->GetObjectType(object) == type_Particle) glDepthMask(GL_FALSE);
 		if(object->setting.EnalbeTwoFace) glDisable(GL_CULL_FACE);
 
+		if (!object->GetMesh()) continue;
 		glBindVertexArray(object->GetMesh()->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, object->GetMesh()->polygon_count * 3);
 		glBindVertexArray(0);
@@ -495,6 +497,9 @@ void Renderer::Render_BloomMap(GLuint Shader, std::vector<Object*> Objects)
 	{
 		VertexData* mesh = object->GetMesh();
 		GetObjectShaderAttributes(Shader, object);
+
+		if (!mesh) continue;
+		if (!object->GetMaterial()) continue;
 
 		GLuint ul_Emissive = glGetUniformLocation(Shader, "u_Emissive");
 		glUniform1i(ul_Emissive, 0);

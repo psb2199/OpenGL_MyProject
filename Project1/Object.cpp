@@ -124,6 +124,7 @@ void Object::SetMesh(VertexData* data)
 
 Material* Object::GetMaterial()
 {
+	if (!m_material) return nullptr;
 	return m_material;
 }
 void Object::SetMaterial(std::string filename)
