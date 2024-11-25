@@ -245,15 +245,15 @@ void LevelDisign()
 	G_Light = new DirectionLight({ 5, 5, 5 });
 	G_Light->AttachDirectionLight(Player);
 
-	int range = 10;
-	
+	int range = 5;
+	float rangesize = 8;
 	for (int x{ 0 }; x <= range; ++x)
 	{
 		for (int z{ 0 }; z <= range; ++z)
 		{
-			G_ObjMgr->AddObject(type_Coin, { x * 5, 2, z * 5 });
+			G_ObjMgr->AddObject(type_Coin, { x * rangesize, 2, z * rangesize });
 
-			G_ObjMgr->AddObject(type_Base, { x * 5, -2, z * 5 });
+			G_ObjMgr->AddObject(type_Base, { x * rangesize, -2, z * rangesize });
 		}
 	}
 	/*G_ObjMgr->AddObject("Coin", { 0, 2, 5});

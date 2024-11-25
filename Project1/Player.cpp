@@ -39,25 +39,48 @@ void Player::TickEvent(float delta_sceconds)
 	BallBouncingAnimation();
 }
 
+
+
 void Player::OverlapedCollisionEvent(Object* collision_obj)
 {
 	Object::OverlapedCollisionEvent(collision_obj);
 
 	if (GetObjectType(collision_obj) == type_Base)
 	{
-
 		hitLocation = GetLocation();
-
 		hitVelocity = GetVelocity();
 
-		hitVelocity.y *= -1;
-		SetVelocity(hitVelocity);
 
-		DoBounceAnim = true;
+		//Solve velocity after collision
+		glm::vec3 hitVector = collision_obj->GetLocation() - GetLocation();
+		hitVector = glm::normalize(hitVector);
+		
+		float dotX = abs(glm::dot(glm::vec3(1.0f, 0.0f, 0.0f), hitVector));
+		float dotY = abs(glm::dot(glm::vec3(0.0f, 1.0f, 0.0f), hitVector));
+		float dotZ = abs(glm::dot(glm::vec3(0.0f, 0.0f, 1.0f), hitVector));
 
-		Object* obj = GetWorld()->SpawnParticle(P_Leaf, hitLocation);
-		Particle* asParticle = dynamic_cast<Particle*>(obj);
-		asParticle->particle_setting.afterVelocity = { hitVelocity.x, 0.0, hitVelocity.z };
+		float maxDotValue = max(dotX, max(dotY, dotZ));
+		if (maxDotValue == dotX)
+		{
+			hitVelocity.x *= -1;
+			SetVelocity(hitVelocity);
+		}
+		if (maxDotValue == dotY)
+		{
+			DoBounceAnim = true;
+
+			Object* obj = GetWorld()->SpawnParticle(P_Leaf, hitLocation);
+			Particle* asParticle = dynamic_cast<Particle*>(obj);
+			asParticle->particle_setting.afterVelocity = { hitVelocity.x, 0.0, hitVelocity.z };
+
+			hitVelocity.y *= -1;
+			SetVelocity(hitVelocity);
+		}
+		if (maxDotValue == dotZ)
+		{
+			hitVelocity.z *= -1;
+			SetVelocity(hitVelocity);
+		}
 	}
 
 
@@ -113,3 +136,5 @@ void Player::BallBouncingAnimation()
 	SetScale(rescale);
 	
 }
+
+

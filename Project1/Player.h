@@ -15,6 +15,7 @@ class Player : public Object
 
 	void BallBouncingAnimation();
 	bool DoBounceAnim{ false };
+
 	glm::vec3 hitVelocity;
 	glm::vec3 hitLocation;
 
